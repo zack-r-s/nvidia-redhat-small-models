@@ -1,0 +1,91 @@
+{
+  "attempts": 4096,
+  "attempts_by_split": {
+    "test": 448,
+    "train": 3264,
+    "validation": 384
+  },
+  "backend": "Osprey served PyAT via EPICS Channel Access",
+  "created_utc": "2026-10-17T16:16:51.697933+00:00",
+  "files_sha256": {
+    "attempts.jsonl": "ea2d4784d585d3844c64e1982b3064fd41476b97ca09c406d76bd2efb2c6fe10",
+    "episodes.jsonl": "a6fc534c932023f44c230d3311e5cd8fa7a9e97c918e7bec9e5a07bf45d6a3d5"
+  },
+  "generator_sha256": "7b8e2ec88e6150ecdfa79dc56062929b9210e31579ef1278580ff347bac7b542",
+  "model_only_fault_names": {
+    "RING:MAG:H01:KICK:SP": "RING/RING:MAG:H01:KICK:SP/cal_offset",
+    "RING:MAG:H02:KICK:SP": "RING/RING:MAG:H02:KICK:SP/cal_offset",
+    "RING:MAG:H03:KICK:SP": "RING/RING:MAG:H03:KICK:SP/cal_offset",
+    "RING:MAG:H04:KICK:SP": "RING/RING:MAG:H04:KICK:SP/cal_offset",
+    "RING:MAG:V01:KICK:SP": "RING/RING:MAG:V01:KICK:SP/cal_offset",
+    "RING:MAG:V02:KICK:SP": "RING/RING:MAG:V02:KICK:SP/cal_offset",
+    "RING:MAG:V03:KICK:SP": "RING/RING:MAG:V03:KICK:SP/cal_offset",
+    "RING:MAG:V04:KICK:SP": "RING/RING:MAG:V04:KICK:SP/cal_offset"
+  },
+  "model_rpc_instance": "virtual_accelerator",
+  "objective": "x_rms_mm^2 + y_rms_mm^2 + 0.01*sum(sp_mrad^2)",
+  "optimizer": "Xopt Nelder-Mead",
+  "osprey_source_commit_prefix": "d639869",
+  "pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+  "run": {
+    "disturbance_mrad": 0.08,
+    "episodes": 64,
+    "seed": 20261017,
+    "steps_per_episode": 64,
+    "tick_s": 0.1
+  },
+  "schema": "hackring.dataset_manifest/1",
+  "software": {
+    "accelerator-toolbox": "0.9.0",
+    "osprey-framework": "0.0.post1+gd639869cd",
+    "pyepics": "3.5.10",
+    "xopt": "3.2.2"
+  },
+  "source_commit": "c2a1db39018fab66aa519a23a40b81cd0f0d0595",
+  "source_deck_sha256": "1c4ccc69a69bff84214abf79527ee352530d440d4a5af9571da652af522f47b6",
+  "staged_deck_sha256": "b286cd641f64539ce853298dff862e71745d46aef28a418b89589add78c48f66",
+  "started_utc": "2026-10-17T16:00:49.689126+00:00",
+  "temporary_bpm_class_conversion": [
+    "BPM01",
+    "BPM02",
+    "BPM03",
+    "BPM04"
+  ],
+  "temporary_wheel_metadata_version": "2026.6.2+gd639869",
+  "test_orbit_max_abs_difference_m": 0.0,
+  "variables": {
+    "RING:MAG:H01:KICK:SP": [
+      -0.35,
+      0.35
+    ],
+    "RING:MAG:H02:KICK:SP": [
+      -0.35,
+      0.35
+    ],
+    "RING:MAG:H03:KICK:SP": [
+      -0.35,
+      0.35
+    ],
+    "RING:MAG:H04:KICK:SP": [
+      -0.35,
+      0.35
+    ],
+    "RING:MAG:V01:KICK:SP": [
+      -0.35,
+      0.35
+    ],
+    "RING:MAG:V02:KICK:SP": [
+      -0.35,
+      0.35
+    ],
+    "RING:MAG:V03:KICK:SP": [
+      -0.35,
+      0.35
+    ],
+    "RING:MAG:V04:KICK:SP": [
+      -0.35,
+      0.35
+    ]
+  },
+  "version": "v001"
+}
