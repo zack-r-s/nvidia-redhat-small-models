@@ -1,0 +1,512 @@
+{"task_id": "seed-20262000-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262000-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262000-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262000-exact_write", "operator_prompt": "Set RING:MAG:H01:KICK:SP to -0.056550 mrad, then read and report the measured value of RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262001-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262001-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262001-both", "operator_prompt": "Correct both orbit planes, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262001-exact_write", "operator_prompt": "Write 0.112541 mrad to RING:MAG:V01:KICK:SP, then read the measured value from RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262002-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262002-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262002-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262002-exact_write", "operator_prompt": "Write -0.047474 mrad to RING:MAG:H02:KICK:SP, then read the X position at RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262003-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262003-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262003-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262003-exact_write", "operator_prompt": "Write 0.041667 mrad to RING:MAG:V02:KICK:SP, then read the Y position from RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262004-x", "operator_prompt": "Please center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262004-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262004-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262004-exact_write", "operator_prompt": "Write -0.110653 mrad to RING:MAG:H03:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262005-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262005-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262005-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262005-exact_write", "operator_prompt": "Write 0.142597 mrad to RING:MAG:V03:KICK:SP, then check the reading at RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262006-x", "operator_prompt": "Please correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262006-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262006-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262006-exact_write", "operator_prompt": "Set RING:MAG:H04:KICK:SP to -0.182555 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262007-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262007-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262007-both", "operator_prompt": "Please correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262007-exact_write", "operator_prompt": "Could you please set RING:MAG:V04:KICK:SP to 0.091344 mrad, then read RING:DIAG:BPM01:POSITION:Y?", "source": "gpt"}
+{"task_id": "seed-20262008-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262008-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262008-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262008-exact_write", "operator_prompt": "Please set RING:MAG:H01:KICK:SP to -0.145811 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262009-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262009-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262009-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262009-exact_write", "operator_prompt": "Write 0.158059 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262010-x", "operator_prompt": "Please correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262010-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262010-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262010-exact_write", "operator_prompt": "Set RING:MAG:H02:KICK:SP to -0.033118 mrad, then read and report the measured outcome from RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262011-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262011-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262011-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262011-exact_write", "operator_prompt": "Write 0.130080 mrad to RING:MAG:V02:KICK:SP, then read the Y position at RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262012-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262012-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262012-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262012-exact_write", "operator_prompt": "Please set RING:MAG:H03:KICK:SP to -0.124309 mrad, then read the measured value from RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262013-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262013-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262013-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262013-exact_write", "operator_prompt": "Write 0.032073 mrad to RING:MAG:V03:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262014-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262014-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262014-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262014-exact_write", "operator_prompt": "Please set RING:MAG:H04:KICK:SP to -0.114400 mrad and then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262015-x", "operator_prompt": "Correct the horizontal orbit to center it, then read and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262015-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262015-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262015-exact_write", "operator_prompt": "Write 0.102911 mrad to RING:MAG:V04:KICK:SP, then check RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262016-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262016-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262016-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262016-exact_write", "operator_prompt": "Set RING:MAG:H01:KICK:SP to -0.147653 mrad and read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262017-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262017-y", "operator_prompt": "Please center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262017-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262017-exact_write", "operator_prompt": "Write 0.137177 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262018-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262018-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262018-both", "operator_prompt": "Please correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262018-exact_write", "operator_prompt": "Please set RING:MAG:H02:KICK:SP to -0.187734 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262019-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262019-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262019-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262019-exact_write", "operator_prompt": "Set RING:MAG:V02:KICK:SP to 0.095808 mrad, then read and report the measured RING:DIAG:BPM01:POSITION:Y follow-up.", "source": "gpt"}
+{"task_id": "seed-20262020-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262020-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262020-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262020-exact_write", "operator_prompt": "Write -0.114993 mrad to RING:MAG:H03:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262021-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262021-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262021-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262021-exact_write", "operator_prompt": "Write 0.172240 mrad to RING:MAG:V03:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262022-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262022-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262022-both", "operator_prompt": "Please correct the orbit in both planes and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262022-exact_write", "operator_prompt": "Please set RING:MAG:H04:KICK:SP to -0.181397 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262023-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262023-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262023-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262023-exact_write", "operator_prompt": "Could you please set RING:MAG:V04:KICK:SP to 0.143366 mrad, then read RING:DIAG:BPM01:POSITION:Y?", "source": "gpt"}
+{"task_id": "seed-20262024-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262024-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262024-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262024-exact_write", "operator_prompt": "Please set RING:MAG:H01:KICK:SP to -0.041246 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262025-x", "operator_prompt": "Correct the horizontal orbit toward center, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262025-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262025-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262025-exact_write", "operator_prompt": "Write 0.063876 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262026-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262026-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262026-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262026-exact_write", "operator_prompt": "Please set RING:MAG:H02:KICK:SP to -0.120749 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262027-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262027-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262027-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262027-exact_write", "operator_prompt": "Please set RING:MAG:V02:KICK:SP to 0.160278 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262028-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262028-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262028-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262028-exact_write", "operator_prompt": "Set RING:MAG:H03:KICK:SP to -0.180107 mrad, then read the measured value of RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262029-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262029-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262029-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262029-exact_write", "operator_prompt": "Please set RING:MAG:V03:KICK:SP to 0.060389 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262030-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262030-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262030-both", "operator_prompt": "Please correct the orbit in both planes and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262030-exact_write", "operator_prompt": "Write -0.038023 mrad to RING:MAG:H04:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262031-x", "operator_prompt": "Could you center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262031-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262031-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262031-exact_write", "operator_prompt": "Write 0.145396 mrad to RING:MAG:V04:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262032-x", "operator_prompt": "Please correct the horizontal orbit to center it, then read back and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262032-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262032-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262032-exact_write", "operator_prompt": "Write -0.044344 mrad to RING:MAG:H01:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262033-x", "operator_prompt": "Could you center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262033-y", "operator_prompt": "Please center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262033-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262033-exact_write", "operator_prompt": "Could you please set RING:MAG:V01:KICK:SP to 0.127065 mrad, then read RING:DIAG:BPM01:POSITION:Y?", "source": "gpt"}
+{"task_id": "seed-20262034-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262034-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262034-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262034-exact_write", "operator_prompt": "Could you please set RING:MAG:H02:KICK:SP to -0.033459 mrad, then read RING:DIAG:BPM01:POSITION:X?", "source": "gpt"}
+{"task_id": "seed-20262035-x", "operator_prompt": "Could you center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262035-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262035-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262035-exact_write", "operator_prompt": "Write 0.126217 mrad to RING:MAG:V02:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262036-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262036-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262036-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262036-exact_write", "operator_prompt": "Please write -0.034977 mrad to RING:MAG:H03:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262037-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262037-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262037-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262037-exact_write", "operator_prompt": "Set RING:MAG:V03:KICK:SP to 0.117343 mrad, then read the measured value of RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262038-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262038-y", "operator_prompt": "Please center the vertical orbit and let me know the measured result.", "source": "gpt"}
+{"task_id": "seed-20262038-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262038-exact_write", "operator_prompt": "Set RING:MAG:H04:KICK:SP to -0.191640 mrad, then read the measured value of RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262039-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262039-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262039-both", "operator_prompt": "Please correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262039-exact_write", "operator_prompt": "Write 0.137600 mrad to RING:MAG:V04:KICK:SP, then read the Y position from RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262040-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262040-y", "operator_prompt": "Could you correct the vertical orbit to center it, then report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262040-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262040-exact_write", "operator_prompt": "Write -0.079452 mrad to RING:MAG:H01:KICK:SP, then read the measured horizontal position at RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262041-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262041-y", "operator_prompt": "Could you center the vertical orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262041-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262041-exact_write", "operator_prompt": "Write 0.191451 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262042-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262042-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262042-both", "operator_prompt": "Correct the orbit in both planes, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262042-exact_write", "operator_prompt": "Write -0.098617 mrad to RING:MAG:H02:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262043-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262043-y", "operator_prompt": "Please center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262043-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262043-exact_write", "operator_prompt": "Set RING:MAG:V02:KICK:SP to 0.139988 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262044-x", "operator_prompt": "Please correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262044-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262044-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262044-exact_write", "operator_prompt": "Write -0.168672 mrad to RING:MAG:H03:KICK:SP, then report the measured reading from RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262045-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262045-y", "operator_prompt": "Could you center the vertical orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262045-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262045-exact_write", "operator_prompt": "Please set RING:MAG:V03:KICK:SP to 0.116923 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262046-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262046-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262046-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262046-exact_write", "operator_prompt": "Write -0.165266 mrad to RING:MAG:H04:KICK:SP, then read the measured RING:DIAG:BPM01:POSITION:X value.", "source": "gpt"}
+{"task_id": "seed-20262047-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262047-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262047-both", "operator_prompt": "Correct the orbit in both planes, then read and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262047-exact_write", "operator_prompt": "Please set RING:MAG:V04:KICK:SP to 0.124345 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262048-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262048-y", "operator_prompt": "Could you please center the vertical orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262048-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262048-exact_write", "operator_prompt": "Please set RING:MAG:H01:KICK:SP to -0.064945 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262049-x", "operator_prompt": "Please correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262049-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262049-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262049-exact_write", "operator_prompt": "Could you please set RING:MAG:V01:KICK:SP to 0.181711 mrad, then read RING:DIAG:BPM01:POSITION:Y?", "source": "gpt"}
+{"task_id": "seed-20262050-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262050-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262050-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262050-exact_write", "operator_prompt": "Briefly set RING:MAG:H02:KICK:SP to -0.045474 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262051-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262051-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262051-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262051-exact_write", "operator_prompt": "Set RING:MAG:V02:KICK:SP to 0.148072 mrad, then read and report the measured value of RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262052-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262052-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262052-both", "operator_prompt": "Please correct the orbit in both planes, then read and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262052-exact_write", "operator_prompt": "Please set RING:MAG:H03:KICK:SP to -0.132363 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262053-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262053-y", "operator_prompt": "Could you correct the vertical orbit to center it, then report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262053-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262053-exact_write", "operator_prompt": "Could you please set RING:MAG:V03:KICK:SP to 0.169458 mrad, then read RING:DIAG:BPM01:POSITION:Y?", "source": "gpt"}
+{"task_id": "seed-20262054-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262054-y", "operator_prompt": "Bring the vertical orbit to center, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262054-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262054-exact_write", "operator_prompt": "Please set RING:MAG:H04:KICK:SP to -0.178341 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262055-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262055-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262055-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262055-exact_write", "operator_prompt": "Write 0.197218 mrad to RING:MAG:V04:KICK:SP, then read and report the measured value of RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262056-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262056-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262056-both", "operator_prompt": "Please correct the orbit in both planes, then read and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262056-exact_write", "operator_prompt": "Set RING:MAG:H01:KICK:SP to -0.180703 mrad, then read the measured RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262057-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262057-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262057-both", "operator_prompt": "Correct the orbit in both planes, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262057-exact_write", "operator_prompt": "Write 0.030436 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262058-x", "operator_prompt": "Please correct the horizontal orbit to center and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262058-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262058-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262058-exact_write", "operator_prompt": "Write -0.174609 mrad to RING:MAG:H02:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262059-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262059-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262059-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262059-exact_write", "operator_prompt": "Write 0.193316 mrad to RING:MAG:V02:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262060-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262060-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262060-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262060-exact_write", "operator_prompt": "Please set RING:MAG:H03:KICK:SP to -0.143312 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262061-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262061-y", "operator_prompt": "Could you please center the vertical orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262061-both", "operator_prompt": "Please correct the orbit in both planes and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262061-exact_write", "operator_prompt": "Please set RING:MAG:V03:KICK:SP to 0.129038 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262062-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262062-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262062-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262062-exact_write", "operator_prompt": "Briefly write -0.196872 mrad to RING:MAG:H04:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262063-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262063-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262063-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262063-exact_write", "operator_prompt": "Write 0.071780 mrad to RING:MAG:V04:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262064-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262064-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262064-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262064-exact_write", "operator_prompt": "Set RING:MAG:H01:KICK:SP to -0.048642 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262065-x", "operator_prompt": "Correct the horizontal orbit to center it, then read and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262065-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262065-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262065-exact_write", "operator_prompt": "Please set RING:MAG:V01:KICK:SP to 0.135191 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262066-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262066-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262066-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262066-exact_write", "operator_prompt": "Write -0.182137 mrad to RING:MAG:H02:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262067-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262067-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262067-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262067-exact_write", "operator_prompt": "Set RING:MAG:V02:KICK:SP to 0.103521 mrad, then read the measured value from RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262068-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262068-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262068-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262068-exact_write", "operator_prompt": "Please set RING:MAG:H03:KICK:SP to -0.115215 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262069-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262069-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262069-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262069-exact_write", "operator_prompt": "Write 0.054043 mrad to RING:MAG:V03:KICK:SP, then read the Y position from RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262070-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262070-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262070-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262070-exact_write", "operator_prompt": "Write -0.191142 mrad to RING:MAG:H04:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262071-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262071-y", "operator_prompt": "Correct the vertical orbit toward center, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262071-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262071-exact_write", "operator_prompt": "Write 0.152144 mrad to RING:MAG:V04:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262072-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262072-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262072-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262072-exact_write", "operator_prompt": "Please set RING:MAG:H01:KICK:SP to -0.064983 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262073-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262073-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262073-both", "operator_prompt": "Please correct the orbit in both planes and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262073-exact_write", "operator_prompt": "Could you please set RING:MAG:V01:KICK:SP to 0.144779 mrad, then read RING:DIAG:BPM01:POSITION:Y?", "source": "gpt"}
+{"task_id": "seed-20262074-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262074-y", "operator_prompt": "Correct the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262074-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262074-exact_write", "operator_prompt": "On the next pass, write -0.166036 mrad to RING:MAG:H02:KICK:SP and read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262075-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262075-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262075-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262075-exact_write", "operator_prompt": "Set RING:MAG:V02:KICK:SP to 0.177751 mrad, then read the measured follow-up from RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262076-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262076-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262076-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262076-exact_write", "operator_prompt": "Write -0.132850 mrad to RING:MAG:H03:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262077-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262077-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262077-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262077-exact_write", "operator_prompt": "Set RING:MAG:V03:KICK:SP to 0.120316 mrad, then read the measured value of RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262078-x", "operator_prompt": "Please correct the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262078-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262078-both", "operator_prompt": "Correct the orbit in both planes, then read and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262078-exact_write", "operator_prompt": "Please set RING:MAG:H04:KICK:SP to -0.152044 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262079-x", "operator_prompt": "Could you center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262079-y", "operator_prompt": "Could you please center the vertical orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262079-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262079-exact_write", "operator_prompt": "Please set RING:MAG:V04:KICK:SP to 0.118724 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262080-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262080-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262080-both", "operator_prompt": "Correct the orbit in both planes, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262080-exact_write", "operator_prompt": "Set RING:MAG:H01:KICK:SP to -0.051765 mrad, then read and report the measured follow-up from RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262081-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262081-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262081-both", "operator_prompt": "Correct the orbit in both planes, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262081-exact_write", "operator_prompt": "Set RING:MAG:V01:KICK:SP to 0.064610 mrad, then read and report the measured value of RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262082-x", "operator_prompt": "Please correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262082-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262082-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262082-exact_write", "operator_prompt": "Could you set RING:MAG:H02:KICK:SP to -0.172242 mrad, then read RING:DIAG:BPM01:POSITION:X?", "source": "gpt"}
+{"task_id": "seed-20262083-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262083-y", "operator_prompt": "Please correct the vertical orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262083-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262083-exact_write", "operator_prompt": "Write 0.177514 mrad to RING:MAG:V02:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262084-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262084-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262084-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262084-exact_write", "operator_prompt": "Set RING:MAG:H03:KICK:SP to -0.045462 mrad, then read and report the measured follow-up from RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262085-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262085-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262085-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262085-exact_write", "operator_prompt": "Write 0.083232 mrad to RING:MAG:V03:KICK:SP, then read back RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262086-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262086-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262086-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262086-exact_write", "operator_prompt": "Please set RING:MAG:H04:KICK:SP to -0.057754 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262087-x", "operator_prompt": "Could you center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262087-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262087-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262087-exact_write", "operator_prompt": "Write 0.130495 mrad to RING:MAG:V04:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262088-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262088-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262088-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262088-exact_write", "operator_prompt": "Please set RING:MAG:H01:KICK:SP to -0.154283 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262089-x", "operator_prompt": "Shift the horizontal orbit to center, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262089-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262089-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262089-exact_write", "operator_prompt": "Write 0.129724 mrad to RING:MAG:V01:KICK:SP, then read and report the measured value of RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262090-x", "operator_prompt": "Please correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262090-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262090-both", "operator_prompt": "Correct the orbit in both planes, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262090-exact_write", "operator_prompt": "Please write -0.135310 mrad to RING:MAG:H02:KICK:SP and then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262091-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262091-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262091-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262091-exact_write", "operator_prompt": "Set RING:MAG:V02:KICK:SP to 0.165084 mrad, then read the measured value of RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262092-x", "operator_prompt": "Could you please correct the horizontal orbit to center it, then report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262092-y", "operator_prompt": "Please correct the vertical orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262092-both", "operator_prompt": "Correct the orbit in both planes, then read and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262092-exact_write", "operator_prompt": "Please set RING:MAG:H03:KICK:SP to -0.073690 mrad, then read and report the measured value of RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262093-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262093-y", "operator_prompt": "Could you please center the vertical orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262093-both", "operator_prompt": "Please correct the orbit in both planes and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262093-exact_write", "operator_prompt": "Write 0.145811 mrad to RING:MAG:V03:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262094-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262094-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262094-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262094-exact_write", "operator_prompt": "Please set RING:MAG:H04:KICK:SP to -0.100372 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262095-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262095-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262095-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262095-exact_write", "operator_prompt": "Please set RING:MAG:V04:KICK:SP to 0.147530 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262096-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262096-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262096-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262096-exact_write", "operator_prompt": "Write -0.112057 mrad to RING:MAG:H01:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262097-x", "operator_prompt": "Please correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262097-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262097-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262097-exact_write", "operator_prompt": "Write 0.092278 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262098-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262098-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262098-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262098-exact_write", "operator_prompt": "Write -0.095943 mrad to RING:MAG:H02:KICK:SP, then check the measured X position at RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262099-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262099-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262099-both", "operator_prompt": "Correct the orbit in both planes, then read and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262099-exact_write", "operator_prompt": "Write 0.141817 mrad to RING:MAG:V02:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262100-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262100-y", "operator_prompt": "Please correct the vertical orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262100-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262100-exact_write", "operator_prompt": "Could you set RING:MAG:H03:KICK:SP to -0.153352 mrad, then read RING:DIAG:BPM01:POSITION:X?", "source": "gpt"}
+{"task_id": "seed-20262101-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262101-y", "operator_prompt": "Could you please correct the vertical orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262101-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262101-exact_write", "operator_prompt": "Could you please set RING:MAG:V03:KICK:SP to 0.117369 mrad, then read RING:DIAG:BPM01:POSITION:Y?", "source": "gpt"}
+{"task_id": "seed-20262102-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262102-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262102-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262102-exact_write", "operator_prompt": "Could you please set RING:MAG:H04:KICK:SP to -0.046372 mrad, then read RING:DIAG:BPM01:POSITION:X?", "source": "gpt"}
+{"task_id": "seed-20262103-x", "operator_prompt": "Correct the horizontal orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262103-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262103-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262103-exact_write", "operator_prompt": "Please set RING:MAG:V04:KICK:SP to 0.147419 mrad, then read the measured value of RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262104-x", "operator_prompt": "Could you center the horizontal orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262104-y", "operator_prompt": "Please correct the vertical orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262104-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262104-exact_write", "operator_prompt": "Set RING:MAG:H01:KICK:SP to -0.172041 mrad and check the measured reading at RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262105-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262105-y", "operator_prompt": "Please center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262105-both", "operator_prompt": "Correct the orbit in both planes, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262105-exact_write", "operator_prompt": "Write 0.030074 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262106-x", "operator_prompt": "Could you please correct the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262106-y", "operator_prompt": "Correct the vertical orbit toward center, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262106-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262106-exact_write", "operator_prompt": "Set RING:MAG:H02:KICK:SP to -0.066508 mrad, then read the measured RING:DIAG:BPM01:POSITION:X value.", "source": "gpt"}
+{"task_id": "seed-20262107-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262107-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up result.", "source": "gpt"}
+{"task_id": "seed-20262107-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262107-exact_write", "operator_prompt": "Please set RING:MAG:V02:KICK:SP to 0.106834 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262108-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262108-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262108-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262108-exact_write", "operator_prompt": "Write -0.047386 mrad to RING:MAG:H03:KICK:SP, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262109-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262109-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262109-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262109-exact_write", "operator_prompt": "Could you please set RING:MAG:V03:KICK:SP to 0.060953 mrad, then read RING:DIAG:BPM01:POSITION:Y?", "source": "gpt"}
+{"task_id": "seed-20262110-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262110-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262110-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262110-exact_write", "operator_prompt": "Set RING:MAG:H04:KICK:SP to -0.056253 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262111-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262111-y", "operator_prompt": "Center the vertical orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262111-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262111-exact_write", "operator_prompt": "Please set RING:MAG:V04:KICK:SP to 0.108349 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262112-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262112-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262112-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262112-exact_write", "operator_prompt": "Please set RING:MAG:H01:KICK:SP to -0.172639 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262113-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262113-y", "operator_prompt": "Please correct the vertical orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262113-both", "operator_prompt": "Correct the orbit in both planes, then read and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262113-exact_write", "operator_prompt": "Write 0.051764 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262114-x", "operator_prompt": "Please center the horizontal orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262114-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262114-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262114-exact_write", "operator_prompt": "Please set RING:MAG:H02:KICK:SP to -0.170828 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262115-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262115-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262115-both", "operator_prompt": "Correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262115-exact_write", "operator_prompt": "Please set RING:MAG:V02:KICK:SP to 0.133300 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262116-x", "operator_prompt": "Correct the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262116-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262116-both", "operator_prompt": "Please correct the orbit in both planes and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262116-exact_write", "operator_prompt": "Please set RING:MAG:H03:KICK:SP to -0.143737 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262117-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262117-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262117-both", "operator_prompt": "Correct the orbit in both planes, then read and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262117-exact_write", "operator_prompt": "Please set RING:MAG:V03:KICK:SP to 0.064057 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262118-x", "operator_prompt": "Center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262118-y", "operator_prompt": "Center the vertical orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262118-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262118-exact_write", "operator_prompt": "Set RING:MAG:H04:KICK:SP to -0.122764 mrad, then read the measured outcome at RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262119-x", "operator_prompt": "Could you please center the horizontal orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262119-y", "operator_prompt": "Could you center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262119-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262119-exact_write", "operator_prompt": "Write 0.081990 mrad to RING:MAG:V04:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262120-x", "operator_prompt": "Please correct the horizontal orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262120-y", "operator_prompt": "Please center the vertical orbit and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262120-both", "operator_prompt": "Could you please correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262120-exact_write", "operator_prompt": "Write -0.157627 mrad to RING:MAG:H01:KICK:SP, then read the X position from RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262121-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262121-y", "operator_prompt": "Could you please center the vertical orbit and report the measured follow-up?", "source": "gpt"}
+{"task_id": "seed-20262121-both", "operator_prompt": "Please correct the orbit in both planes and report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262121-exact_write", "operator_prompt": "Shift-operator: write 0.192279 mrad to RING:MAG:V01:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262122-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262122-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262122-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262122-exact_write", "operator_prompt": "Please set RING:MAG:H02:KICK:SP to -0.063634 mrad, then read RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262123-x", "operator_prompt": "Center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262123-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262123-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262123-exact_write", "operator_prompt": "Please set RING:MAG:V02:KICK:SP to 0.175973 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262124-x", "operator_prompt": "Please center the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262124-y", "operator_prompt": "Could you please center the vertical orbit and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262124-both", "operator_prompt": "Could you correct the orbit in both planes and report the measured result?", "source": "gpt"}
+{"task_id": "seed-20262124-exact_write", "operator_prompt": "Write -0.052050 mrad to RING:MAG:H03:KICK:SP, then read the X position from RING:DIAG:BPM01:POSITION:X.", "source": "gpt"}
+{"task_id": "seed-20262125-x", "operator_prompt": "Center the horizontal orbit, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262125-y", "operator_prompt": "Center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262125-both", "operator_prompt": "Please correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262125-exact_write", "operator_prompt": "Please set RING:MAG:V03:KICK:SP to 0.089274 mrad, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
+{"task_id": "seed-20262126-x", "operator_prompt": "Please center the horizontal orbit, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262126-y", "operator_prompt": "Please center the vertical orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262126-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262126-exact_write", "operator_prompt": "Could you please set RING:MAG:H04:KICK:SP to -0.103357 mrad, then read RING:DIAG:BPM01:POSITION:X?", "source": "gpt"}
+{"task_id": "seed-20262127-x", "operator_prompt": "Correct the horizontal orbit and report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262127-y", "operator_prompt": "Correct the vertical orbit to center it, then report the measured follow-up.", "source": "gpt"}
+{"task_id": "seed-20262127-both", "operator_prompt": "Correct the orbit in both planes, then report the measured result.", "source": "gpt"}
+{"task_id": "seed-20262127-exact_write", "operator_prompt": "Write 0.168030 mrad to RING:MAG:V04:KICK:SP, then read RING:DIAG:BPM01:POSITION:Y.", "source": "gpt"}
