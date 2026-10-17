@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import math
 import os
 import re
 import subprocess
@@ -46,12 +47,16 @@ TOOLS = {"channel_read", "channel_write", "channel_limits"}
 ACTION = re.compile(r"\b(read|set|write|kick|get|measure|report|show)\b", re.IGNORECASE)
 BEAM_POSITION = re.compile(r"\b(beam position|orbit|bpm)\b", re.IGNORECASE)
 MOVE_BEAM = re.compile(r"\b(move|shift|steer|disturb|perturb)\b.*\b(beam|orbit)\b|\b(beam|orbit)\b.*\b(move|shift|steer|disturb|perturb)\b", re.IGNORECASE)
+GOAL_VERB = re.compile(r"\b(correct|center|centre|reduce|minimi[sz]e|flatten|restore)\b", re.IGNORECASE)
+NEGATION = re.compile(r"\b(do not|don't|never|without)\b", re.IGNORECASE)
+KICK_LIMIT = float(CONTRACT["kick_limit_mrad"])
 COMMANDS = {"/clear": "forget the conversation so far", "/help": "show commands", "/exit": "quit"}
 
 SYSTEM = (
     "You operate a simulated FODO storage ring through tools; this is not a physical machine. "
     "Read a channel before writing it. Only use channel names returned by tools. "
-    "You may adjust a corrector setpoint when the user specifies the channel and kick. "
+    "You may adjust a corrector setpoint when the user specifies the channel and kick, "
+    "or choose bounded correctors when explicitly asked to correct the orbit. "
     "For a vague request to move the beam, ask for an exact corrector setpoint and kick. "
     "Answer briefly."
     f"\nBPM channels ({CONTRACT['units']['orbit']}): " + ", ".join(CONTRACT["bpm"])
@@ -86,6 +91,17 @@ def wants_tool(prompt: str) -> bool:
     return any(name in prompt for name in KNOWN_READS) or bool(ACTION.search(prompt) or BEAM_POSITION.search(prompt))
 
 
+def goal_request(prompt: str) -> str | None:
+    """Recognize an explicit orbit-correction goal, preserving exact PV commands."""
+    if requested_write(prompt) or NEGATION.search(prompt) or not GOAL_VERB.search(prompt):
+        return None
+    if not re.search(r"\b(beam|orbit|bpm)\b", prompt, re.IGNORECASE):
+        return None
+    horizontal = bool(re.search(r"\b(horizontal|x-plane|x orbit)\b", prompt, re.IGNORECASE))
+    vertical = bool(re.search(r"\b(vertical|y-plane|y orbit)\b", prompt, re.IGNORECASE))
+    return "both" if horizontal == vertical else "x" if horizontal else "y"
+
+
 def move_clarification(prompt: str) -> str | None:
     """Do not let a small model invent a kick for an underspecified beam move."""
     if (any(channel in prompt for channel in CONTRACT["corrector_setpoints"])
@@ -98,7 +114,7 @@ def move_clarification(prompt: str) -> str | None:
             "No write was made. Specify an absolute numeric kick for the corrector "
             "(the setpoint unit is mrad), for example: Set RING:MAG:H01:KICK:SP to 0.2."
         )
-    if MOVE_BEAM.search(prompt) and requested_write(prompt) is None:
+    if MOVE_BEAM.search(prompt) and requested_write(prompt) is None and goal_request(prompt) is None:
         return (
             "I can move the simulated beam with a corrector. Please specify the corrector setpoint "
             "and kick in mrad. For a small test, say: Set RING:MAG:H01:KICK:SP to 0.05 mrad."
@@ -215,7 +231,145 @@ def verified_report(prompt: str, readings: dict, write_request: tuple[str, float
     return "\n".join(lines) if lines else "No verified channel result was returned."
 
 
+def goal_channels(plane: str) -> tuple[list[str], list[str]]:
+    bpm = [pv for pv in CONTRACT["bpm"] if plane == "both" or pv.endswith(":X" if plane == "x" else ":Y")]
+    correctors = [pv for pv in CONTRACT["corrector_setpoints"]
+                  if plane == "both" or (":MAG:H" in pv if plane == "x" else ":MAG:V" in pv)]
+    return bpm, correctors
+
+
+def rms(readings: dict, channels: list[str]) -> float | None:
+    try:
+        values = [float(readings[pv]["value"]) for pv in channels]
+        return math.sqrt(sum(value * value for value in values) / len(values)) if all(map(math.isfinite, values)) else None
+    except (KeyError, TypeError, ValueError, ZeroDivisionError):
+        return None
+
+
+def compact_read(text: str, channels: list[str]) -> str:
+    readings = readings_from(text)
+    return json.dumps({"status": "success" if all(pv in readings for pv in channels) else "error",
+                       "summary": {"readings": {pv: {"value": readings[pv]["value"]}
+                                                for pv in channels if pv in readings}}})
+
+
+def valid_goal_operations(operations: object, allowed: list[str]) -> list[dict]:
+    if not isinstance(operations, list) or not 1 <= len(operations) <= len(allowed):
+        raise ValueError("expected one bounded write batch for the selected plane")
+    normalized = []
+    seen = set()
+    for op in operations:
+        if not isinstance(op, dict):
+            raise ValueError("every write operation must be an object")
+        channel = op.get("channel", op.get("name"))
+        value = op.get("value")
+        if channel not in allowed or channel in seen:
+            raise ValueError(f"duplicate or disallowed corrector: {channel}")
+        if isinstance(value, bool):
+            raise ValueError("kick must be a finite number")
+        try:
+            value = float(value)
+        except (TypeError, ValueError):
+            raise ValueError("kick must be a finite number") from None
+        if not math.isfinite(value) or abs(value) > KICK_LIMIT:
+            raise ValueError(f"kick for {channel} exceeds ±{KICK_LIMIT:g} mrad")
+        seen.add(channel)
+        normalized.append({"channel": channel, "value": value})
+    return normalized
+
+
+async def goal_turn(prompt, plane, history, mcp, http, tools, schemas, args) -> None:
+    """Let the model choose one bounded correction, then report only measured results."""
+    bpm, correctors = goal_channels(plane)
+    needed = bpm + correctors
+    try:
+        before_raw = await mcp.call_tool("channel_read", {"channels": needed})
+        before_text = "\n".join(getattr(part, "text", "") for part in before_raw.content)
+        before = readings_from(before_text)
+        if not all(pv in before for pv in needed):
+            raise ValueError("pre-write BPM or setpoint read was incomplete")
+    except Exception as exc:
+        print(f"No write was made: {exc}.")
+        return
+    dim(f"  [channel_read · pre-write] {len(needed)} measured PVs")
+    write_tools = [tool for tool in tools if tool["function"]["name"] == "channel_write"]
+    tool_id = "prewrite-read"
+    messages = [
+        {"role": "system", "content": SYSTEM + " Choose at most one batch of absolute corrector setpoints "
+         "for the requested plane; values are mrad and must be within the listed limits. "
+         "Use only the measured BPMs and setpoints below. Do not claim a result before the write is measured."},
+        *history, {"role": "user", "content": prompt},
+        {"role": "assistant", "tool_calls": [{"id": tool_id, "type": "function",
+          "function": {"name": "channel_read", "arguments": json.dumps({"channels": needed})}}]},
+        {"role": "tool", "tool_call_id": tool_id, "content": compact_read(before_text, needed)},
+    ]
+    response = await http.post("/chat/completions", json={
+        "model": args.model, "messages": messages, "tools": write_tools,
+        "temperature": args.temperature, "max_tokens": args.max_tokens,
+        "tool_choice": "required",
+    })
+    if response.is_error:
+        raise httpx.HTTPStatusError(f"{response.status_code} from vLLM: {response.text}",
+                                    request=response.request, response=response)
+    calls = response.json()["choices"][0]["message"].get("tool_calls") or []
+    try:
+        if len(calls) != 1 or calls[0]["function"]["name"] != "channel_write":
+            raise ValueError("model did not propose one channel_write call")
+        arguments = coerce(json.loads(calls[0]["function"]["arguments"] or "{}"),
+                           schemas.get("channel_write"))
+        operations = valid_goal_operations(arguments.get("operations"), correctors)
+    except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        print(f"No write was made: {exc}.")
+        return
+    call_args = {"operations": operations, "confirm": True}
+    dim(f"  [channel_write] {json.dumps(call_args)}")
+    write_error = None
+    results = {}
+    try:
+        result = await mcp.call_tool("channel_write", call_args)
+        payload = json.loads("\n".join(getattr(part, "text", "") for part in result.content))
+        if payload.get("status") == "success":
+            results = {entry.get("channel"): entry for entry in payload.get("summary", {}).get("results", [])}
+        else:
+            write_error = payload.get("message", "Osprey did not confirm the write")
+    except Exception as exc:
+        write_error = str(exc)
+    follow_up = bpm + [READBACKS[op["channel"]] for op in operations]
+    after = {}
+    try:
+        observed = await mcp.call_tool("channel_read", {"channels": follow_up})
+        after = readings_from("\n".join(getattr(part, "text", "") for part in observed.content))
+    except Exception as exc:
+        write_error = f"{write_error}; post-write read failed: {exc}" if write_error else f"post-write read failed: {exc}"
+    dim(f"  [channel_read · post-write] {len(after)}/{len(follow_up)} measured PVs")
+    lines = []
+    for op in operations:
+        channel = op["channel"]
+        rb = READBACKS[channel]
+        outcome = results.get(channel, {}).get("outcome", "unknown")
+        measured = after.get(rb, {}).get("value")
+        lines.append(f"{channel}: requested {op['value']:g} mrad; Osprey {outcome}; "
+                     + (f"readback {measured} mrad." if measured is not None else "no verified readback."))
+    if write_error:
+        lines.append(f"Write or follow-up error: {write_error}.")
+    for label, channels in (("X", [pv for pv in bpm if pv.endswith(":X")]),
+                            ("Y", [pv for pv in bpm if pv.endswith(":Y")])):
+        if not channels:
+            continue
+        start, end = rms(before, channels), rms(after, channels)
+        lines.append(f"{label} RMS: {start:.4f} → {end:.4f} mm (measured)." if start is not None and end is not None
+                     else f"{label} RMS: no complete post-write measurement.")
+    answer = "\n".join(lines)
+    print(answer)
+    history.extend([{"role": "user", "content": prompt}, {"role": "assistant", "content": answer}])
+    del history[: max(0, len(history) - max(1, args.history // 2) * 2)]
+
+
 async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
+    plane = goal_request(prompt)
+    if plane:
+        await goal_turn(prompt, plane, history, mcp, http, tools, schemas, args)
+        return
     messages = [{"role": "system", "content": SYSTEM}, *history, {"role": "user", "content": prompt}]
     force = wants_tool(prompt)
     write_request = requested_write(prompt)

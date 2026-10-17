@@ -249,3 +249,99 @@ def test_failed_post_write_read_does_not_report_stale_bpm(capsys, monkeypatch):
     output = capsys.readouterr().out
     assert f"{bpm}: no verified reading returned." in output
     assert f"{bpm}: 0.0 mm" not in output
+
+
+def test_goal_request_and_batch_validation():
+    assert small_agent.goal_request("Center the horizontal orbit") == "x"
+    assert small_agent.goal_request("Correct the vertical beam") == "y"
+    assert small_agent.goal_request("Reduce the beam orbit") == "both"
+    assert small_agent.goal_request("Report the horizontal orbit") is None
+    assert small_agent.goal_request("Do not correct the orbit") is None
+    assert small_agent.goal_request("Set RING:MAG:H01:KICK:SP to 0.2, then center the orbit") is None
+    bpm, allowed = small_agent.goal_channels("x")
+    assert len(bpm) == len(allowed) == 4
+    assert all(pv.endswith(":X") for pv in bpm)
+    assert all(":MAG:H" in pv for pv in allowed)
+    assert small_agent.valid_goal_operations([{"channel": allowed[0], "value": "0.05"}], allowed) == [
+        {"channel": allowed[0], "value": 0.05}]
+    import pytest
+    for operations in ([{"channel": "RING:MAG:V01:KICK:SP", "value": 0.05}],
+                       [{"channel": allowed[0], "value": 0.4}],
+                       [{"channel": allowed[0], "value": float("nan")}],
+                       [{"channel": allowed[0], "value": 0.1}, {"channel": allowed[0], "value": 0.2}]):
+        with pytest.raises(ValueError):
+            small_agent.valid_goal_operations(operations, allowed)
+
+
+def test_goal_correction_reads_before_and_after_write(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpm, correctors = small_agent.goal_channels("x")
+    command = correctors[0]
+    rb = small_agent.READBACKS[command]
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert path == "/chat/completions"
+            assert [tool["function"]["name"] for tool in json["tools"]] == ["channel_write"]
+            assert json["messages"][-1]["role"] == "tool"
+            assert json["messages"][-1]["content"].startswith('{"status": "success"')
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [{"id": "write", "function": {
+                    "name": "channel_write", "arguments": '{"operations":[{"channel":"RING:MAG:H01:KICK:SP","value":0.05}]}'}}]
+            }}]})
+
+    class FakeMCP:
+        def __init__(self):
+            self.calls = []
+
+        async def call_tool(self, name, args):
+            self.calls.append((name, args))
+            if name == "channel_write":
+                data = {"status": "success", "summary": {"results": [{
+                    "channel": command, "outcome": "confirmed", "observed_value": 0.05}]}}
+            else:
+                post = len(self.calls) > 2
+                data = {"status": "success", "summary": {"readings": {
+                    pv: {"value": (0.2 if not post else 0.1) if pv in bpm else
+                         0.05 if pv == rb and post else 0.0} for pv in args["channels"]}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))], isError=False)
+
+    mcp = FakeMCP()
+    history = []
+    asyncio.run(small_agent.turn("Center the horizontal orbit", history, mcp, FakeHTTP(),
+        [{"type": "function", "function": {"name": "channel_read"}},
+         {"type": "function", "function": {"name": "channel_write"}}],
+        {"channel_write": {"properties": {"operations": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, history=8)))
+    assert [name for name, _ in mcp.calls] == ["channel_read", "channel_write", "channel_read"]
+    assert mcp.calls[0][1]["channels"] == bpm + correctors
+    assert mcp.calls[1][1]["confirm"] is True
+    assert mcp.calls[2][1]["channels"] == bpm + [rb]
+    output = capsys.readouterr().out
+    assert "X RMS: 0.2000 → 0.1000 mm (measured)." in output
+    assert "readback 0.05 mrad" in output
+    assert history[-1]["role"] == "assistant"
+
+
+def test_goal_rejects_wrong_plane_without_write(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpm, correctors = small_agent.goal_channels("x")
+
+    class FakeMCP:
+        async def call_tool(self, name, args):
+            assert name == "channel_read"
+            data = {"status": "success", "summary": {"readings": {
+                pv: {"value": 0.1} for pv in bpm + correctors}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))], isError=False)
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [{"id": "bad", "function": {
+                    "name": "channel_write", "arguments": '{"operations":[{"channel":"RING:MAG:V01:KICK:SP","value":0.1}]}'}}]
+            }}]})
+
+    asyncio.run(small_agent.goal_turn("Correct the horizontal orbit", "x", [], FakeMCP(), FakeHTTP(),
+        [{"type": "function", "function": {"name": "channel_write"}}],
+        {"channel_write": {}}, SimpleNamespace(model="test", temperature=0, max_tokens=32, history=8)))
+    assert "No write was made" in capsys.readouterr().out
