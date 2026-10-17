@@ -17,6 +17,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["caproto>=1.1", "pytest>=8"]
+eval = ["transformers>=5.17,<6"]
 
 [build-system]
 requires = ["hatchling"]
