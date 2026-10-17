@@ -55,7 +55,7 @@ scripts/shared_demo.sh
 
 For the end-to-end check, record `/state`, ask chat to read `RING:MAG:H01:KICK:SP`, set it to `0.05` mrad, then read `RING:MAG:H01:KICK:RB`. The readback, at least one BPM measurement, `/state`, and the viewer must change together. An out-of-limit request above ±0.35 mrad must leave the setpoint unchanged. The API's `backend` field and viewer label should say `osprey-epics`/“Osprey” in this mode. `POST /scenario` is unavailable in EPICS mode; do not use its dev-only controls for this test.
 
-The small-model chat currently needs an explicit corrector setpoint and kick for a beam move. A vague “Move the beam” request asks for those details; target-orbit optimization is not yet wired into this chat loop.
+The small-model chat currently needs an explicit corrector setpoint and kick for a beam move. Vague requests such as “Move the beam” or “Disturb the beam” ask for those details; target-orbit optimization is not yet wired into this chat loop. The agent offers `channel_write` to the model only for a request that names a corrector setpoint and an absolute kick in mrad, and rejects a proposed write if its channel or value differs from the request.
 
 ## Frontend fixture and QA
 

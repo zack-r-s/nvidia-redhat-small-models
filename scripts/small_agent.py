@@ -42,7 +42,7 @@ KNOWN_READS = set(CHANNELS) | set(READBACKS.values())
 TOOLS = {"channel_read", "channel_write", "channel_limits"}
 ACTION = re.compile(r"\b(read|set|write|kick|get|measure|report|show)\b", re.IGNORECASE)
 BEAM_POSITION = re.compile(r"\b(beam position|orbit|bpm)\b", re.IGNORECASE)
-MOVE_BEAM = re.compile(r"\b(move|shift|steer)\b.*\b(beam|orbit)\b|\b(beam|orbit)\b.*\b(move|shift|steer)\b", re.IGNORECASE)
+MOVE_BEAM = re.compile(r"\b(move|shift|steer|disturb|perturb)\b.*\b(beam|orbit)\b|\b(beam|orbit)\b.*\b(move|shift|steer|disturb|perturb)\b", re.IGNORECASE)
 COMMANDS = {"/clear": "forget the conversation so far", "/help": "show commands", "/exit": "quit"}
 
 SYSTEM = (
@@ -85,13 +85,24 @@ def wants_tool(prompt: str) -> bool:
 
 def move_clarification(prompt: str) -> str | None:
     """Do not let a small model invent a kick for an underspecified beam move."""
-    has_setpoint = any(name in prompt for name in CONTRACT["corrector_setpoints"])
-    has_kick = bool(re.search(r"[+-]?\d+(?:\.\d+)?\s*mrad\b", prompt, re.IGNORECASE))
-    if MOVE_BEAM.search(prompt) and not (has_setpoint and has_kick):
+    if MOVE_BEAM.search(prompt) and requested_write(prompt) is None:
         return (
             "I can move the simulated beam with a corrector. Please specify the corrector setpoint "
             "and kick in mrad. For a small test, say: Set RING:MAG:H01:KICK:SP to 0.05 mrad."
         )
+    return None
+
+
+def requested_write(prompt: str) -> tuple[str, float] | None:
+    """Only explicit setpoint-and-kick requests authorize a model-issued write."""
+    for channel in CONTRACT["corrector_setpoints"]:
+        match = re.search(
+            re.escape(channel) + r"[^\n]*?\bto\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))\s*mrad\b",
+            prompt,
+            re.IGNORECASE,
+        )
+        if match:
+            return channel, float(match.group(1))
     return None
 
 
@@ -159,12 +170,14 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     messages = [{"role": "system", "content": SYSTEM}, *history, {"role": "user", "content": prompt}]
     start = len(messages) - 1
     force = wants_tool(prompt)
+    write_request = requested_write(prompt)
+    available_tools = tools if write_request else [tool for tool in tools if tool["function"]["name"] != "channel_write"]
     general_beam_request = bool(BEAM_POSITION.search(prompt)) and not any(pv in prompt for pv in KNOWN_READS)
     for step in range(args.max_steps):
         resp = await http.post(
             "/chat/completions",
             json={
-                "model": args.model, "messages": messages, "tools": tools,
+                "model": args.model, "messages": messages, "tools": available_tools,
                 "temperature": args.temperature, "max_tokens": args.max_tokens,
                 "tool_choice": "required" if force and step == 0 else "auto",
             },
@@ -183,9 +196,12 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
         for call in calls:
             name = call["function"]["name"]
             readback_log = None
+            rejected = None
             try:
                 if name not in schemas:
                     raise ValueError(f"unknown tool {name!r}; available: {', '.join(schemas)}")
+                if name == "channel_write" and write_request is None:
+                    raise ValueError("no explicit corrector setpoint and kick in the operator request")
                 call_args = coerce(json.loads(call["function"]["arguments"] or "{}"), schemas.get(name))
                 if name == "channel_read":
                     if general_beam_request:
@@ -194,8 +210,14 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                     if unknown:
                         raise ValueError(f"unknown PV(s): {sorted(unknown)}; use the listed ring PVs")
                 elif name == "channel_write":
+                    operations = call_args.get("operations") or []
+                    if len(operations) != 1 or not isinstance(operations[0], dict):
+                        raise ValueError("expected exactly one corrector write operation")
+                    requested_channel, requested_value = write_request
+                    if operations[0].get("channel") != requested_channel or operations[0].get("value") != requested_value:
+                        raise ValueError("model write arguments differ from the operator's requested channel or kick")
                     unknown = {
-                        op.get("channel") for op in call_args.get("operations", [])
+                        op.get("channel") for op in operations
                         if isinstance(op, dict) and op.get("channel") not in READBACKS
                     }
                     if unknown:
@@ -218,8 +240,11 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                         shown = ", ".join(f"{pv}={values[pv]['value']}" for pv in readbacks if pv in values)
                         readback_log = f"  [channel_read · post-write] {shown or json.dumps({'channels': readbacks})}"
             except Exception as exc:  # report tool errors to the model instead of crashing the REPL
-                call_args, text = {}, f"error: {exc}"
-            dim(f"  [{name}] {json.dumps(call_args)}")
+                rejected, text = str(exc), f"error: {exc}"
+            if rejected:
+                dim(f"  [{name} rejected] {rejected}")
+            else:
+                dim(f"  [{name}] {json.dumps(call_args)}")
             if readback_log:
                 dim(readback_log)
             messages.append({"role": "tool", "tool_call_id": call["id"], "content": text})
