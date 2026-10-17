@@ -26,6 +26,8 @@ def validate_prompt(prompt: str, row: dict) -> None:
         raise ValueError("prompt claims an outcome")
     if "cal_offset" in prompt or "hidden" in prompt.lower():
         raise ValueError("prompt mentions a hidden fault")
+    if re.search(r"\b(do not|don't|never|without)\b", prompt, re.I):
+        raise ValueError("prompt negates the requested action")
     goal = row["goal"]
     if goal == "exact_write":
         original = canonical_prompt(row)
@@ -41,6 +43,8 @@ def validate_prompt(prompt: str, row: dict) -> None:
         if not re.search(r"\b(set|write|change|adjust)\b", prompt, re.I):
             raise ValueError("exact write omitted its action")
     else:
+        if not re.search(r"\b(beam|orbit|bpm)\b", prompt, re.I):
+            raise ValueError("correction prompt omitted the beam or orbit target")
         if re.search(r"RING:|\bBPM\d+\b|(?<!\w)\d+(?:\.\d+)?", prompt, re.I):
             raise ValueError("correction prompt invented a PV or numeric claim")
         if not re.search(r"\b(correct|center|centre|reduce|minimize|minimise|flatten|restore)\b", prompt, re.I):
