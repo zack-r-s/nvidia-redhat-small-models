@@ -18,13 +18,15 @@ need() { command -v "$1" >/dev/null 2>&1 || die "Missing $1. Install it and reru
 
 usage() {
   cat <<'EOF'
-Usage: scripts/bootstrap_demo.sh [--check]
+Usage: scripts/bootstrap_demo.sh [--check | --cleanup-old-demo]
 
 Resets only this checkout's Osprey deployment, installs pinned project
 dependencies, starts the local LFM2.5-230M vLLM server if needed, and brings
 up the Osprey accelerator, viewer/API, and authenticated web terminal.
 
 --check  Check host prerequisites without changing anything.
+--cleanup-old-demo  Stop the old hackring-live-230m Osprey deployment before
+                    starting this one. Its volumes and the Xopt stack remain.
 
 If vllm is outside PATH, set VLLM_BIN to its executable. On Apple Silicon the
 script also checks ~/.venv-vllm-metal/bin/vllm. Docker must already be running.
@@ -35,9 +37,11 @@ EOF
 }
 
 MODE=run
+CLEANUP_OLD_DEMO=0
 case "${1:-}" in
   '') ;;
   --check) MODE=check ;;
+  --cleanup-old-demo) CLEANUP_OLD_DEMO=1 ;;
   -h|--help) usage; exit 0 ;;
   *) usage >&2; exit 2 ;;
 esac
@@ -123,6 +127,27 @@ SETUPTOOLS_SCM_PRETEND_VERSION=2026.6.2+gd639869 \
   -e "$OSPREY_SRC/packages/osprey-connectors" \
   -e "$OSPREY_SRC/packages/pyaml-cs-osprey"
 npm --prefix frontend ci
+
+if [[ $CLEANUP_OLD_DEMO == 1 ]]; then
+  legacy_repo=${LEGACY_DEMO_REPO:-"$ROOT/../hackring-live-230m"}
+  [[ -f "$legacy_repo/profile.yml" ]] ||
+    die "Old demo checkout not found at $legacy_repo; set LEGACY_DEMO_REPO to its path."
+  legacy_project=$("$PY" - "$legacy_repo" <<'PY'
+import sys
+import yaml
+from pathlib import Path
+repo = Path(sys.argv[1])
+rendered = repo / "build" / "config.yml"
+source = rendered if rendered.is_file() else repo / "profile.yml"
+print(yaml.safe_load(source.read_text())["project_name"])
+PY
+)
+  [[ $legacy_project == hackring-live-230m ]] ||
+    die "Refusing to stop $legacy_repo: its project is '$legacy_project', not hackring-live-230m."
+  say 'Stopping the earlier live demo to free its ports and Docker resources (volumes kept)'
+  "$OSPREY" web stop --repo "$legacy_repo" >/dev/null 2>&1 || true
+  "$OSPREY" down --repo "$legacy_repo"
+fi
 
 if curl -fsS --max-time 3 "$MODEL_URL" >/dev/null 2>&1 && ! model_ready; then
   die "Port 8000 serves a different model; expected $MODEL_ID. Stop that server and rerun."
@@ -237,7 +262,11 @@ if ! model_ready; then
 fi
 
 say 'Starting the served PyAT accelerator'
-"$OSPREY" up --dev -d
+if ! "$OSPREY" up --dev -d; then
+  say 'Stopping this checkout’s partial deployment to release its ports (volumes kept)'
+  "$OSPREY" down --repo "$ROOT" || true
+  die 'Osprey did not become healthy. See the startup error above and var/logs.'
+fi
 
 say 'Starting viewer API and frontend'
 nohup "$ROOT/scripts/shared_demo.sh" >"$BOOT/viewer.log" 2>&1 &

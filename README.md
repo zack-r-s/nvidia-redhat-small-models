@@ -17,6 +17,8 @@ The script installs the Python, pinned Osprey, and frontend dependencies; resets
 
 The bootstrap selects a free Osprey port block and separate EPICS CA/PVA ports before resetting. It writes those choices to the ignored host overlay `profiles/bootstrap-local.yml` and selects it with `.env.variant`; the checked-in profile and lattice stay unchanged. The chat and viewer read the rendered deployment ports, so they follow this local overlay. This lets the demo coexist with the Xopt data-generation Osprey stack. If ports 8001 or 5173 are already occupied, stop that viewer/API first; those two frontend ports are fixed.
 
+If the earlier `hackring-live-230m` demo is still running on a small Docker VM, use `scripts/bootstrap_demo.sh --cleanup-old-demo`. This stops that exact older demo before startup, freeing its ports and resources while keeping its volumes and leaving the Xopt data stack alone. The old checkout defaults to a sibling directory named `hackring-live-230m`; set `LEGACY_DEMO_REPO=/path/to/checkout` if it lives elsewhere. A failed `osprey up` also stops this bootstrap's partial deployment, so a retry does not leave its containers holding ports. ClickHouse's internal port 9000 is unrelated to host-port selection; a timeout there can also indicate that the Docker VM is overloaded.
+
 The manual setup below remains useful when working on only one part of the stack:
 
 ```sh
