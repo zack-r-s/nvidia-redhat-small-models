@@ -18,15 +18,15 @@ need() { command -v "$1" >/dev/null 2>&1 || die "Missing $1. Install it and reru
 
 usage() {
   cat <<'EOF'
-Usage: scripts/bootstrap_demo.sh [--check | --cleanup-old-demo]
+Usage: scripts/bootstrap_demo.sh [--check | --keep-old-demo]
 
 Resets only this checkout's Osprey deployment, installs pinned project
 dependencies, starts the local LFM2.5-230M vLLM server if needed, and brings
 up the Osprey accelerator, viewer/API, and authenticated web terminal.
 
 --check  Check host prerequisites without changing anything.
---cleanup-old-demo  Stop the old hackring-live-230m Osprey deployment before
-                    starting this one. Its volumes and the Xopt stack remain.
+The old hackring-live-230m demo is stopped automatically when it is running.
+Its volumes and the Xopt stack remain. --keep-old-demo skips that cleanup.
 
 If vllm is outside PATH, set VLLM_BIN to its executable. On Apple Silicon the
 script also checks ~/.venv-vllm-metal/bin/vllm. Docker must already be running.
@@ -37,11 +37,12 @@ EOF
 }
 
 MODE=run
-CLEANUP_OLD_DEMO=0
+CLEANUP_OLD_DEMO=1
 case "${1:-}" in
   '') ;;
   --check) MODE=check ;;
   --cleanup-old-demo) CLEANUP_OLD_DEMO=1 ;;
+  --keep-old-demo) CLEANUP_OLD_DEMO=0 ;;
   -h|--help) usage; exit 0 ;;
   *) usage >&2; exit 2 ;;
 esac
@@ -128,7 +129,8 @@ SETUPTOOLS_SCM_PRETEND_VERSION=2026.6.2+gd639869 \
   -e "$OSPREY_SRC/packages/pyaml-cs-osprey"
 npm --prefix frontend ci
 
-if [[ $CLEANUP_OLD_DEMO == 1 ]]; then
+old_demo_running=$(docker ps -q --filter label=com.docker.compose.project=hackring-live-230m)
+if [[ $CLEANUP_OLD_DEMO == 1 && -n $old_demo_running ]]; then
   legacy_repo=${LEGACY_DEMO_REPO:-"$ROOT/../hackring-live-230m"}
   [[ -f "$legacy_repo/profile.yml" ]] ||
     die "Old demo checkout not found at $legacy_repo; set LEGACY_DEMO_REPO to its path."
@@ -147,6 +149,10 @@ PY
   say 'Stopping the earlier live demo to free its ports and Docker resources (volumes kept)'
   "$OSPREY" web stop --repo "$legacy_repo" >/dev/null 2>&1 || true
   "$OSPREY" down --repo "$legacy_repo"
+  [[ -z $(docker ps -q --filter label=com.docker.compose.project=hackring-live-230m) ]] ||
+    die 'The earlier live demo still has running containers after osprey down.'
+elif [[ $CLEANUP_OLD_DEMO == 0 && -n $old_demo_running ]]; then
+  say 'Keeping the earlier live demo running; Docker will host three Osprey stacks.'
 fi
 
 if curl -fsS --max-time 3 "$MODEL_URL" >/dev/null 2>&1 && ! model_ready; then
