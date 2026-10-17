@@ -1,6 +1,6 @@
 .obsidian/
 /ara/
-/datasets/
+/datasets/v*/annotations/
 /.venv/
 /.uv-cache/
 /build/
