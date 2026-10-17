@@ -1,5 +1,6 @@
 .obsidian/
 /ara/
+/datasets/
 /.venv/
 /.uv-cache/
 /build/
