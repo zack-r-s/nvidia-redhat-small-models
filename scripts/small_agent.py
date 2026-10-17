@@ -85,6 +85,16 @@ def wants_tool(prompt: str) -> bool:
 
 def move_clarification(prompt: str) -> str | None:
     """Do not let a small model invent a kick for an underspecified beam move."""
+    if (any(channel in prompt for channel in CONTRACT["corrector_setpoints"])
+            and re.search(r"\b(do not|don't|never|without)\b", prompt, re.IGNORECASE)):
+        return "No write was made."
+    if (any(channel in prompt for channel in CONTRACT["corrector_setpoints"])
+            and re.search(r"\b(set|write|change|adjust)\b", prompt, re.IGNORECASE)
+            and requested_write(prompt) is None):
+        return (
+            "No write was made. Specify an absolute numeric kick for the corrector "
+            "(the setpoint unit is mrad), for example: Set RING:MAG:H01:KICK:SP to 0.2."
+        )
     if MOVE_BEAM.search(prompt) and requested_write(prompt) is None:
         return (
             "I can move the simulated beam with a corrector. Please specify the corrector setpoint "
@@ -95,9 +105,15 @@ def move_clarification(prompt: str) -> str | None:
 
 def requested_write(prompt: str) -> tuple[str, float] | None:
     """Only explicit setpoint-and-kick requests authorize a model-issued write."""
+    if not re.search(r"\b(set|write|change|adjust)\b", prompt, re.IGNORECASE):
+        return None
+    if re.search(r"\b(do not|don't|never|without)\b", prompt, re.IGNORECASE):
+        return None
     for channel in CONTRACT["corrector_setpoints"]:
         match = re.search(
-            re.escape(channel) + r"[^\n]*?\bto\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))\s*mrad\b",
+            re.escape(channel)
+            + r"[^\n]*?\bto\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))"
+            + r"(?:\s*mrad)?(?![\d.])(?=\s*(?:[,.;]|$|\bthen\b|\band\b))",
             prompt,
             re.IGNORECASE,
         )
@@ -166,6 +182,36 @@ def beam_position_report(text: str) -> str | None:
     return "\n".join(lines)
 
 
+def verified_report(prompt: str, readings: dict, write_request: tuple[str, float] | None,
+                    write_result: dict | None, write_attempted: bool = False) -> str:
+    """Render only observations and write outcomes returned by Osprey."""
+    lines = []
+    if write_request:
+        channel, requested_value = write_request
+        if write_result is None:
+            lines.append((f"Write outcome unknown for {channel}; check its current setpoint."
+                          if write_attempted else f"No write was made to {channel}."))
+        else:
+            outcome = write_result.get("outcome", "unknown")
+            observed = write_result.get("observed_value")
+            lines.append(f"{channel}: Osprey reported {outcome} for {requested_value:g} mrad"
+                         + (f"; observed setpoint {observed} mrad." if observed is not None else "."))
+    named = [pv for pv in [*CONTRACT["bpm"], *CONTRACT["corrector_setpoints"], *READBACKS.values()]
+             if pv in prompt]
+    for pv in named:
+        if write_request and pv == write_request[0]:
+            continue  # a pre-write setpoint read is not the final setpoint
+        if pv in readings:
+            unit = "mm" if pv in CONTRACT["bpm"] else "mrad"
+            lines.append(f"{pv}: {readings[pv]['value']} {unit} (read from Osprey).")
+        elif not (write_request and pv == write_request[0]):
+            lines.append(f"{pv}: no verified reading returned.")
+    if write_request and READBACKS[write_request[0]] in readings:
+        pv = READBACKS[write_request[0]]
+        lines.append(f"{pv}: {readings[pv]['value']} mrad (post-write readback).")
+    return "\n".join(lines) if lines else "No verified channel result was returned."
+
+
 async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     messages = [{"role": "system", "content": SYSTEM}, *history, {"role": "user", "content": prompt}]
     start = len(messages) - 1
@@ -173,6 +219,10 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     write_request = requested_write(prompt)
     available_tools = tools if write_request else [tool for tool in tools if tool["function"]["name"] != "channel_write"]
     general_beam_request = bool(BEAM_POSITION.search(prompt)) and not any(pv in prompt for pv in KNOWN_READS)
+    channel_request = bool(write_request or BEAM_POSITION.search(prompt) or any(pv in prompt for pv in KNOWN_READS))
+    observed_readings: dict = {}
+    write_result: dict | None = None
+    write_attempted = False
     for step in range(args.max_steps):
         resp = await http.post(
             "/chat/completions",
@@ -190,12 +240,14 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
         messages.append({k: v for k, v in msg.items() if v is not None})
         calls = msg.get("tool_calls") or []
         if not calls:
-            print(msg.get("content") or "")
+            print(verified_report(prompt, observed_readings, write_request, write_result, write_attempted)
+                  if channel_request else (msg.get("content") or ""))
             break
         measured_beam = None
         for call in calls:
             name = call["function"]["name"]
             readback_log = None
+            pre_read_log = None
             rejected = None
             try:
                 if name not in schemas:
@@ -214,19 +266,43 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                     if len(operations) != 1 or not isinstance(operations[0], dict):
                         raise ValueError("expected exactly one corrector write operation")
                     requested_channel, requested_value = write_request
+                    if "channel" not in operations[0] and operations[0].get("name") == requested_channel:
+                        operations[0]["channel"] = operations[0].pop("name")
                     if operations[0].get("channel") != requested_channel or operations[0].get("value") != requested_value:
                         raise ValueError("model write arguments differ from the operator's requested channel or kick")
+                    if write_attempted:
+                        raise ValueError("already attempted the requested write this turn")
                     unknown = {
                         op.get("channel") for op in operations
                         if isinstance(op, dict) and op.get("channel") not in READBACKS
                     }
                     if unknown:
                         raise ValueError(f"not a writable corrector setpoint: {sorted(unknown)}")
+                    if requested_channel not in observed_readings:
+                        before = await mcp.call_tool("channel_read", {"channels": [requested_channel]})
+                        before_text = "\n".join(getattr(part, "text", "") for part in before.content)
+                        prior = readings_from(before_text)
+                        if requested_channel not in prior:
+                            raise ValueError("pre-write setpoint read failed; no write attempted")
+                        observed_readings.update(prior)
+                        pre_read_log = f"  [channel_read · pre-write] {requested_channel}={prior[requested_channel]['value']} mrad"
+                if name == "channel_write":
+                    write_attempted = True
                 result = await mcp.call_tool(name, call_args)
                 text = "\n".join(getattr(part, "text", "") for part in result.content)
+                if name == "channel_read":
+                    observed_readings.update(readings_from(text))
                 if name == "channel_read" and general_beam_request:
                     measured_beam = beam_position_report(text)
-                if name == "channel_write" and not result.isError:
+                if name == "channel_write":
+                    try:
+                        envelope = json.loads(text)
+                        if envelope.get("status") == "success":
+                            results = envelope.get("summary", {}).get("results", [])
+                            write_result = next((entry for entry in results if entry.get("channel") == requested_channel), None)
+                    except (ValueError, TypeError):
+                        pass
+                if name == "channel_write" and write_result is not None:
                     readbacks = [
                         READBACKS[op["channel"]]
                         for op in call_args.get("operations", [])
@@ -237,10 +313,13 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                         observed_text = "\n".join(getattr(part, "text", "") for part in observed.content)
                         text += "\nPost-write readback:\n" + observed_text
                         values = readings_from(observed_text)
+                        observed_readings.update(values)
                         shown = ", ".join(f"{pv}={values[pv]['value']}" for pv in readbacks if pv in values)
                         readback_log = f"  [channel_read · post-write] {shown or json.dumps({'channels': readbacks})}"
             except Exception as exc:  # report tool errors to the model instead of crashing the REPL
                 rejected, text = str(exc), f"error: {exc}"
+            if pre_read_log:
+                dim(pre_read_log)
             if rejected:
                 dim(f"  [{name} rejected] {rejected}")
             else:
@@ -252,7 +331,8 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
             print(measured_beam)
             break
     else:
-        dim(f"(stopped after {args.max_steps} steps)")
+        print(verified_report(prompt, observed_readings, write_request, write_result, write_attempted)
+              if channel_request else f"(stopped after {args.max_steps} steps)")
     history.extend(messages[start:])
     # Small models degrade with context; keep only the last few exchanges.
     # Trim at a user message so no tool result is left without its call.

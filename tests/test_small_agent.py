@@ -1,6 +1,7 @@
 """A read-only operator request must never reach the control-system write tool."""
 
 import asyncio
+import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -39,3 +40,104 @@ def test_read_request_rejects_model_write(capsys):
         SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8),
     ))
     assert "[channel_write rejected]" in capsys.readouterr().out
+
+
+def test_known_setpoint_uses_contract_units_but_rejects_wrong_unit():
+    assert small_agent.requested_write("Set RING:MAG:H01:KICK:SP to 0.2") == (
+        "RING:MAG:H01:KICK:SP", 0.2,
+    )
+    response = small_agent.move_clarification("Set RING:MAG:H01:KICK:SP to 0.2 mm")
+    assert response.startswith("No write was made.")
+    assert "mrad" in response
+
+
+def test_model_final_cannot_claim_an_unexecuted_write(capsys):
+    prompt = "Set RING:MAG:H01:KICK:SP to 0.2, then read RING:DIAG:BPM01:POSITION:X"
+
+    class FakeResponse:
+        is_error = False
+
+        def json(self):
+            return {"choices": [{"message": {"role": "assistant", "content": "Set to 0.2 mm."}}]}
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert {tool["function"]["name"] for tool in json["tools"]} == {"channel_read", "channel_write"}
+            return FakeResponse()
+
+    class FakeMCP:
+        async def call_tool(self, name, args):
+            raise AssertionError("model returned no tool call")
+
+    asyncio.run(small_agent.turn(
+        prompt, [], FakeMCP(), FakeHTTP(),
+        [{"type": "function", "function": {"name": name}} for name in ("channel_read", "channel_write")],
+        {"channel_read": {}, "channel_write": {}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8),
+    ))
+    output = capsys.readouterr().out
+    assert "0.2 mm" not in output
+    assert "No write was made" in output
+    assert "no verified reading returned" in output
+
+
+def test_model_write_uses_verified_read_write_read_sequence(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    setpoint = "RING:MAG:H01:KICK:SP"
+    readback = "RING:MAG:H01:KICK:RB"
+    bpm = "RING:DIAG:BPM01:POSITION:X"
+    prompt = f"Set {setpoint} to 0.2, then read {bpm}"
+
+    class FakeResponse:
+        is_error = False
+
+        def __init__(self, message):
+            self.message = message
+
+        def json(self):
+            return {"choices": [{"message": self.message}]}
+
+    class FakeHTTP:
+        count = 0
+
+        async def post(self, path, json):
+            self.count += 1
+            if self.count == 1:
+                return FakeResponse({"role": "assistant", "tool_calls": [
+                    {"id": "write", "type": "function", "function": {"name": "channel_write",
+                        "arguments": '{"operations":[{"name":"RING:MAG:H01:KICK:SP","value":0.2}]}'}},
+                    {"id": "read", "type": "function", "function": {"name": "channel_read",
+                        "arguments": '{"channels":["RING:DIAG:BPM01:POSITION:X"]}'}},
+                ]})
+            return FakeResponse({"role": "assistant", "content": "Set to 0.2 mm."})
+
+    class FakeMCP:
+        calls = []
+
+        async def call_tool(self, name, args):
+            self.calls.append((name, args))
+            if name == "channel_write":
+                data = {"status": "success", "summary": {"results": [{"channel": setpoint,
+                    "outcome": "confirmed", "observed_value": 0.2}]}}
+            else:
+                values = {setpoint: 0.0, readback: 0.2, bpm: 0.1}
+                data = {"status": "success", "summary": {"readings": {
+                    pv: {"value": values[pv]} for pv in args["channels"]}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))], isError=False)
+
+    mcp = FakeMCP()
+    asyncio.run(small_agent.turn(
+        prompt, [], mcp, FakeHTTP(),
+        [{"type": "function", "function": {"name": name}} for name in ("channel_read", "channel_write")],
+        {"channel_read": {"properties": {"channels": {"type": "array"}}},
+         "channel_write": {"properties": {"operations": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=2, history=8),
+    ))
+    assert [(name, args.get("channels", [None])[0]) for name, args in mcp.calls] == [
+        ("channel_read", setpoint), ("channel_write", None),
+        ("channel_read", readback), ("channel_read", bpm),
+    ]
+    output = capsys.readouterr().out
+    assert "confirmed for 0.2 mrad" in output
+    assert f"{bpm}: 0.1 mm" in output
+    assert "Set to 0.2 mm." not in output
