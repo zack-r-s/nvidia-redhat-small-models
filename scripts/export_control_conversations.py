@@ -119,7 +119,8 @@ def read_only(row: dict) -> dict:
     else:
         x = row["before_metrics"]["x_rms_mm"]
         y = row["before_metrics"]["y_rms_mm"]
-        final = f"Measured RMS: X={x:.4f} mm, Y={y:.4f} mm. The {'X' if x > y else 'Y'} plane is larger."
+        comparison = f"The {'X' if x > y else 'Y'} plane is larger." if x != y else "The planes are equal."
+        final = f"Measured RMS: X={x:.4f} mm, Y={y:.4f} mm. {comparison}"
     return {"messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt},
                          {"role": "assistant", "content": tool_call("channel_read", channels=channels)},
                          {"role": "tool", "content": read_response(row, channels, "read_before")},
