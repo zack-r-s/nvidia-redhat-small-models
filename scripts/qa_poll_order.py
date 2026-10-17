@@ -52,7 +52,7 @@ async def run(viewer: str, api: str, chrome: str | None) -> int:
         page.on("requestfailed", closed)
         await page.route("**/state", handle)
         await page.goto(viewer)
-        await page.wait_for_selector("[data-testid=bpm-table]", timeout=20000)
+        await page.wait_for_selector("[data-testid=bpm-table]", state="attached", timeout=20000)
         max_in_flight = in_flight  # ignore the dev-mode (StrictMode) startup handoff; measure steady state
         seen: list[float] = []
         for _ in range(60):

@@ -78,6 +78,18 @@ The chat also accepts explicit goals such as “Center the horizontal orbit,” 
 
 For UI work without Docker or inference, `scripts/demo.sh --manual` starts the local PyAT machine and a development-only control panel; plain `scripts/demo.sh` also drives it with Xopt. `scripts/demo.sh --epics` uses a **caproto fixture IOC** on CA port 6064, not Osprey. Stop any other accelerator using 6064 before starting that fixture. `?driver=1` exposes local-fixture presets only. The production viewer only issues `GET /state`; replay remains at `/?replay=/replay/demo.json`. The agent intent, action status, and target panels show “Unavailable” until an event contract exists. [Frontend QA notes](frontend/QA.md) describe the browser checks; `scripts/qa_state_match.py` and `scripts/qa_poll_order.py` cover displayed values and polling order. Pass `--chrome` to those QA scripts to use a system Chrome executable instead of Playwright's bundled browser.
 
+### Chat-UI dev mode (no Docker, no Osprey)
+
+`scripts/dev_up.sh` starts the local PyAT fixture API (8001), a **dev chat bridge** (8002, `src/hackring/chat_bridge.py`), and the viewer (5173), seeds the disturbance (`--seed`, default 7), and opens the browser. It does not need the served Osprey accelerator.
+
+- **Live model:** if a vLLM server answers on `VLLM_BASE_URL` (default `http://127.0.0.1:8000/v1`), the bridge runs the merged small agent's own turn logic (`scripts/small_agent.py`, imported unmodified) against a thin stand-in for Osprey's `channel_read`/`channel_write`/`channel_limits` tools. On an 8 GiB Mac start vLLM with `--gpu-memory-utilization 0.4`; the bootstrap script's 0.05 is too small.
+- **Scripted mode** (`--scripted`, or automatic when no model is up): deterministic model-free replies for building the UI.
+- **Same machine as the viewer:** the stand-in talks to the fixture API, so agent writes show up in the viewer. Everything is labelled "dev fixture", and the agent's word "Osprey" is rewritten to "dev fixture" because Osprey is not involved.
+- **Endpoints:** `GET /chat/health`, `POST /chat {message, session_id}` returning `{reply, events[], mode, elapsed_s}`, and `POST /chat/clear`. Point the UI elsewhere with `VITE_CHAT_URL`.
+- **Merge note:** when the real agent exposes an HTTP surface, replace the bridge with it; the stand-in tool layer is the part that goes away.
+
+The viewer is a viewport-height display with no page scroll: a slim top bar, the ring schematic on the left, and on the right an upper tabbed panel (Beam, which shows the beam-spot panels over the orbit RMS history, then Readings, Correctors, Agent & goal) above the chat panel. The manual test driver (`?driver=1`) is a popover in the top bar.
+
 The API emits `hackring.state/1`. `EpicsMachine` gets every measured value from EPICS and reads the checked-in deck only for static device positions and circumference. `LocalMachine` is a separate PyAT fixture. [The frontend handoff prompt](frontend/CLAUDE_PROMPT.md) describes current boundaries and remaining UI work; [the Osprey panel snippet](frontend/osprey-panel.yml) remains optional and is not enabled in `profile.yml`.
 
 Run the physical and fixture checks with:

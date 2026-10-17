@@ -23,7 +23,7 @@ def main() -> int:
         for label, size in {"desktop": (1440, 900), "mobile": (390, 844)}.items():
             page = browser.new_page(viewport={"width": size[0], "height": size[1]})
             page.goto(a.viewer)
-            page.wait_for_selector("[data-testid=bpm-table]")
+            page.wait_for_selector("[data-testid=bpm-table]", state="attached")  # tables live in side-panel tabs
             page.wait_for_timeout(800)
             checked = 0
             for name, value in state["pvs"].items():
@@ -35,7 +35,8 @@ def main() -> int:
             overflow = page.evaluate("document.documentElement.scrollWidth > innerWidth")
             print(f"{label}: {checked} PVs compared, horizontal overflow={overflow}, status={page.locator('[data-testid=status-tag]').text_content()}")
             if a.shot:
-                page.screenshot(path=f"{a.shot}-{label}.png", full_page=True)
+                # Snapshots show the central workspace (scene, beam views, side panel), not the browser chrome or top bar.
+                page.locator(".workspace").screenshot(path=f"{a.shot}-{label}.png")
         browser.close()
     return 1 if bad else 0
 
