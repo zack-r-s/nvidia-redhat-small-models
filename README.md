@@ -92,7 +92,7 @@ The `ara/` research artifact, `build/`, `var/`, virtual environments, frontend d
 
 ## Generate and validate Xopt traces
 
-The data lane records read → write → read attempts against the served PyAT accelerator through EPICS, using the same 24-PV contract as the chat and viewer. `datasets/v001/` contains 64 episodes and 4,096 attempts with episode-level train, validation, and test splits. The physical traces are separate from language annotations and model training. [Dataset documentation](datasets/README.md) describes the row schema, provenance, and annotation pass.
+The data lane records read → write → read attempts against the served PyAT accelerator through EPICS, using the same 24-PV contract as the chat and viewer. `datasets/v001/` contains 64 episodes and 4,096 Xopt attempts. The v002 pass fits a response-matrix teacher from v001 train data and measures fresh correction and exact-write tasks on the served ring, with separate Liquid-format conversation exports. Physical traces remain separate from language annotations and model training. [Dataset documentation](datasets/README.md) describes the schemas, provenance, and commands.
 
 The first collection used an isolated Osprey deployment at `/private/tmp/hackring-data-v001-monitor`. At that time the checked-in deck had `Marker` BPMs, so staging converted only those four zero-length elements to `Monitor` and verified the test orbit was unchanged. The merged main deck now uses `Monitor` directly; staging accepts it without changing the checked-in lattice or facility files. The recorded v001 manifest retains the historical conversion provenance.
 

@@ -6,6 +6,31 @@ Each immutable `vNNN/` directory is one complete collection pass. `v001/` was ge
 
 This is raw machine and optimizer data, not LFM chat training data. A later language pass can append operator prompts and convert selected episodes into Liquid's `messages` and tool-call format without changing the physical observations.
 
+## v002: measured control tasks
+
+`v002/response_teacher.json` fits the direct orbit response `ΔBPM = R·Δreadback` from **v001 train attempts only**; held-out validation and test residuals are recorded in the file. This is a compact [SciML-style data-driven identification](https://docs.sciml.ai/DataDrivenDiffEq/) step implemented with NumPy. SciPy bounded least squares proposes setpoints for fresh X-only, Y-only, and combined correction tasks. The teacher is not a substitute for PyAT: each task resets a seeded disturbance in Osprey's served ring, reads all 24 PVs, writes through EPICS, and records the measured 24-PV state after settlement. A fourth task per seed exercises an exact setpoint command. The lattice and checked-in Osprey profile are not modified.
+
+The collection uses 128 fresh seeds, with seed-level 96/16/16 train/validation/test splits and four independently reset actions per seed. `v002/raw/actions.jsonl` keeps hidden calibration offsets only for reproducibility; the conversation exporter never exposes them. `v002/raw/manifest.json` binds the raw file, v001 lineage, teacher, source lattice and PV contract, deployment, and software versions by checksums. An interrupted collector resumes missing task IDs only when its run settings and script checksum match; a complete version cannot be overwritten.
+
+```sh
+PYTHONPATH=src .venv/bin/python scripts/fit_response_matrix.py
+MPLCONFIGDIR=/private/tmp/mpl-hackring-v002 .venv/bin/python scripts/prepare_dataset_va.py --deployment /private/tmp/hackring-data-v002-lite --ca-port 6264 --pva-port 6275 --port-base 16000 --no-archive --build
+.venv/bin/osprey up --repo /private/tmp/hackring-data-v002-lite --dev -d
+PYTHONPATH=src .venv/bin/python scripts/generate_control_dataset.py
+PYTHONPATH=src .venv/bin/python scripts/validate_control_dataset.py
+```
+
+The separate language pass asks GPT for one pre-action-only paraphrase of each canonical task prompt. It checkpoints under ignored `v002/annotations/`; set `OPENAI_API_KEY` before running it. The final exporter makes one canonical and one checked GPT conversation per measured action, plus one deterministic read-only task per seed, and leaves raw data untouched. Correction actions that did not improve their measured target cost stay in raw data but are excluded from ideal-action SFT. The exported `v002/sft/{train,validation,test}.jsonl` use [Liquid's `messages` and native bracket tool-call format](https://github.com/Liquid4All/liquid-finetune#tool-calling-datasets). Run the tokenizer check with an environment containing `transformers` and the cached LFM2.5-230M tokenizer.
+
+```sh
+PYTHONPATH=src .venv/bin/python scripts/paraphrase_control_prompts.py --limit 32 --output datasets/v002/annotations/pilot
+PYTHONPATH=src .venv/bin/python scripts/paraphrase_control_prompts.py
+PYTHONPATH=src .venv/bin/python scripts/export_control_conversations.py --paraphrases datasets/v002/annotations/gpt-v001/paraphrases.jsonl
+/Users/zackstone/.venv-vllm-metal/bin/python scripts/validate_control_conversations.py
+```
+
+The vLLM environment path above is an example from the development machine; use any Python with `transformers` installed. These scripts prepare training data and do not start fine-tuning.
+
 ## GPT annotation pass
 
 `scripts/annotate_dataset.py` uses direct [OpenAI Responses API](https://developers.openai.com/api/docs/libraries) calls, with [`gpt-6-luna`](https://developers.openai.com/api/docs/models/gpt-6-luna) as the default. It generates one `operator_prompt` per episode from **only that episode's initial public PV read**, then one retrospective `observation` for each selected read/write/read attempt. The operator prompt is repeated on the episode's annotated rows; it never sees later actions or results. Hidden episode faults are never sent. Prompts get rotating style cues and a BPM-derived factual focus, following the attributed-prompt idea in [AttrPrompt](https://arxiv.org/abs/2306.15895). This resembles Liquid's [robotics demo](https://www.liquid.ai/blog/lfm2-5-230m) in its episode-level language goal followed by tool calls, without claiming their undisclosed data recipe. Both fields permit one or two short sentences. Numeric measurements remain in the copied PV fields, not generated prose; the script rejects unsupported BPM names, numeric claims, omitted prompt focus, or an incorrect orbit-cost trend. Review a pilot for plausible wording and any remaining unsupported qualitative claims before the full pass.
