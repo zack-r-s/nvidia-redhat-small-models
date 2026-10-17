@@ -98,7 +98,14 @@ def request(row: dict, model: str) -> dict:
     return params
 
 
-async def generate(api, row: dict, model: str) -> str:
+def exact_write_fallback(row: dict) -> str:
+    canonical = canonical_prompt(row)
+    prompt = "Please " + canonical[0].lower() + canonical[1:]
+    validate_prompt(prompt, row)
+    return prompt
+
+
+async def generate(api, row: dict, model: str) -> tuple[str, str]:
     params = request(row, model)
     last_error = None
     for attempt in range(3):
@@ -108,16 +115,19 @@ async def generate(api, row: dict, model: str) -> str:
                 raise ValueError(f"response status {response.status}")
             prompt = json.loads(response.output_text)["operator_prompt"].strip()
             validate_prompt(prompt, row)
-            if prompt == canonical_prompt(row):
+            if prompt == canonical_prompt(row) and row["goal"] != "exact_write":
                 raise ValueError("model repeated the canonical request")
-            return prompt
+            return prompt, "gpt"
         except (ValueError, KeyError, TypeError) as exc:
             last_error = exc
             params["instructions"] = request(row, model)["instructions"] + f" Previous candidate was rejected: {exc}."
+    if row["goal"] == "exact_write":
+        return exact_write_fallback(row), "deterministic_fallback"
     raise ValueError(f"three invalid paraphrases for {row['task_id']}: {last_error}")
 
 
-async def collect(rows: list[dict], completed: dict[str, str], progress: Path, model: str, workers: int) -> None:
+async def collect(rows: list[dict], completed: dict[str, str], sources: dict[str, str],
+                  progress: Path, model: str, workers: int) -> None:
     from openai import AsyncOpenAI
 
     queue = asyncio.Queue()
@@ -133,11 +143,13 @@ async def collect(rows: list[dict], completed: dict[str, str], progress: Path, m
                 except asyncio.QueueEmpty:
                     return
                 try:
-                    prompt = await generate(api, row, model)
+                    prompt, source = await generate(api, row, model)
                     with progress.open("a") as stream:
-                        stream.write(json.dumps({"task_id": row["task_id"], "operator_prompt": prompt}) + "\n")
+                        stream.write(json.dumps({"task_id": row["task_id"], "operator_prompt": prompt,
+                                                 "source": source}) + "\n")
                         stream.flush()
                     completed[row["task_id"]] = prompt
+                    sources[row["task_id"]] = source
                     if len(completed) % 50 == 0 or len(completed) == len(rows):
                         print(f"Paraphrased {len(completed)}/{len(rows)}", flush=True)
                 except Exception as exc:
@@ -162,14 +174,23 @@ def run(args: argparse.Namespace) -> None:
                 "script_sha256": digest(Path(__file__)), "selected_ids": [row["task_id"] for row in rows]}
     output = args.output.resolve()
     settings = output / "run.json"
+    prior_script_hashes = []
     if output.exists():
-        if json.loads(settings.read_text()) != expected:
-            raise ValueError("paraphrase run settings changed; select a new output")
+        stored = json.loads(settings.read_text())
+        for key in ("schema", "source_actions_sha256", "model", "selected_ids"):
+            if stored.get(key) != expected[key]:
+                raise ValueError("paraphrase run settings changed; select a new output")
+        prior_script_hashes = stored.get("script_sha256_history", [])
+        if stored.get("script_sha256") != expected["script_sha256"]:
+            if not args.resume_after_edit:
+                raise ValueError("paraphrase script changed; review it, then rerun with --resume-after-edit")
+            prior_script_hashes = [*prior_script_hashes, stored["script_sha256"]]
     else:
         output.mkdir(parents=True)
         settings.write_text(json.dumps(expected, indent=2) + "\n")
     progress = output / "progress.jsonl"
     completed = {}
+    sources = {}
     if progress.exists():
         lookup = {row["task_id"]: row for row in rows}
         for line in progress.read_text().splitlines():
@@ -179,13 +200,20 @@ def run(args: argparse.Namespace) -> None:
                 raise ValueError("unexpected or duplicate progress row")
             validate_prompt(note["operator_prompt"], lookup[task_id])
             completed[task_id] = note["operator_prompt"]
+            source = note.get("source", "gpt")
+            if source not in ("gpt", "deterministic_fallback"):
+                raise ValueError("unknown paraphrase source")
+            sources[task_id] = source
+    if output.exists() and settings.exists() and json.loads(settings.read_text()).get("script_sha256") != expected["script_sha256"]:
+        settings.write_text(json.dumps({**expected, "script_sha256_history": prior_script_hashes}, indent=2) + "\n")
     if len(completed) < len(rows):
         if not os.environ.get("OPENAI_API_KEY"):
             raise RuntimeError("Set OPENAI_API_KEY before the direct API paraphrase pass")
-        asyncio.run(collect(rows, completed, progress, args.model, args.workers))
+        asyncio.run(collect(rows, completed, sources, progress, args.model, args.workers))
     final = output / "paraphrases.jsonl"
     expected_text = "".join(json.dumps({"task_id": row["task_id"],
-                                        "operator_prompt": completed[row["task_id"]]}) + "\n" for row in rows)
+                                        "operator_prompt": completed[row["task_id"]],
+                                        "source": sources[row["task_id"]]}) + "\n" for row in rows)
     if final.exists():
         if final.read_text() != expected_text:
             raise ValueError("existing completed paraphrases differ from validated progress")
@@ -193,7 +221,10 @@ def run(args: argparse.Namespace) -> None:
         temporary = output / "paraphrases.jsonl.tmp"
         temporary.write_text(expected_text)
         temporary.replace(final)
-    manifest_text = json.dumps({**expected, "paraphrases_sha256": digest(final)}, indent=2) + "\n"
+    manifest_text = json.dumps({**expected, "script_sha256_history": prior_script_hashes,
+                                "deterministic_fallback_task_ids": [row["task_id"] for row in rows
+                                                                     if sources[row["task_id"]] == "deterministic_fallback"],
+                                "paraphrases_sha256": digest(final)}, indent=2) + "\n"
     existing_manifest = output / "manifest.json"
     if existing_manifest.exists() and existing_manifest.read_text() != manifest_text:
         raise ValueError("existing paraphrase manifest differs from completed output")
@@ -208,6 +239,8 @@ def main() -> None:
     parser.add_argument("--model", default=MODEL)
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--resume-after-edit", action="store_true",
+                        help="After reviewing a script change, validate saved prompts and preserve prior script hash")
     args = parser.parse_args()
     if args.workers < 1 or (args.limit is not None and args.limit < 1):
         parser.error("workers and limit must be positive")

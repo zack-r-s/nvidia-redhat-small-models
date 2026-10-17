@@ -24,6 +24,8 @@ PYTHONPATH=src .venv/bin/python scripts/validate_control_dataset.py
 
 The canonical export, `v002/sft-canonical/`, contains 640 conversations: one measured action conversation for each of the 512 tasks and one read-only task for each seed. It is usable before the separate GPT language pass. That pass asks GPT for one pre-action-only paraphrase of each action prompt and checkpoints under ignored `v002/annotations/`; set `OPENAI_API_KEY` before running it. The later `v002/sft/` export adds those checked paraphrases without editing either raw data or the canonical export. Correction actions that did not improve their measured target cost stay in raw data but are excluded from ideal-action SFT. Both exports use [Liquid's `messages` and native bracket tool-call format](https://github.com/Liquid4All/liquid-finetune#tool-calling-datasets). Run the tokenizer check with an environment containing `transformers` and the cached LFM2.5-230M tokenizer.
 
+The v002 paraphraser resumes from validated `progress.jsonl` rows. If its script changes during a run, review the change and pass `--resume-after-edit`; it preserves the prior script hash in `run.json` and labels any deterministic exact-write fallback in the final annotation file and manifest. A completed rerun with identical settings is idempotent. Inspect repeated phrasing and fallback labels before exporting or training on language variants.
+
 ```sh
 PYTHONPATH=src .venv/bin/python scripts/export_control_conversations.py --output datasets/v002/sft-canonical
 /Users/zackstone/.venv-vllm-metal/bin/python scripts/validate_control_conversations.py datasets/v002/sft-canonical

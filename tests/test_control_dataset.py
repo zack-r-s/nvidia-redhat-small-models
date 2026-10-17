@@ -73,20 +73,30 @@ def test_paraphrase_requests_vary_style_without_sending_future_values():
 
 
 def test_paraphrase_run_resumes_completed_output_without_api(tmp_path, monkeypatch):
-    async def fake_collect(rows, completed, progress, model, workers):
+    async def fake_collect(rows, completed, sources, progress, model, workers):
         for row in rows:
             prompt = "Please " + canonical_prompt(row)
             validate_prompt(prompt, row)
             with progress.open("a") as stream:
-                stream.write(json.dumps({"task_id": row["task_id"], "operator_prompt": prompt}) + "\n")
+                stream.write(json.dumps({"task_id": row["task_id"], "operator_prompt": prompt,
+                                         "source": "gpt"}) + "\n")
             completed[row["task_id"]] = prompt
+            sources[row["task_id"]] = "gpt"
 
     monkeypatch.setattr(paraphrases, "collect", fake_collect)
     monkeypatch.setenv("OPENAI_API_KEY", "mock-test-key")
     args = Namespace(raw=ROOT / "datasets/v002/raw", output=tmp_path / "notes", model="gpt-6-luna",
-                     workers=2, limit=4)
+                     workers=2, limit=4, resume_after_edit=False)
     paraphrases.run(args)
     first = (args.output / "paraphrases.jsonl").read_bytes()
     monkeypatch.delenv("OPENAI_API_KEY")
     paraphrases.run(args)
     assert (args.output / "paraphrases.jsonl").read_bytes() == first
+
+
+def test_exact_write_fallback_preserves_action_and_measurement():
+    rows = [json.loads(line) for line in (ROOT / "datasets/v002/raw/actions.jsonl").read_text().splitlines()]
+    exact = next(row for row in rows if row["goal"] == "exact_write")
+    prompt = paraphrases.exact_write_fallback(exact)
+    assert prompt != canonical_prompt(exact)
+    validate_prompt(prompt, exact)
