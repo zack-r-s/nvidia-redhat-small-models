@@ -34,7 +34,9 @@ BUILD = REPO / "build"
 LOGS = REPO / "var" / "logs"
 CONTRACT = json.loads((REPO / "data" / "pv_contract.json").read_text())
 PROVIDER = yaml.safe_load((REPO / "providers.yml").read_text())["providers"]["vllm"]
-VA = yaml.safe_load((REPO / "profile.yml").read_text())["virtual_accelerator"]
+PROFILE = yaml.safe_load((REPO / "profile.yml").read_text())
+VA = PROFILE["virtual_accelerator"]
+VA_CONTAINER = f"{PROFILE['project_name']}-virtual-accelerator"
 CHANNELS = CONTRACT["bpm"] + CONTRACT["corrector_setpoints"]
 READBACKS = {name: name.removesuffix(":SP") + ":RB" for name in CONTRACT["corrector_setpoints"]}
 KNOWN_READS = set(CHANNELS) | set(READBACKS.values())
@@ -343,11 +345,11 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
 
 async def main(args) -> None:
     health = subprocess.run(
-        ["docker", "inspect", "--format", "{{.State.Health.Status}}", "hackring-virtual-accelerator"],
+        ["docker", "inspect", "--format", "{{.State.Health.Status}}", VA_CONTAINER],
         capture_output=True, text=True, check=False,
     )
     if health.returncode != 0 or health.stdout.strip() != "healthy":
-        raise RuntimeError("hackring-virtual-accelerator is not healthy; start this worktree's Osprey deployment first")
+        raise RuntimeError(f"{VA_CONTAINER} is not healthy; start this worktree's Osprey deployment first")
     LOGS.mkdir(parents=True, exist_ok=True)
     server_log = LOGS / "small_agent_mcp.log"
     # The controls server's FastMCP logging goes to a file, not the operator's terminal.

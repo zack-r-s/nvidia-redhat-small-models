@@ -10,13 +10,22 @@ for port in 8001 5173; do
   if lsof -iTCP:$port -sTCP:LISTEN >/dev/null 2>&1; then echo "Port $port is already in use." >&2; exit 1; fi
 done
 
+read -r PROJECT CA_PORT PVA_PORT < <($PY - <<'PY'
+import yaml
+from pathlib import Path
+profile = yaml.safe_load(Path('profile.yml').read_text())
+va = profile['virtual_accelerator']
+print(profile['project_name'], va['port'], va['pva_port'])
+PY
+)
 export PYTHONPATH=src HACKRING_BACKEND=epics HACKRING_EPICS_SOURCE=osprey-epics
-export EPICS_CA_NAME_SERVERS=127.0.0.1:5064 EPICS_CA_AUTO_ADDR_LIST=NO EPICS_CA_ADDR_LIST=
-export EPICS_PVA_NAME_SERVERS=127.0.0.1:5075 EPICS_PVA_AUTO_ADDR_LIST=NO EPICS_PVA_ADDR_LIST=
+export EPICS_CA_NAME_SERVERS=127.0.0.1:$CA_PORT EPICS_CA_AUTO_ADDR_LIST=NO EPICS_CA_ADDR_LIST=
+export EPICS_PVA_NAME_SERVERS=127.0.0.1:$PVA_PORT EPICS_PVA_AUTO_ADDR_LIST=NO EPICS_PVA_ADDR_LIST=
 
 # Do not mistake another project's VA on the same ports for this deployment.
-health=$(docker inspect --format '{{.State.Health.Status}}' hackring-virtual-accelerator 2>/dev/null || true)
-[[ $health == healthy ]] || { echo "hackring-virtual-accelerator is not healthy; start this worktree's Osprey deployment first." >&2; exit 1; }
+va_container="${PROJECT}-virtual-accelerator"
+health=$(docker inspect --format '{{.State.Health.Status}}' "$va_container" 2>/dev/null || true)
+[[ $health == healthy ]] || { echo "$va_container is not healthy; start this worktree's Osprey deployment first." >&2; exit 1; }
 
 # Fail before starting either UI if the real 24-PV served machine is unavailable.
 $PY - <<'PY'
@@ -43,6 +52,6 @@ for url in http://127.0.0.1:8001/state http://127.0.0.1:5173; do
 done
 
 echo "Viewer: http://127.0.0.1:5173/"
-echo "Machine: http://127.0.0.1:8001/state (Osprey via EPICS)"
+echo "Machine: http://127.0.0.1:8001/state (Osprey via EPICS on CA $CA_PORT)"
 echo "Run .venv/bin/osprey web in another terminal for the LFM chat. Ctrl-C stops this API and viewer."
 wait

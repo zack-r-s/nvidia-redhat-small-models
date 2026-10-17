@@ -1,6 +1,6 @@
 # Hackathon FODO ring
 
-This repo uses one 20-cell, 1 GeV PyAT storage ring for the Osprey controls agent and the Blueprint/Three visualizer. Four BPMs and eight corrector setpoints expose a fixed [24-PV contract](data/pv_contract.json): positions in mm and kicks in mrad. `src/hackring/lattice.py` generates the [facility deck](data/facility/decks/RING.json); its four BPM elements are PyAT `Monitor`s so Osprey can serve them. The visualizer reads measurements but does not issue writes. The local Xopt fixture remains available for frontend development without inference.
+This repo uses one 20-cell, 1 GeV PyAT storage ring for the Osprey controls agent and the Blueprint/Three visualizer. Four BPMs and eight corrector setpoints expose a fixed [24-PV contract](data/pv_contract.json): positions in mm and kicks in mrad. `src/hackring/lattice.py` generates the [facility deck](data/facility/decks/RING.json); its four BPM elements are PyAT `Monitor`s so Osprey can serve them. In the shared demo, the chat and read-only visualizer use the same served accelerator. The local Xopt fixture is separate and needs no inference server.
 
 ## Setup
 
@@ -33,7 +33,7 @@ Build output is ignored under `build/`. Rebuild after changing the profile, prov
 
 ## Shared Osprey chat and viewer demo
 
-Use a supported vLLM host to serve the instruction-tuned model, then set `VLLM_BASE_URL` to its `/v1` endpoint reachable from the host running the Osprey web terminal. For a server on the same host:
+Serve LFM2.5-230M with vLLM's `lfm2` tool parser. The custom web-terminal agent calls this endpoint directly; `.env` sets `VLLM_BASE_URL`. For a server on the same host:
 
 ```sh
 vllm serve LiquidAI/LFM2.5-230M --served-model-name LFM2.5-230M \
@@ -41,9 +41,9 @@ vllm serve LiquidAI/LFM2.5-230M --served-model-name LFM2.5-230M \
 curl http://127.0.0.1:8000/v1/models
 ```
 
-The `lfm2` parser is required for the chat's forced tool calls. On an Apple Silicon host running vLLM Metal alongside Docker, `--max-model-len 4096 --gpu-memory-utilization 0.05` kept this demo's memory use low; tune those values for your host.
+The `lfm2` parser is required for structured tool calls. On the tested Apple Silicon host running vLLM Metal alongside Docker, `--max-model-len 4096 --gpu-memory-utilization 0.05` worked for 230M; tune these resource flags for your host. A 1.2B comparison server is optional and does not change the checked-in 230M provider configuration.
 
-The checked-in profile follows the small served deployment used for data collection: `hello-world` preset, one PyAT virtual accelerator, a recorded archive, controls MCP tools, and the custom small-model web terminal. It has no planning, rule, or approval hooks. Start it from a separate terminal after the build:
+The checked-in profile has one served PyAT virtual accelerator, a recorded archive, controls MCP tools, and the custom small-model web terminal. It has no planning, rule, or approval hooks. Start the accelerator after building, then start the viewer API in a separate terminal:
 
 ```sh
 # If Rancher Desktop is your Docker engine, first export DOCKER_HOST=unix://$HOME/.rd/docker.sock
@@ -51,17 +51,19 @@ The checked-in profile follows the small served deployment used for data collect
 scripts/shared_demo.sh
 ```
 
-`shared_demo.sh` checks that all 24 EPICS PVs answer before starting the API at `http://127.0.0.1:8001/state` and the viewer at `http://127.0.0.1:5173/`. It does not launch a fixture IOC. In another terminal run `.venv/bin/osprey web` and open its chat separately from the visualizer. The chat's controls MCP server and the viewer API use the same served accelerator through Channel Access ports 5064 and 5075. Do not start this deployment on those ports while another accelerator, including the data-generation deployment, is using them.
+`shared_demo.sh` checks the deployment container and all 24 EPICS PVs before starting the API at `http://127.0.0.1:8001/state` and the viewer at `http://127.0.0.1:5173/`. It does not launch a fixture IOC. In another terminal run `.venv/bin/osprey web`; open the authenticated URL it prints. The chat and viewer remain in separate tabs. Both use the accelerator named by this worktree's `profile.yml`; the default CA/PVA ports are 5064/5075. The agent and `shared_demo.sh` read the project name and accelerator ports from that profile, so an isolated demo copy can use its own name and ports after rebuilding. Do not launch two accelerators on the same CA/PVA ports, or run the viewer API while another service owns 8001/5173.
 
-For the end-to-end check, record `/state`, ask chat to read `RING:MAG:H01:KICK:SP`, set it to `0.05` mrad, then read `RING:MAG:H01:KICK:RB`. The readback, at least one BPM measurement, `/state`, and the viewer must change together. An out-of-limit request above ±0.35 mrad must leave the setpoint unchanged. The API's `backend` field and viewer label should say `osprey-epics`/“Osprey” in this mode. `POST /scenario` is unavailable in EPICS mode; do not use its dev-only controls for this test.
+If data generation already owns 5064/5075, make a separate demo checkout and give that copy a unique `project_name`, `virtual_accelerator.port`, and `virtual_accelerator.pva_port` before building it. For example, the live verification used a temporary `hackring-live-230m` copy on 6064/6075 while the data accelerator stayed on 5064/5075. Keep the checked-in lattice and facility contract unchanged. The caproto UI fixture also uses 6064, so stop it before using that particular demo port.
 
-The small-model chat currently needs an explicit corrector setpoint and kick for a beam move. Vague requests such as “Move the beam” or “Disturb the beam” ask for those details; target-orbit optimization is not yet wired into this chat loop. A named corrector setpoint accepts an absolute number with optional `mrad` (the PV contract supplies that unit). The agent offers `channel_write` only for that request, rejects a proposed write if its channel or value differs, and reports control results from Osprey rather than trusting the model's final sentence.
+For the end-to-end check, note the starting values at `/state`, then ask the chat: `Set RING:MAG:H01:KICK:SP to 0.05, then read RING:DIAG:BPM01:POSITION:X`. The named setpoint's unit is mrad; an explicit `mrad` is also accepted. Look for a `channel_read · pre-write`, a `channel_write`, and Osprey's reported outcome. Compare the H01 setpoint and readback and at least one BPM in chat, `/state`, and the viewer. A later setpoint command replaces the earlier value. The API's `backend` field and viewer label should say `osprey-epics`/“Osprey”. An out-of-limit request above ±0.35 mrad should leave the setpoint unchanged and report the rejection. `POST /scenario` is unavailable in EPICS mode.
+
+The small-model chat currently needs an explicit corrector setpoint and absolute kick for a beam move. Vague requests such as “Move the beam” or “Disturb the beam” ask for those details; target-orbit optimization is not yet wired into this chat loop. The agent offers `channel_write` only for an explicit setpoint request, checks its proposed channel and value, reads the setpoint before writing, and reports Osprey's outcome and observed PVs instead of trusting the model's final sentence. A read-only prompt cannot write through this agent. If no write occurred, the response says so.
 
 ## Frontend fixture and QA
 
-For UI work without Docker or inference, `scripts/demo.sh` runs the local PyAT machine and Xopt; `scripts/demo.sh --epics` uses a **caproto fixture IOC** on isolated CA port 6064, not Osprey. `?driver=1` exposes development-only presets for the local machine. The production viewer only issues `GET /state`; replay remains at `/?replay=/replay/demo.json`. The agent intent, action status, and target panels explicitly say “Unavailable” until an event contract exists. [Frontend QA notes](frontend/QA.md) describe the browser checks; `scripts/qa_state_match.py` and `scripts/qa_poll_order.py` cover displayed values and polling order. Pass `--chrome` to those QA scripts to use a system Chrome executable instead of Playwright's bundled browser.
+For UI work without Docker or inference, `scripts/demo.sh --manual` starts the local PyAT machine and a development-only control panel; plain `scripts/demo.sh` also drives it with Xopt. `scripts/demo.sh --epics` uses a **caproto fixture IOC** on CA port 6064, not Osprey. Stop any other accelerator using 6064 before starting that fixture. `?driver=1` exposes local-fixture presets only. The production viewer only issues `GET /state`; replay remains at `/?replay=/replay/demo.json`. The agent intent, action status, and target panels show “Unavailable” until an event contract exists. [Frontend QA notes](frontend/QA.md) describe the browser checks; `scripts/qa_state_match.py` and `scripts/qa_poll_order.py` cover displayed values and polling order. Pass `--chrome` to those QA scripts to use a system Chrome executable instead of Playwright's bundled browser.
 
-The API emits `hackring.state/1`. `EpicsMachine` gets every measured value from EPICS and reads the checked-in deck only for static device positions and circumference. `LocalMachine` is a separate PyAT fixture. [The frontend handoff prompt](frontend/CLAUDE_PROMPT.md) remains the starting point for later Blueprint/Three work; [the Osprey panel snippet](frontend/osprey-panel.yml) is intentionally not enabled.
+The API emits `hackring.state/1`. `EpicsMachine` gets every measured value from EPICS and reads the checked-in deck only for static device positions and circumference. `LocalMachine` is a separate PyAT fixture. [The frontend handoff prompt](frontend/CLAUDE_PROMPT.md) describes current boundaries and remaining UI work; [the Osprey panel snippet](frontend/osprey-panel.yml) remains optional and is not enabled in `profile.yml`.
 
 Run the physical and fixture checks with:
 
