@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import json
 import os
 import re
@@ -15,6 +16,21 @@ from generate_dataset import BPMS, ROOT
 
 MODEL = "gpt-6-luna"
 SCHEMA = "hackring.control_paraphrases/1"
+STYLES = (
+    "a concise direct request",
+    "a polite request from an operator",
+    "an informal but precise request",
+    "a brief shift-operator instruction",
+    "a measured-outcome-focused request",
+    "a straightforward diagnostic request",
+    "a short task-first request",
+    "a natural conversational request",
+)
+
+
+def style_for(task_id: str) -> str:
+    index = int.from_bytes(hashlib.sha256(task_id.encode()).digest()[:4], "big") % len(STYLES)
+    return STYLES[index]
 
 
 def validate_prompt(prompt: str, row: dict) -> None:
@@ -67,10 +83,12 @@ def request(row: dict, model: str) -> dict:
         "infer a cause, introduce a new device, invent a measurement, or specify an unprovided kick. "
         "For an exact write, copy both PV identifiers, the exact numeric kick, and mrad unit unchanged. "
         "For a correction goal, preserve the requested plane(s) explicitly and include no PV names or numbers. "
-        "Vary phrasing naturally; the user may ask for measured follow-up. Return only the requested JSON field."
+        "Keep the request to read or report the measured follow-up. Vary phrasing naturally according to the "
+        "given style cue, without adding facts or changing the task. Return only the requested JSON field."
     )
     params = {"model": model, "instructions": instructions,
-              "input": json.dumps({"task": row["goal"], "canonical_operator_request": canonical}),
+              "input": json.dumps({"task": row["goal"], "canonical_operator_request": canonical,
+                                   "style_cue": style_for(row["task_id"])}),
               "text": {"format": {"type": "json_schema", "name": "control_paraphrase", "strict": True,
                                   "schema": {"type": "object", "properties": {"operator_prompt": {"type": "string"}},
                                              "required": ["operator_prompt"], "additionalProperties": False}}},
@@ -82,6 +100,7 @@ def request(row: dict, model: str) -> dict:
 
 async def generate(api, row: dict, model: str) -> str:
     params = request(row, model)
+    last_error = None
     for attempt in range(3):
         response = await api.responses.create(**params)
         try:
@@ -93,8 +112,9 @@ async def generate(api, row: dict, model: str) -> str:
                 raise ValueError("model repeated the canonical request")
             return prompt
         except (ValueError, KeyError, TypeError) as exc:
+            last_error = exc
             params["instructions"] = request(row, model)["instructions"] + f" Previous candidate was rejected: {exc}."
-    raise ValueError(f"three invalid paraphrases for {row['task_id']}")
+    raise ValueError(f"three invalid paraphrases for {row['task_id']}: {last_error}")
 
 
 async def collect(rows: list[dict], completed: dict[str, str], progress: Path, model: str, workers: int) -> None:
@@ -164,11 +184,20 @@ def run(args: argparse.Namespace) -> None:
             raise RuntimeError("Set OPENAI_API_KEY before the direct API paraphrase pass")
         asyncio.run(collect(rows, completed, progress, args.model, args.workers))
     final = output / "paraphrases.jsonl"
+    expected_text = "".join(json.dumps({"task_id": row["task_id"],
+                                        "operator_prompt": completed[row["task_id"]]}) + "\n" for row in rows)
     if final.exists():
-        raise FileExistsError(final)
-    final.write_text("".join(json.dumps({"task_id": row["task_id"],
-                                       "operator_prompt": completed[row["task_id"]]}) + "\n" for row in rows))
-    (output / "manifest.json").write_text(json.dumps({**expected, "paraphrases_sha256": digest(final)}, indent=2) + "\n")
+        if final.read_text() != expected_text:
+            raise ValueError("existing completed paraphrases differ from validated progress")
+    else:
+        temporary = output / "paraphrases.jsonl.tmp"
+        temporary.write_text(expected_text)
+        temporary.replace(final)
+    manifest_text = json.dumps({**expected, "paraphrases_sha256": digest(final)}, indent=2) + "\n"
+    existing_manifest = output / "manifest.json"
+    if existing_manifest.exists() and existing_manifest.read_text() != manifest_text:
+        raise ValueError("existing paraphrase manifest differs from completed output")
+    existing_manifest.write_text(manifest_text)
     print(f"Saved {len(rows)} checked paraphrases to {final}")
 
 

@@ -2,6 +2,7 @@
 
 import json
 import sys
+from argparse import Namespace
 from pathlib import Path
 
 import numpy as np
@@ -13,7 +14,8 @@ from export_control_conversations import canonical_prompt, conversation
 from fit_response_matrix import fit
 from generate_control_dataset import metrics, target
 from generate_dataset import BPMS, SETPOINTS
-from paraphrase_control_prompts import validate_prompt
+import paraphrase_control_prompts as paraphrases
+from paraphrase_control_prompts import request, style_for, validate_prompt
 
 
 def test_v001_train_only_response_fit_predicts_heldout_changes():
@@ -58,3 +60,33 @@ def test_paraphrase_rejects_changed_plane_or_invented_values():
         validate_prompt("Please center the vertical orbit and show the result.", row)
     with pytest.raises(ValueError):
         validate_prompt("Correct the horizontal orbit with a 0.1 mrad kick.", row)
+
+
+def test_paraphrase_requests_vary_style_without_sending_future_values():
+    rows = [json.loads(line) for line in (ROOT / "datasets/v002/raw/actions.jsonl").read_text().splitlines()[:8]]
+    styles = {style_for(row["task_id"]) for row in rows}
+    assert len(styles) > 1
+    for row in rows:
+        payload = json.loads(request(row, "gpt-6-luna")["input"])
+        assert payload == {"task": row["goal"], "canonical_operator_request": canonical_prompt(row),
+                           "style_cue": style_for(row["task_id"])}
+
+
+def test_paraphrase_run_resumes_completed_output_without_api(tmp_path, monkeypatch):
+    async def fake_collect(rows, completed, progress, model, workers):
+        for row in rows:
+            prompt = "Please " + canonical_prompt(row)
+            validate_prompt(prompt, row)
+            with progress.open("a") as stream:
+                stream.write(json.dumps({"task_id": row["task_id"], "operator_prompt": prompt}) + "\n")
+            completed[row["task_id"]] = prompt
+
+    monkeypatch.setattr(paraphrases, "collect", fake_collect)
+    monkeypatch.setenv("OPENAI_API_KEY", "mock-test-key")
+    args = Namespace(raw=ROOT / "datasets/v002/raw", output=tmp_path / "notes", model="gpt-6-luna",
+                     workers=2, limit=4)
+    paraphrases.run(args)
+    first = (args.output / "paraphrases.jsonl").read_bytes()
+    monkeypatch.delenv("OPENAI_API_KEY")
+    paraphrases.run(args)
+    assert (args.output / "paraphrases.jsonl").read_bytes() == first
