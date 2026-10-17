@@ -168,7 +168,8 @@ def run(args: argparse.Namespace) -> None:
     deck = ROOT / "data/facility/decks/RING.json"
     if sha256(deck) != provenance["source_deck_sha256"] or sha256(deployment / "data/facility/decks/RING.json") != provenance["staged_deck_sha256"]:
         raise RuntimeError("source or temporary deployment lattice changed after staging")
-    if set(provenance["temporary_bpm_class_conversion"]) != {f"BPM{i:02d}" for i in range(1, 5)}:
+    converted = provenance["temporary_bpm_class_conversion"]
+    if converted and set(converted) != {f"BPM{i:02d}" for i in range(1, 5)}:
         raise RuntimeError("temporary deck has an unexpected compatibility conversion")
     if sha256(ROOT / "data/pv_contract.json") != provenance["source_pv_contract_sha256"]:
         raise RuntimeError("PV contract changed after deployment staging")

@@ -35,8 +35,17 @@ def validate(folder: Path) -> dict:
     for name, expected in manifest["files_sha256"].items():
         if digest(folder / name) != expected:
             raise ValueError(f"checksum mismatch: {name}")
-    if digest(ROOT / "data/facility/decks/RING.json") != manifest["source_deck_sha256"]:
-        raise ValueError("dataset lattice does not match current checked-in lattice")
+    deck = ROOT / "data/facility/decks/RING.json"
+    if digest(deck) != manifest["source_deck_sha256"]:
+        # v001 used the former Marker deck, converting only its BPM class tags
+        # in the temporary deployment. Main now checks in that equivalent
+        # Monitor lattice. Match its staged semantic deck without weakening
+        # the checksum check for newly generated datasets.
+        canonical = (json.dumps(json.loads(deck.read_text()), indent=2) + "\n").encode()
+        staged_digest = hashlib.sha256(canonical).hexdigest()
+        conversions = manifest.get("temporary_bpm_class_conversion", [])
+        if set(conversions) != {f"BPM{i:02d}" for i in range(1, 5)} or staged_digest != manifest["staged_deck_sha256"]:
+            raise ValueError("dataset lattice does not match current checked-in lattice")
     if digest(ROOT / "data/pv_contract.json") != manifest["pv_contract_sha256"]:
         raise ValueError("dataset PV contract does not match current checked-in contract")
     episodes = load_jsonl(folder / "episodes.jsonl")

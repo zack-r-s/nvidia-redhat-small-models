@@ -25,19 +25,25 @@ def digest(path: Path) -> str:
 
 
 def adapt_monitor_elements(deck: Path) -> list[str]:
-    """Change only the four zero-length BPM class tags in the temporary deck."""
+    """Convert historical Marker BPMs; accept the current Monitor deck unchanged."""
     document = json.loads(deck.read_text())
     changed: list[str] = []
+    seen: list[str] = []
     for element in document["elements"]:
         if element.get("FamName") not in BPM_NAMES:
             continue
-        if element.get("Class") != "Marker" or element.get("Length") != 0.0 or element.get("PassMethod") != "IdentityPass":
-            raise RuntimeError(f"BPM is not a zero-length identity marker: {element.get('FamName')}")
-        element["Class"] = "Monitor"
-        changed.append(element["FamName"])
-    if set(changed) != BPM_NAMES or len(changed) != 4:
-        raise RuntimeError(f"expected exactly four BPM markers, found {changed}")
-    deck.write_text(json.dumps(document, indent=2) + "\n")
+        seen.append(element["FamName"])
+        if element.get("Length") != 0.0 or element.get("PassMethod") != "IdentityPass":
+            raise RuntimeError(f"BPM is not zero-length with IdentityPass: {element.get('FamName')}")
+        if element.get("Class") == "Marker":
+            element["Class"] = "Monitor"
+            changed.append(element["FamName"])
+        elif element.get("Class") != "Monitor":
+            raise RuntimeError(f"unexpected BPM class: {element.get('FamName')}")
+    if set(seen) != BPM_NAMES or len(seen) != 4 or len(changed) not in (0, 4):
+        raise RuntimeError(f"expected four BPMs with one consistent class, found {seen}, converted {changed}")
+    if changed:
+        deck.write_text(json.dumps(document, indent=2) + "\n")
     return changed
 
 
@@ -56,11 +62,12 @@ def prepare(destination: Path) -> None:
     # The small preset omits the control-assistant database consumers; the
     # checked-in facility data still supplies the exact same PyAT model.
     profile["extends"] = "hello-world"
-    profile["project_name"] = "hackring-data-v001-monitor"
+    profile["project_name"] = destination.name
     profile["config"]["control_system.connector.virtual_accelerator.serving"] = "served"
     profile["config"]["archiver.type"] = "mongodb_archiver"
     profile["config"]["simulation.tick_s"] = 0.1
     profile["config"]["claude_code.servers.ariel.enabled"] = False
+    profile["config"].pop("web_terminal.shell", None)
     profile["virtual_accelerator"] = {"port": 5064, "pva_port": 5075}
     profile["va_archiver"] = {}
     (destination / "profile.yml").write_text(yaml.safe_dump(profile, sort_keys=False))
@@ -87,7 +94,7 @@ def prepare(destination: Path) -> None:
     _, source_orbit = at.find_orbit4(source_ring, refpts=indices)
     _, staged_orbit = at.find_orbit4(staged_ring, refpts=indices)
     if not np.allclose(source_orbit, staged_orbit, rtol=0, atol=1e-12):
-        raise RuntimeError("staged BPM conversion changed the test orbit")
+        raise RuntimeError("staged BPM handling changed the test orbit")
     provenance = {
         "source_deck_sha256": digest(source_deck),
         "staged_deck_sha256": digest(copy_deck),
@@ -99,7 +106,7 @@ def prepare(destination: Path) -> None:
         "temporary_wheel_metadata_version": TEMP_WHEEL_VERSION,
     }
     (destination / "dataset_deployment.json").write_text(json.dumps(provenance, indent=2) + "\n")
-    print(f"Prepared {destination}; four temporary BPM class conversions; test orbit difference {provenance['test_orbit_max_abs_difference_m']:.3g} m")
+    print(f"Prepared {destination}; {len(changed)} temporary BPM class conversions; test orbit difference {provenance['test_orbit_max_abs_difference_m']:.3g} m")
 
 
 def main() -> None:
