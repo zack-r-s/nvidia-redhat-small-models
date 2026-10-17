@@ -7,6 +7,8 @@ import asyncio
 import hashlib
 import json
 import os
+import random
+import math
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -14,14 +16,27 @@ ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "datasets/v001"
 DEFAULT_MODEL = "gpt-6-luna"
 SCHEMA = "hackring.operator_annotation/1"
+PILOT_SEED = 20261017
+STYLE_CUES = (
+    "a terse control-room instruction, without a greeting",
+    "a conversational question to the assistant",
+    "a measurement-first request that opens with the observed offset",
+    "a goal-first request that opens with the desired orbit state",
+    "compact operator shorthand, without politeness filler",
+    "a cautious request for small adjustments",
+    "a plain-language request for someone less familiar with the PV names",
+    "a technical request that names the relevant BPM or plane",
+)
 
 PROMPT_INSTRUCTIONS = (
-    "Write one short, natural operator request for a simulated storage ring. "
-    "The operator wants to bring the measured orbit toward center using modest corrector kicks. "
-    "Refer to one real feature of the supplied PRE-ACTION BPM readings so the request is specific "
-    "to this state. Use only those pre-action public PV readings. Do not prescribe a specific knob value, "
-    "claim to know a hidden fault, predict an outcome, or mention a later measurement. "
-    "Vary the wording naturally. BPM positions are mm; corrector settings are mrad."
+    "Write exactly one short, natural operator utterance asking an assistant to improve the "
+    "orbit of a simulated storage ring. Follow the supplied style cue and factual focus. "
+    "Use only the PRE-ACTION public PVs; the model will not receive any later action or result. "
+    "The goal is smaller BPM displacement with modest corrector kicks. Avoid stock openings "
+    "such as 'Please use modest corrector kicks to'. Refer to a real feature of the readings, "
+    "but do not invent numbers, prescribe a specific knob value, claim a hidden cause, "
+    "predict an outcome, or mention a later measurement. Use one sentence, roughly 8–30 words. "
+    "BPM positions are mm; corrector settings are mrad."
 )
 OBSERVATION_INSTRUCTIONS = (
     "Write one short factual sentence describing this simulated read-write-read transition. "
@@ -59,9 +74,11 @@ def source(dataset: Path) -> tuple[Path, dict]:
     return attempts, manifest
 
 
-def selected_rows(attempts: Path, limit: int | None) -> list[dict]:
-    if limit is not None and limit < 1:
-        raise ValueError("--limit must be positive")
+def selected_rows(attempts: Path, limit: int | None, sample: int | None = None) -> list[dict]:
+    if (limit is not None and limit < 1) or (sample is not None and sample < 1):
+        raise ValueError("--limit and --sample must be positive")
+    if limit is not None and sample is not None:
+        raise ValueError("choose either --limit or --sample")
     rows = []
     seen = set()
     for row, _ in records(attempts):
@@ -70,8 +87,13 @@ def selected_rows(attempts: Path, limit: int | None) -> list[dict]:
             raise ValueError(f"duplicate attempt ID: {request_id}")
         seen.add(request_id)
         rows.append(row)
-        if limit is not None and len(rows) >= limit:
-            break
+    if sample is not None:
+        if sample > len(rows):
+            raise ValueError(f"--sample exceeds {len(rows)} source attempts")
+        chosen = set(random.Random(PILOT_SEED).sample(range(len(rows)), sample))
+        return [row for index, row in enumerate(rows) if index in chosen]
+    if limit is not None:
+        return rows[:limit]
     return rows
 
 
@@ -79,9 +101,30 @@ def rounded_pvs(pvs: dict[str, float]) -> dict[str, float]:
     return {name: round(value, 6) for name, value in pvs.items()}
 
 
+def prompt_attributes(row: dict) -> dict[str, str]:
+    readings = {name: value for name, value in row["read_before"].items()
+                if name.startswith("RING:DIAG:BPM")}
+    worst_name, worst_value = max(readings.items(), key=lambda item: abs(item[1]))
+    plane_values = {axis: [value for name, value in readings.items() if name.endswith(f":{axis}")]
+                    for axis in ("X", "Y")}
+    rms = {axis: math.sqrt(sum(value * value for value in values) / len(values))
+           for axis, values in plane_values.items()}
+    dominant = max(rms, key=rms.get)
+    focus_cues = (
+        f"The largest absolute BPM reading is {worst_name}: {worst_value:+.3f} mm.",
+        f"The {dominant} plane has the larger BPM RMS ({rms[dominant]:.3f} mm).",
+        f"The {dominant} readings span {min(plane_values[dominant]):+.3f} to "
+        f"{max(plane_values[dominant]):+.3f} mm across the BPMs.",
+    )
+    index = row["step"] + int(row["episode_id"].split("-")[-1])
+    return {"style_cue": STYLE_CUES[index % len(STYLE_CUES)],
+            "factual_focus": focus_cues[(index // len(STYLE_CUES)) % len(focus_cues)]}
+
+
 def prompt_context(row: dict) -> dict:
     # This API call cannot leak future actions or outcomes: it receives only the first read.
     return {"read_before": rounded_pvs(row["read_before"]),
+            **prompt_attributes(row),
             "goal": "Center the BPM orbit while keeping corrector kicks modest."}
 
 
@@ -135,11 +178,13 @@ def parse_response(response, field: str) -> str:
 
 
 def run_settings(dataset: Path, attempts: Path, model: str, rows: list[dict]) -> dict:
+    selected_ids = "\n".join(key(row) for row in rows).encode()
     return {"schema": SCHEMA, "dataset": dataset.name,
             "source_attempts_sha256": digest(attempts),
             "source_manifest_sha256": digest(dataset / "manifest.json"),
             "annotator_sha256": digest(Path(__file__)),
             "model": model, "selected_count": len(rows),
+            "selected_ids_sha256": hashlib.sha256(selected_ids).hexdigest(),
             "first_id": key(rows[0]), "last_id": key(rows[-1]),
             "created_utc": datetime.now(timezone.utc).isoformat()}
 
@@ -232,7 +277,7 @@ def run(args: argparse.Namespace) -> None:
     if args.workers < 1:
         raise ValueError("--workers must be positive")
     attempts, _ = source(args.dataset)
-    rows = selected_rows(attempts, args.limit)
+    rows = selected_rows(attempts, args.limit, args.sample)
     if not rows:
         raise ValueError("source has no attempts")
     settings_path = args.output / "run.json"
@@ -242,7 +287,8 @@ def run(args: argparse.Namespace) -> None:
         settings = json.loads(settings_path.read_text())
         expected = run_settings(args.dataset, attempts, args.model, rows)
         for name in ("schema", "dataset", "source_attempts_sha256", "source_manifest_sha256",
-                     "annotator_sha256", "model", "selected_count", "first_id", "last_id"):
+                     "annotator_sha256", "model", "selected_count", "selected_ids_sha256",
+                     "first_id", "last_id"):
             if settings[name] != expected[name]:
                 raise ValueError(f"cannot resume: run setting {name} changed")
     else:
@@ -261,9 +307,9 @@ def run(args: argparse.Namespace) -> None:
 
 def preview(args: argparse.Namespace) -> None:
     attempts, _ = source(args.dataset)
-    row = selected_rows(attempts, 1)[0]
-    for field in ("operator_prompt", "observation"):
-        print(json.dumps({"field": field, **request(args.model, field, row)}, indent=2))
+    rows = selected_rows(attempts, args.limit, args.sample)
+    for row in rows[:8]:
+        print(json.dumps({"custom_id": key(row), **prompt_attributes(row)}, indent=2))
 
 
 def main() -> None:
@@ -273,6 +319,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=DATASET / "annotations/direct-v001")
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--limit", type=int, help="annotate the first N attempts for a pilot")
+    parser.add_argument("--sample", type=int, help="deterministically sample N attempts across episodes")
     parser.add_argument("--workers", type=int, default=2, help="maximum concurrent attempts (default: 2)")
     args = parser.parse_args()
     globals()[args.command](args)

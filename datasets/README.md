@@ -8,14 +8,14 @@ This is raw machine and optimizer data, not LFM chat training data. A later lang
 
 ## GPT annotation pass
 
-`scripts/annotate_dataset.py` uses direct [OpenAI Responses API](https://developers.openai.com/api/docs/libraries) calls, with [`gpt-6-luna`](https://developers.openai.com/api/docs/models/gpt-6-luna) as the default. For each attempt it makes two independent calls: an `operator_prompt` generated from **only the pre-action public PVs**, then a retrospective `observation` generated from the public read/write/read transition. The first call cannot see the action or result. Hidden episode faults are never sent. This is synthetic language annotation, so review a pilot for plausible wording before the full pass.
+`scripts/annotate_dataset.py` uses direct [OpenAI Responses API](https://developers.openai.com/api/docs/libraries) calls, with [`gpt-6-luna`](https://developers.openai.com/api/docs/models/gpt-6-luna) as the default. For each attempt it makes two independent calls: an `operator_prompt` generated from **only the pre-action public PVs**, then a retrospective `observation` generated from the public read/write/read transition. The first call cannot see the action or result. Hidden episode faults are never sent. To avoid repeated stock language, each prompt call receives a rotating communication style and a fact computed from the current BPM readings; this follows the attributed-prompt approach studied in [AttrPrompt](https://arxiv.org/abs/2306.15895). This is synthetic language annotation, so review a pilot for plausible wording before the full pass.
 
 ```sh
 uv pip install --python .venv/bin/python openai
-.venv/bin/python scripts/annotate_dataset.py preview
+.venv/bin/python scripts/annotate_dataset.py preview --sample 32
 # Set OPENAI_API_KEY in your environment before the paid API calls below.
-.venv/bin/python scripts/annotate_dataset.py run --limit 32 --output datasets/v001/annotations/pilot
+.venv/bin/python scripts/annotate_dataset.py run --sample 32 --output datasets/v001/annotations/pilot-v2
 .venv/bin/python scripts/annotate_dataset.py run --output datasets/v001/annotations/direct-v001
 ```
 
-The script checkpoints completed pairs of calls in `progress.jsonl`; rerun the **same command** after an interruption to resume missing attempts. `--workers` controls concurrent attempts (default 2); actual time depends on the API rate limits for your project and response latency. When all selected attempts succeed, `annotated_attempts.jsonl` is written in original episode/step order. Every row is a complete copy of the corresponding physical attempt with an added `annotation` object containing the operator prompt and observation. `annotation_manifest.json` records source and output checksums. The raw `attempts.jsonl` and manifest are not edited. The final model-training conversation conversion is a later step.
+The script checkpoints completed pairs of calls in `progress.jsonl`; rerun the **same command** after an interruption to resume missing attempts. `--sample` selects a reproducible set across episodes; `--limit` still selects the first N source attempts. Use a new output directory when changing the annotator, model, or selection. `--workers` controls concurrent attempts (default 2); actual time depends on the API rate limits for your project and response latency. When all selected attempts succeed, `annotated_attempts.jsonl` is written in original episode/step order. Every row is a complete copy of the corresponding physical attempt with an added `annotation` object containing the operator prompt and observation. `annotation_manifest.json` records source and output checksums. The raw `attempts.jsonl` and manifest are not edited. The final model-training conversation conversion is a later step.
