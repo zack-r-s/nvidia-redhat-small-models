@@ -6,3 +6,29 @@ export type MachineState = {
   summary: { x_rms_mm: number; y_rms_mm: number };
   lattice: { circumference_m: number | null; devices: Device[] };
 };
+
+export type FeedMode = "live" | "replay";
+/** live: fresh /state; stale: last good snapshot is old; disconnected: no snapshot at all or fetch failing. */
+export type FeedStatus = "live" | "stale" | "disconnected" | "replay";
+
+export type Feed = {
+  status: FeedStatus;
+  state: MachineState | null;
+  /** Wall-clock ms of the last good snapshot (live) or the replay frame time. */
+  receivedAt: number | null;
+  error: string | null;
+  source: string;
+  replay?: { frame: number; frames: number; runId?: string; seed?: number; playing: boolean; toggle: () => void };
+};
+
+export type ReplayFile = {
+  run_id?: string;
+  seed?: number;
+  source?: string;
+  frames: { t_s: number; state: MachineState }[];
+};
+
+/** Fixed by data/pv_contract.json; the viewer displays but never changes it. */
+export const KICK_LIMIT_MRAD = 0.35;
+export const bpmPv = (name: string, axis: "X" | "Y") => `RING:DIAG:${name}:POSITION:${axis}`;
+export const correctorPv = (name: string, field: "SP" | "RB") => `RING:MAG:${name}:KICK:${field}`;
