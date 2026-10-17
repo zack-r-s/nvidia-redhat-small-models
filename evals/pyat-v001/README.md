@@ -12,3 +12,5 @@ MPLCONFIGDIR=/private/tmp/mpl-hackring-eval PYTHONPATH=src .venv/bin/python scri
 ```
 
 The first base-model run is in `base-230m/`: 1/8 passed (BPM report 1/1, plane comparison 0/1, exact writes 0/2, corrections 0/4). All proposed writes were rejected before plant execution. A bounded response-teacher check confirms all four correction cases are physically correctable on this PyAT plant. `report.json` records case scores and provenance; `traces.jsonl` keeps the pre-read, raw model proposal, final text where available, and measured after-state. Use a new `--output` directory for another checkpoint; the script refuses to overwrite an evaluation.
+
+The Liquid Finetune v001 merged checkpoint is evaluated in `liquid-v001/`: 2/8 passed, both exact writes. Its four syntactically valid correction writes all increased the requested orbit RMS. The read-only report and plane comparison also failed. See `training/v001/results.json` for the training artifact identity and hashes.

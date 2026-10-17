@@ -1,0 +1,53 @@
+{
+  "schema": "hackring.liquid_training_result/1",
+  "status": "completed",
+  "upstream": {
+    "repository": "https://github.com/Liquid4All/liquid-finetune",
+    "commit": "d9cc23dae5a16498ab7dc11958b80ca803e0440a"
+  },
+  "backend": "Apple M4 Pro MPS; Liquid single-process trainer invoked through scripts/run_liquid_training.py",
+  "config_sha256": "836e0c3cd8cef65a8006a166889fd8c2cbf2e40fbf8c7c7ae981993e85076fdb",
+  "train_sha256": "f5138f350b3eccea71e1a9205279ab1f50f4ff6794ca34e502a5bfc1f0582384",
+  "validation_sha256": "eff9d0dbc23527c2d6b8fb63450b50cf81900559bbb0864e264436c829fb8c82",
+  "run_dir": "training/v001/output/LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-20261017_184147",
+  "epochs": 2,
+  "optimizer_steps": 216,
+  "train_runtime_seconds": 1095,
+  "validation_loss": {
+    "epoch_1": 0.08373144268989563,
+    "epoch_2": 0.08058765530586243
+  },
+  "artifacts": {
+    "epoch_1_adapter": {
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-e1s108-20261017_184147",
+      "adapter_sha256": "bc79bfd84bb1cb6c05743b2b057b3c0c9ad267677e9eabf64f2ff97ee9901df4"
+    },
+    "epoch_2_adapter": {
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-e2s216-20261017_184147",
+      "adapter_sha256": "4ea5323d6bc266b3d34db1aced8a611802957ea2d2f17bb4cb90341064987bbe"
+    },
+    "merged_model": {
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_m-20261017_184147",
+      "weights_sha256": "f38487d028a61c079e871d2923b2729afac6eaedee35dce67b6199b5a54187d0"
+    }
+  },
+  "pyat_eval": {
+    "base_passed": 1,
+    "trained_passed": 2,
+    "total": 8,
+    "trained_report": "evals/pyat-v001/liquid-v001/report.json",
+    "trained_report_sha256": "99f3f8910019487a41a5d56045b299e493b71e8c7f27d35256e42c948f9ee780",
+    "finding": "Both exact writes passed; read and comparison failed; all four accepted orbit corrections increased measured target RMS."
+  },
+  "vllm_smoke": {
+    "version": "0.31.0",
+    "served_name": "LFM2.5-230M-v001",
+    "health_status": 200,
+    "exact_write_tool_call": {
+      "name": "channel_write",
+      "channel": "RING:MAG:H02:KICK:SP",
+      "value": 0.075
+    },
+    "server_stopped_after_check": true
+  }
+}
