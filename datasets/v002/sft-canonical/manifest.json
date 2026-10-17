@@ -1,0 +1,18 @@
+{
+  "counts": {
+    "test": 80,
+    "train": 480,
+    "validation": 80
+  },
+  "files_sha256": {
+    "index.jsonl": "1100b90336bbc418ffcfe567e20a9a484b5ae71de456858966ee72a8a790b8aa",
+    "test.jsonl": "86feca3a32b8391b5d8a832fcbe372ab8fe95a1ce95cd335fff54e4a10b3d03f",
+    "train.jsonl": "91dc5de1b76a1a24e353d54b41469ab3b954f37ddd076b2feba4d4f3eb719472",
+    "validation.jsonl": "0f2d4dbbcb728be6a4890e5f0698630ffdfd159b2b2287927551e825dc173a6b"
+  },
+  "language_complete": false,
+  "paraphrases_sha256": null,
+  "schema": "hackring.lfm_conversations/1",
+  "source_actions_sha256": "eecc9fa05c739da6f1a1ecfe827196ee2bee92e0caec1022ec584e181ca98045",
+  "source_manifest_sha256": "1f622436ed9b6939dbee5be3b85f65e016b52200720275df54bedd8d574d4e75"
+}
