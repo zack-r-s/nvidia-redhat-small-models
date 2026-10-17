@@ -1,7 +1,7 @@
 providers:
   vllm:
     api_key: local-vllm
-    base_url: ${VLLM_BASE_URL:-http://host.docker.internal:8000/v1}
+    base_url: ${VLLM_BASE_URL:-http://127.0.0.1:8000/v1}
     default_model: LFM2.5-230M
     models:
       - LFM2.5-230M

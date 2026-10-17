@@ -1,0 +1,10 @@
+# Osprey URL-panel entry for the ring viewer. NOT yet applied: merge into profile.yml
+# (web_panels + config) after review, then run `osprey build`.
+# Schema per osprey cli/init_cmd.py: id in `web_panels:`, address under `config: web.panels.<id>.*`.
+web_panels:
+  - ring
+
+config:
+  web.panels.ring.url: http://127.0.0.1:5173   # `npm run dev`, or the host serving frontend/dist
+  web.panels.ring.label: Ring monitor
+  web.panels.ring.path: /

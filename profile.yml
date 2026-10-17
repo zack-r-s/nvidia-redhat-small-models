@@ -1,27 +1,38 @@
 name: Hackathon FODO Ring
 project_name: hackring
+extends: hello-world
 provider: vllm
-channel_finder_mode: in_context
+osprey_install: "osprey-framework @ git+https://github.com/als-apg/osprey.git@d639869"
 
-# Minimal tool-calling agent: one model, one controls server, no workflows.
+# One served PyAT machine is shared by the controls MCP server and the viewer API.
 hooks: []
 rules: []
 skills: []
 agents: []
 output_styles: []
 web_panels: []
-
 data: data
+
+virtual_accelerator:
+  port: 5064
+  pva_port: 5075
+va_archiver: {}
 
 config:
   control_system.type: virtual_accelerator
-  control_system.connector.virtual_accelerator.serving: in_process
+  control_system.connector.virtual_accelerator.serving: served
   control_system.writes_enabled: true
   approval.enabled: false
-  archiver.type: mock_archiver
+  archiver.type: mongodb_archiver
+  simulation.tick_s: 0.1
   claude_code.telemetry.enabled: false
   hooks.debug: false
   claude_code.servers.controls.enabled: true
   claude_code.servers.archiver.enabled: false
   claude_code.servers.logbook.enabled: false
   claude_code.servers.python.enabled: false
+  claude_code.servers.ariel.enabled: false
+  claude_code.servers.osprey_facility_knowledge.enabled: false
+  claude_code.servers.osprey_workspace.enabled: false
+  claude_code.servers.channel-finder.enabled: false
+  web_terminal.shell: [env, ../.venv/bin/python, -I, ../scripts/small_agent.py]
