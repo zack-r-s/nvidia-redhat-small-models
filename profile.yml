@@ -13,14 +13,32 @@ web_panels: []
 
 data: data
 
+# Source-installed Osprey is not a release, so the build cannot pin it from PyPI.
+osprey_install: git+https://github.com/als-apg/osprey.git@d639869
+
+# The simulator runs as a container (amd64 image; emulated on Apple Silicon). No live stand-in: one more emulated IOC.
+virtual_accelerator:
+  port: 5064
+
+# A served simulator must pair with a recorded archive (Osprey refuses the mock archiver).
+# No freshness_channel: a quiet ring's BPMs legitimately sit still.
+va_archiver:
+  host: localhost
+
 config:
+  system.timezone: UTC
   control_system.type: virtual_accelerator
-  control_system.connector.virtual_accelerator.serving: in_process
+  control_system.connector.virtual_accelerator.serving: served
   control_system.writes_enabled: true
   approval.enabled: false
-  archiver.type: mock_archiver
+  archiver.type: mongodb_archiver
   claude_code.telemetry.enabled: false
   hooks.debug: false
+  # ARIEL (logbook search) ships in the default bundle and needs its Postgres store.
+  deployed_services: [virtual_accelerator, postgresql]
+  services.postgresql.path: ./services/postgresql
+  services.postgresql.database_name: ariel
+  services.postgresql.username: ariel
   claude_code.servers.controls.enabled: true
   claude_code.servers.archiver.enabled: false
   claude_code.servers.logbook.enabled: false
