@@ -91,7 +91,7 @@
       "FamName": "BPM01",
       "Length": 0.0,
       "PassMethod": "IdentityPass",
-      "Class": "Marker"
+      "Class": "Monitor"
     },
     {
       "FamName": "D01D",
@@ -677,7 +677,7 @@
       "FamName": "BPM02",
       "Length": 0.0,
       "PassMethod": "IdentityPass",
-      "Class": "Marker"
+      "Class": "Monitor"
     },
     {
       "FamName": "D06D",
@@ -1263,7 +1263,7 @@
       "FamName": "BPM03",
       "Length": 0.0,
       "PassMethod": "IdentityPass",
-      "Class": "Marker"
+      "Class": "Monitor"
     },
     {
       "FamName": "D11D",
@@ -1849,7 +1849,7 @@
       "FamName": "BPM04",
       "Length": 0.0,
       "PassMethod": "IdentityPass",
-      "Class": "Marker"
+      "Class": "Monitor"
     },
     {
       "FamName": "D16D",
