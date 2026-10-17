@@ -13,6 +13,9 @@ dependencies = [
   "xopt>=3,<4",
 ]
 
+[project.optional-dependencies]
+dev = ["caproto>=1.1", "pytest>=8"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

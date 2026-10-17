@@ -73,6 +73,25 @@ To check the API directly, run `curl http://127.0.0.1:8001/state`. It exposes `G
 
 `HACKRING_BACKEND=epics` switches the API to PyEPICS reads and writes for a **served** Osprey virtual accelerator using the same PV names. The committed Osprey profile currently uses the simpler in-process mode, so EPICS mode requires a future served-VA deployment and its Channel Access configuration. Scenario reset in EPICS mode also awaits wiring to Osprey's model RPC. The local PyAT API and Osprey simulator are separate machine instances; the former is the frontend fixture until this bridge is completed.
 
+One-command visual demo: `scripts/demo.sh` starts the API and viewer, opens the browser, runs Xopt, and cleans up. Options: `--epics` (caproto IOC + PyEPICS path), `--steps`, `--delay`, `--seed`, `--loops N`, `--keep`, and `--manual` (no Xopt; opens the viewer with the test-driver panel).
+
+**Manual test driver:** `npm run dev` with `?driver=1` (e.g. `http://127.0.0.1:5173/?driver=1`) shows a drop-down of preset beam states (seeded disturbances, single/limit corrector kicks, zeroing, and an out-of-limit write that must be rejected) with Apply/Reset buttons. It is dev-only, in `frontend/src/TestDriver.tsx`, the sole module that calls `/scenario` and `/write`; production builds and the default viewer stay read-only. Scenario presets need the local backend (`/scenario` is 501 in EPICS mode).
+
+### Viewer states, replay, and EPICS-mode testing
+
+The viewer is read-only (`GET /state` only) and shows **Live**, **Stale**, **Disconnected**, or **Replay**. Set `VITE_MACHINE_URL` to point at a different API. Open `http://127.0.0.1:5173/?replay=/replay/demo.json` to replay recorded snapshots (re-record with `scripts/record_replay.py --seed 7` while `xopt_demo.py` runs). Agent intent, action status, and target/goal panels read "Unavailable" until the backend provides those contracts.
+
+To exercise the PyEPICS path deterministically without a served Osprey VA, install dev extras (`uv pip install --python .venv/bin/python -e '.[dev]'`) and run a caproto soft IOC over the same PyAT plant. Use these env vars in every terminal: `EPICS_CA_ADDR_LIST=127.0.0.1 EPICS_CA_AUTO_ADDR_LIST=NO EPICS_CAS_INTF_ADDR_LIST=127.0.0.1 EPICS_CAS_AUTO_BEACON_ADDR_LIST=NO EPICS_CAS_BEACON_ADDR_LIST=127.0.0.1`.
+
+```sh
+PYTHONPATH=src .venv/bin/python scripts/ca_fixture.py --seed 7
+HACKRING_BACKEND=epics PYTHONPATH=src .venv/bin/uvicorn hackring.api:app --port 8001
+PYTHONPATH=src .venv/bin/python scripts/xopt_demo.py   # /scenario is 501 in EPICS mode; the IOC seed sets the disturbance
+PYTHONPATH=src .venv/bin/python -m pytest tests
+```
+
+`frontend/osprey-panel.yml` holds the `profile.yml` snippet that mounts the viewer as an Osprey URL panel (not applied yet). See `frontend/QA.md` for visual QA notes.
+
 ## Parallel lanes
 
 - **Machine/Osprey:** Keep `lattice.py`, generated facility records, and `pv_contract.json` in sync. Validate the PA wiring and add served-VA access when needed.
