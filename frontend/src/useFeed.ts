@@ -23,22 +23,33 @@ function useLiveFeed(enabled: boolean): Feed {
   useEffect(() => {
     if (!enabled) return;
     let active = true;
+    let timer: number | undefined;
+    let issued = 0;
+    let applied = 0;
+    let inFlight: AbortController | null = null;
+    // One request in flight at a time: the next poll is scheduled only after this one settles,
+    // so a slow response can never be overtaken by a later one. The sequence guard is a backstop.
     const poll = async () => {
+      const seq = ++issued;
+      const started = Date.now();
       const controller = new AbortController();
+      inFlight = controller;
       const timeout = window.setTimeout(() => controller.abort(), TIMEOUT_MS);
       try {
         const response = await fetch(`${API}/state`, { signal: controller.signal });
         if (!response.ok) throw new Error(`Machine API returned ${response.status}`);
         const next = (await response.json()) as MachineState;
         if (next.schema !== SCHEMA) throw new Error("Unknown machine state schema");
-        if (active) { setState(next); setReceivedAt(Date.now()); setError(null); }
+        if (active && seq > applied) { applied = seq; setState(next); setReceivedAt(Date.now()); setError(null); }
       } catch (cause) {
-        if (active) setError(cause instanceof Error ? (cause.name === "AbortError" ? "Machine API timed out" : cause.message) : "Machine unavailable");
-      } finally { window.clearTimeout(timeout); }
+        if (active && seq > applied) setError(cause instanceof Error ? (cause.name === "AbortError" ? "Machine API timed out" : cause.message) : "Machine unavailable");
+      } finally {
+        window.clearTimeout(timeout);
+        if (active) timer = window.setTimeout(() => void poll(), Math.max(0, POLL_MS - (Date.now() - started)));
+      }
     };
     void poll();
-    const timer = window.setInterval(() => void poll(), POLL_MS);
-    return () => { active = false; window.clearInterval(timer); };
+    return () => { active = false; window.clearTimeout(timer); inFlight?.abort(); };
   }, [enabled]);
 
   const age = receivedAt === null ? Infinity : now - receivedAt;
