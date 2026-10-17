@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "units": {
+    "orbit": "mm",
+    "kick": "mrad"
+  },
+  "bpm": [
+    "RING:DIAG:BPM01:POSITION:X",
+    "RING:DIAG:BPM01:POSITION:Y",
+    "RING:DIAG:BPM02:POSITION:X",
+    "RING:DIAG:BPM02:POSITION:Y",
+    "RING:DIAG:BPM03:POSITION:X",
+    "RING:DIAG:BPM03:POSITION:Y",
+    "RING:DIAG:BPM04:POSITION:X",
+    "RING:DIAG:BPM04:POSITION:Y"
+  ],
+  "corrector_setpoints": [
+    "RING:MAG:H01:KICK:SP",
+    "RING:MAG:V01:KICK:SP",
+    "RING:MAG:H02:KICK:SP",
+    "RING:MAG:V02:KICK:SP",
+    "RING:MAG:H03:KICK:SP",
+    "RING:MAG:V03:KICK:SP",
+    "RING:MAG:H04:KICK:SP",
+    "RING:MAG:V04:KICK:SP"
+  ],
+  "kick_limit_mrad": 0.35
+}

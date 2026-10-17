@@ -1,0 +1,25 @@
+records:
+- address: RING:MAG:H01:KICK:SP
+  min_value: -0.35
+  max_value: 0.35
+- address: RING:MAG:V01:KICK:SP
+  min_value: -0.35
+  max_value: 0.35
+- address: RING:MAG:H02:KICK:SP
+  min_value: -0.35
+  max_value: 0.35
+- address: RING:MAG:V02:KICK:SP
+  min_value: -0.35
+  max_value: 0.35
+- address: RING:MAG:H03:KICK:SP
+  min_value: -0.35
+  max_value: 0.35
+- address: RING:MAG:V03:KICK:SP
+  min_value: -0.35
+  max_value: 0.35
+- address: RING:MAG:H04:KICK:SP
+  min_value: -0.35
+  max_value: 0.35
+- address: RING:MAG:V04:KICK:SP
+  min_value: -0.35
+  max_value: 0.35

@@ -1,0 +1,263 @@
+- name: RING
+  engine: pyat
+  deck: decks/RING.json
+  settings:
+    pyat:
+      solve: periodic
+  wiring:
+  - address: RING:DIAG:BPM01:POSITION:X
+    element: BPM01
+    engine:
+      axis: x
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:DIAG:BPM01:POSITION:Y
+    element: BPM01
+    engine:
+      axis: y
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:H01:KICK:RB
+    element: H01
+    engine:
+      attribute: KickAngle
+      index: 0
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:H01:KICK:SP
+    element: H01
+    engine:
+      attribute: KickAngle
+      index: 0
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:V01:KICK:RB
+    element: V01
+    engine:
+      attribute: KickAngle
+      index: 1
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:V01:KICK:SP
+    element: V01
+    engine:
+      attribute: KickAngle
+      index: 1
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:DIAG:BPM02:POSITION:X
+    element: BPM02
+    engine:
+      axis: x
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:DIAG:BPM02:POSITION:Y
+    element: BPM02
+    engine:
+      axis: y
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:H02:KICK:RB
+    element: H02
+    engine:
+      attribute: KickAngle
+      index: 0
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:H02:KICK:SP
+    element: H02
+    engine:
+      attribute: KickAngle
+      index: 0
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:V02:KICK:RB
+    element: V02
+    engine:
+      attribute: KickAngle
+      index: 1
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:V02:KICK:SP
+    element: V02
+    engine:
+      attribute: KickAngle
+      index: 1
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:DIAG:BPM03:POSITION:X
+    element: BPM03
+    engine:
+      axis: x
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:DIAG:BPM03:POSITION:Y
+    element: BPM03
+    engine:
+      axis: y
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:H03:KICK:RB
+    element: H03
+    engine:
+      attribute: KickAngle
+      index: 0
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:H03:KICK:SP
+    element: H03
+    engine:
+      attribute: KickAngle
+      index: 0
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:V03:KICK:RB
+    element: V03
+    engine:
+      attribute: KickAngle
+      index: 1
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:V03:KICK:SP
+    element: V03
+    engine:
+      attribute: KickAngle
+      index: 1
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:DIAG:BPM04:POSITION:X
+    element: BPM04
+    engine:
+      axis: x
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:DIAG:BPM04:POSITION:Y
+    element: BPM04
+    engine:
+      axis: y
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:H04:KICK:RB
+    element: H04
+    engine:
+      attribute: KickAngle
+      index: 0
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:H04:KICK:SP
+    element: H04
+    engine:
+      attribute: KickAngle
+      index: 0
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:V04:KICK:RB
+    element: V04
+    engine:
+      attribute: KickAngle
+      index: 1
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none
+  - address: RING:MAG:V04:KICK:SP
+    element: V04
+    engine:
+      attribute: KickAngle
+      index: 1
+    calibration:
+      curve:
+        linear:
+          gain: 0.001
+          offset: 0.0
+      energy_scaling: none

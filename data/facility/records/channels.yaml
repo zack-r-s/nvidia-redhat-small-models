@@ -1,0 +1,112 @@
+- id: RING:DIAG:BPM01:POSITION:X
+  'on':
+    device: RING/BPM01
+  unit: mm
+- id: RING:DIAG:BPM01:POSITION:Y
+  'on':
+    device: RING/BPM01
+  unit: mm
+- id: RING:MAG:H01:KICK:RB
+  'on':
+    device: RING/H01
+  unit: mrad
+- id: RING:MAG:H01:KICK:SP
+  role: setpoint
+  pair: RING:MAG:H01:KICK:RB
+  'on':
+    device: RING/H01
+  unit: mrad
+- id: RING:MAG:V01:KICK:RB
+  'on':
+    device: RING/V01
+  unit: mrad
+- id: RING:MAG:V01:KICK:SP
+  role: setpoint
+  pair: RING:MAG:V01:KICK:RB
+  'on':
+    device: RING/V01
+  unit: mrad
+- id: RING:DIAG:BPM02:POSITION:X
+  'on':
+    device: RING/BPM02
+  unit: mm
+- id: RING:DIAG:BPM02:POSITION:Y
+  'on':
+    device: RING/BPM02
+  unit: mm
+- id: RING:MAG:H02:KICK:RB
+  'on':
+    device: RING/H02
+  unit: mrad
+- id: RING:MAG:H02:KICK:SP
+  role: setpoint
+  pair: RING:MAG:H02:KICK:RB
+  'on':
+    device: RING/H02
+  unit: mrad
+- id: RING:MAG:V02:KICK:RB
+  'on':
+    device: RING/V02
+  unit: mrad
+- id: RING:MAG:V02:KICK:SP
+  role: setpoint
+  pair: RING:MAG:V02:KICK:RB
+  'on':
+    device: RING/V02
+  unit: mrad
+- id: RING:DIAG:BPM03:POSITION:X
+  'on':
+    device: RING/BPM03
+  unit: mm
+- id: RING:DIAG:BPM03:POSITION:Y
+  'on':
+    device: RING/BPM03
+  unit: mm
+- id: RING:MAG:H03:KICK:RB
+  'on':
+    device: RING/H03
+  unit: mrad
+- id: RING:MAG:H03:KICK:SP
+  role: setpoint
+  pair: RING:MAG:H03:KICK:RB
+  'on':
+    device: RING/H03
+  unit: mrad
+- id: RING:MAG:V03:KICK:RB
+  'on':
+    device: RING/V03
+  unit: mrad
+- id: RING:MAG:V03:KICK:SP
+  role: setpoint
+  pair: RING:MAG:V03:KICK:RB
+  'on':
+    device: RING/V03
+  unit: mrad
+- id: RING:DIAG:BPM04:POSITION:X
+  'on':
+    device: RING/BPM04
+  unit: mm
+- id: RING:DIAG:BPM04:POSITION:Y
+  'on':
+    device: RING/BPM04
+  unit: mm
+- id: RING:MAG:H04:KICK:RB
+  'on':
+    device: RING/H04
+  unit: mrad
+- id: RING:MAG:H04:KICK:SP
+  role: setpoint
+  pair: RING:MAG:H04:KICK:RB
+  'on':
+    device: RING/H04
+  unit: mrad
+- id: RING:MAG:V04:KICK:RB
+  'on':
+    device: RING/V04
+  unit: mrad
+- id: RING:MAG:V04:KICK:SP
+  role: setpoint
+  pair: RING:MAG:V04:KICK:RB
+  'on':
+    device: RING/V04
+  unit: mrad
