@@ -12,6 +12,8 @@ This is raw machine and optimizer data, not LFM chat training data. A later lang
 
 The collection uses 128 fresh seeds, with seed-level 96/16/16 train/validation/test splits and four independently reset actions per seed. `v002/raw/actions.jsonl` keeps hidden calibration offsets only for reproducibility; the conversation exporter never exposes them. `v002/raw/manifest.json` binds the raw file, v001 lineage, teacher, source lattice and PV contract, deployment, and software versions by checksums. An interrupted collector resumes missing task IDs only when its run settings and script checksum match; a complete version cannot be overwritten.
 
+The completed v002 validator found 512 valid actions, 384/64/64 actions by split, no non-improving correction tasks, and a maximum measured response-matrix residual of 4.82×10⁻¹⁴ mm. The canonical conversations pass the LFM2.5-230M tokenizer check; the longest has 2,435 input tokens before the reserved 512 output tokens.
+
 ```sh
 PYTHONPATH=src .venv/bin/python scripts/fit_response_matrix.py
 MPLCONFIGDIR=/private/tmp/mpl-hackring-v002 .venv/bin/python scripts/prepare_dataset_va.py --deployment /private/tmp/hackring-data-v002-lite --ca-port 6264 --pva-port 6275 --port-base 16000 --no-archive --build
@@ -20,9 +22,13 @@ PYTHONPATH=src .venv/bin/python scripts/generate_control_dataset.py
 PYTHONPATH=src .venv/bin/python scripts/validate_control_dataset.py
 ```
 
-The separate language pass asks GPT for one pre-action-only paraphrase of each canonical task prompt. It checkpoints under ignored `v002/annotations/`; set `OPENAI_API_KEY` before running it. The final exporter makes one canonical and one checked GPT conversation per measured action, plus one deterministic read-only task per seed, and leaves raw data untouched. Correction actions that did not improve their measured target cost stay in raw data but are excluded from ideal-action SFT. The exported `v002/sft/{train,validation,test}.jsonl` use [Liquid's `messages` and native bracket tool-call format](https://github.com/Liquid4All/liquid-finetune#tool-calling-datasets). Run the tokenizer check with an environment containing `transformers` and the cached LFM2.5-230M tokenizer.
+The canonical export, `v002/sft-canonical/`, contains 640 conversations: one measured action conversation for each of the 512 tasks and one read-only task for each seed. It is usable before the separate GPT language pass. That pass asks GPT for one pre-action-only paraphrase of each action prompt and checkpoints under ignored `v002/annotations/`; set `OPENAI_API_KEY` before running it. The later `v002/sft/` export adds those checked paraphrases without editing either raw data or the canonical export. Correction actions that did not improve their measured target cost stay in raw data but are excluded from ideal-action SFT. Both exports use [Liquid's `messages` and native bracket tool-call format](https://github.com/Liquid4All/liquid-finetune#tool-calling-datasets). Run the tokenizer check with an environment containing `transformers` and the cached LFM2.5-230M tokenizer.
 
 ```sh
+PYTHONPATH=src .venv/bin/python scripts/export_control_conversations.py --output datasets/v002/sft-canonical
+/Users/zackstone/.venv-vllm-metal/bin/python scripts/validate_control_conversations.py datasets/v002/sft-canonical
+
+# Later, after setting OPENAI_API_KEY:
 PYTHONPATH=src .venv/bin/python scripts/paraphrase_control_prompts.py --limit 32 --output datasets/v002/annotations/pilot
 PYTHONPATH=src .venv/bin/python scripts/paraphrase_control_prompts.py
 PYTHONPATH=src .venv/bin/python scripts/export_control_conversations.py --paraphrases datasets/v002/annotations/gpt-v001/paraphrases.jsonl

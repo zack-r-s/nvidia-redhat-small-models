@@ -1,0 +1,57 @@
+{
+  "actions": 512,
+  "actions_by_split": {
+    "test": 64,
+    "train": 384,
+    "validation": 64
+  },
+  "backend": "Osprey served PyAT via EPICS Channel Access",
+  "created_utc": "2026-10-17T21:49:36.534613+00:00",
+  "deployment_provenance": {
+    "ca_port": 6264,
+    "osprey_source_commit_prefix": "d639869",
+    "port_base": 16000,
+    "pva_port": 6275,
+    "record_archive": false,
+    "source_deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+    "source_pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+    "staged_deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+    "staged_pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+    "temporary_bpm_class_conversion": [],
+    "temporary_wheel_metadata_version": "2026.6.2+gd639869",
+    "test_orbit_max_abs_difference_m": 0.0
+  },
+  "files_sha256": {
+    "actions.jsonl": "eecc9fa05c739da6f1a1ecfe827196ee2bee92e0caec1022ec584e181ca98045",
+    "run_config.json": "bb12a1d4d68a687fe946585556dcd93b996357037644626d82a4b004224528ec"
+  },
+  "model_rpc_instance": "virtual_accelerator",
+  "parent_manifest_sha256": "11e192f17b7ad9f3d10ec51f0be0ada831c9f26aa39b421c2f94075423ee61b8",
+  "parent_version": "v001",
+  "pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+  "response_teacher_sha256": "8da906e2e4ca5cf449a2cfff8bd09994a29f60b1ea759d5f7dfe7dca3f2ae1cd",
+  "run": {
+    "ca_port": 6264,
+    "deployment_provenance_sha256": "9fc806b51f182fa5fe25d9c56864c9f180cc8fb0fced96e2bc1da609796c8f88",
+    "disturbance_mrad": 0.08,
+    "generator_sha256": "0bf94695af25444f48906d3e5da45d725e3f8cff3d13e170a81e0038cd0e5990",
+    "pva_port": 6275,
+    "schema": "hackring.control_run/1",
+    "seed_base": 20262000,
+    "seeds": 128,
+    "split_seed": 20262000,
+    "teacher_sha256": "8da906e2e4ca5cf449a2cfff8bd09994a29f60b1ea759d5f7dfe7dca3f2ae1cd",
+    "tick_s": 0.1
+  },
+  "schema": "hackring.control_manifest/1",
+  "software": {
+    "accelerator-toolbox": "0.9.0",
+    "numpy": "2.5.4",
+    "osprey-framework": "0.0.post1+gd639869cd",
+    "pyepics": "3.5.10",
+    "scipy": "1.18.1"
+  },
+  "source_commit": "3ee3926b8f68a97e2a3d3fc70f602a3b4d165833",
+  "source_deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+  "version": "raw"
+}

@@ -1,0 +1,13 @@
+{
+  "ca_port": 6264,
+  "deployment_provenance_sha256": "9fc806b51f182fa5fe25d9c56864c9f180cc8fb0fced96e2bc1da609796c8f88",
+  "disturbance_mrad": 0.08,
+  "generator_sha256": "0bf94695af25444f48906d3e5da45d725e3f8cff3d13e170a81e0038cd0e5990",
+  "pva_port": 6275,
+  "schema": "hackring.control_run/1",
+  "seed_base": 20262000,
+  "seeds": 128,
+  "split_seed": 20262000,
+  "teacher_sha256": "8da906e2e4ca5cf449a2cfff8bd09994a29f60b1ea759d5f7dfe7dca3f2ae1cd",
+  "tick_s": 0.1
+}
