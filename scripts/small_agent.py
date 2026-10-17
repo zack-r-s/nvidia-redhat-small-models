@@ -36,9 +36,12 @@ CONTRACT = json.loads((REPO / "data" / "pv_contract.json").read_text())
 PROVIDER = yaml.safe_load((REPO / "providers.yml").read_text())["providers"]["vllm"]
 VA = yaml.safe_load((REPO / "profile.yml").read_text())["virtual_accelerator"]
 CHANNELS = CONTRACT["bpm"] + CONTRACT["corrector_setpoints"]
+READBACKS = {name: name.removesuffix(":SP") + ":RB" for name in CONTRACT["corrector_setpoints"]}
+KNOWN_READS = set(CHANNELS) | set(READBACKS.values())
 # Target switching and archiver history stay out of reach; a small model misfires them.
 TOOLS = {"channel_read", "channel_write", "channel_limits"}
-ACTION = re.compile(r"\b(read|set|write|kick|get|measure)\b", re.IGNORECASE)
+ACTION = re.compile(r"\b(read|set|write|kick|get|measure|report|show)\b", re.IGNORECASE)
+BEAM_POSITION = re.compile(r"\b(beam position|orbit|bpm)\b", re.IGNORECASE)
 COMMANDS = {"/clear": "forget the conversation so far", "/help": "show commands", "/exit": "quit"}
 
 SYSTEM = (
@@ -74,7 +77,7 @@ def server_params() -> StdioServerParameters:
 
 def wants_tool(prompt: str) -> bool:
     """Force a tool call only for prompts that name a channel or ask for a read/write."""
-    return any(name in prompt for name in CHANNELS) or bool(ACTION.search(prompt))
+    return any(name in prompt for name in KNOWN_READS) or bool(ACTION.search(prompt) or BEAM_POSITION.search(prompt))
 
 
 def coerce(args: dict, schema: dict | None) -> dict:
@@ -114,10 +117,34 @@ def to_openai(tool) -> dict:
     return {"type": "function", "function": {"name": tool.name, "description": tool.description or "", "parameters": tool.inputSchema}}
 
 
+def readings_from(text: str) -> dict:
+    """Extract only observed PV values from a successful Osprey channel_read result."""
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        return {}
+    if data.get("status") != "success":
+        return {}
+    return data.get("summary", {}).get("readings", {})
+
+
+def beam_position_report(text: str) -> str | None:
+    readings = readings_from(text)
+    if not all(pv in readings for pv in CONTRACT["bpm"]):
+        return None
+    lines = ["Measured beam position (mm):"]
+    for index in range(0, len(CONTRACT["bpm"]), 2):
+        x, y = CONTRACT["bpm"][index : index + 2]
+        label = x.split(":")[2]
+        lines.append(f"  {label}: X={readings[x]['value']:+.4f}, Y={readings[y]['value']:+.4f}")
+    return "\n".join(lines)
+
+
 async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     messages = [{"role": "system", "content": SYSTEM}, *history, {"role": "user", "content": prompt}]
     start = len(messages) - 1
     force = wants_tool(prompt)
+    general_beam_request = bool(BEAM_POSITION.search(prompt)) and not any(pv in prompt for pv in KNOWN_READS)
     for step in range(args.max_steps):
         resp = await http.post(
             "/chat/completions",
@@ -127,25 +154,63 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                 "tool_choice": "required" if force and step == 0 else "auto",
             },
         )
-        resp.raise_for_status()
+        if resp.is_error:
+            raise httpx.HTTPStatusError(
+                f"{resp.status_code} from vLLM: {resp.text}", request=resp.request, response=resp
+            )
         msg = resp.json()["choices"][0]["message"]
         messages.append({k: v for k, v in msg.items() if v is not None})
         calls = msg.get("tool_calls") or []
         if not calls:
             print(msg.get("content") or "")
             break
+        measured_beam = None
         for call in calls:
             name = call["function"]["name"]
+            readback_log = None
             try:
                 if name not in schemas:
                     raise ValueError(f"unknown tool {name!r}; available: {', '.join(schemas)}")
                 call_args = coerce(json.loads(call["function"]["arguments"] or "{}"), schemas.get(name))
+                if name == "channel_read":
+                    if general_beam_request:
+                        call_args["channels"] = CONTRACT["bpm"]
+                    unknown = set(call_args.get("channels") or []) - KNOWN_READS
+                    if unknown:
+                        raise ValueError(f"unknown PV(s): {sorted(unknown)}; use the listed ring PVs")
+                elif name == "channel_write":
+                    unknown = {
+                        op.get("channel") for op in call_args.get("operations", [])
+                        if isinstance(op, dict) and op.get("channel") not in READBACKS
+                    }
+                    if unknown:
+                        raise ValueError(f"not a writable corrector setpoint: {sorted(unknown)}")
                 result = await mcp.call_tool(name, call_args)
                 text = "\n".join(getattr(part, "text", "") for part in result.content)
+                if name == "channel_read" and general_beam_request:
+                    measured_beam = beam_position_report(text)
+                if name == "channel_write" and not result.isError:
+                    readbacks = [
+                        READBACKS[op["channel"]]
+                        for op in call_args.get("operations", [])
+                        if isinstance(op, dict) and op.get("channel") in READBACKS
+                    ]
+                    if readbacks:
+                        observed = await mcp.call_tool("channel_read", {"channels": readbacks})
+                        observed_text = "\n".join(getattr(part, "text", "") for part in observed.content)
+                        text += "\nPost-write readback:\n" + observed_text
+                        values = readings_from(observed_text)
+                        shown = ", ".join(f"{pv}={values[pv]['value']}" for pv in readbacks if pv in values)
+                        readback_log = f"  [channel_read · post-write] {shown or json.dumps({'channels': readbacks})}"
             except Exception as exc:  # report tool errors to the model instead of crashing the REPL
                 call_args, text = {}, f"error: {exc}"
             dim(f"  [{name}] {json.dumps(call_args)}")
+            if readback_log:
+                dim(readback_log)
             messages.append({"role": "tool", "tool_call_id": call["id"], "content": text})
+        if measured_beam:
+            print(measured_beam)
+            break
     else:
         dim(f"(stopped after {args.max_steps} steps)")
     history.extend(messages[start:])

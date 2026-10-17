@@ -36,9 +36,12 @@ Build output is ignored under `build/`. Rebuild after changing the profile, prov
 Use a supported vLLM host to serve the instruction-tuned model, then set `VLLM_BASE_URL` to its `/v1` endpoint reachable from the host running the Osprey web terminal. For a server on the same host:
 
 ```sh
-vllm serve LiquidAI/LFM2.5-230M --served-model-name LFM2.5-230M --host 0.0.0.0 --port 8000
+vllm serve LiquidAI/LFM2.5-230M --served-model-name LFM2.5-230M \
+  --enable-auto-tool-choice --tool-call-parser lfm2 --host 127.0.0.1 --port 8000
 curl http://127.0.0.1:8000/v1/models
 ```
+
+The `lfm2` parser is required for the chat's forced tool calls. On an Apple Silicon host running vLLM Metal alongside Docker, `--max-model-len 4096 --gpu-memory-utilization 0.05` kept this demo's memory use low; tune those values for your host.
 
 The checked-in profile follows the small served deployment used for data collection: `hello-world` preset, one PyAT virtual accelerator, a recorded archive, controls MCP tools, and the custom small-model web terminal. It has no planning, rule, or approval hooks. Start it from a separate terminal after the build:
 
