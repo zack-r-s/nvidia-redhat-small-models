@@ -63,6 +63,11 @@ SYSTEM = (
     + f"\nCorrector setpoints ({CONTRACT['units']['kick']}, |kick| <= {CONTRACT['kick_limit_mrad']}): "
     + ", ".join(CONTRACT["corrector_setpoints"])
 )
+GOAL_SYSTEM = (
+    SYSTEM + " Choose at most one batch of absolute corrector setpoints "
+    "for the requested plane; values are mrad and must be within the listed limits. "
+    "Use only the measured BPMs and setpoints below. Do not claim a result before the write is measured."
+)
 
 
 def server_params() -> StdioServerParameters:
@@ -295,9 +300,7 @@ async def goal_turn(prompt, plane, history, mcp, http, tools, schemas, args) -> 
     write_tools = [tool for tool in tools if tool["function"]["name"] == "channel_write"]
     tool_id = "prewrite-read"
     messages = [
-        {"role": "system", "content": SYSTEM + " Choose at most one batch of absolute corrector setpoints "
-         "for the requested plane; values are mrad and must be within the listed limits. "
-         "Use only the measured BPMs and setpoints below. Do not claim a result before the write is measured."},
+        {"role": "system", "content": GOAL_SYSTEM},
         *history, {"role": "user", "content": prompt},
         {"role": "assistant", "tool_calls": [{"id": tool_id, "type": "function",
           "function": {"name": "channel_read", "arguments": json.dumps({"channels": needed})}}]},
@@ -572,7 +575,7 @@ async def main(args) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url", default=os.environ.get("VLLM_BASE_URL", "http://localhost:8000/v1"))
-    parser.add_argument("--model", default=PROVIDER["default_model"])
+    parser.add_argument("--model", default=os.environ.get("VLLM_MODEL_NAME") or PROVIDER["default_model"])
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--max-tokens", type=int, default=512)
     parser.add_argument("--max-steps", type=int, default=5, help="Model calls per turn")

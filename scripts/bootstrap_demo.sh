@@ -10,7 +10,6 @@ BOOT="$ROOT/var/bootstrap"
 PY="$ROOT/.venv/bin/python"
 OSPREY="$ROOT/.venv/bin/osprey"
 MODEL_URL=http://127.0.0.1:8000/v1/models
-MODEL_ID=LFM2.5-230M
 
 say() { printf '\n==> %s\n' "$*"; }
 die() { printf 'bootstrap: %s\n' "$*" >&2; exit 1; }
@@ -18,13 +17,22 @@ need() { command -v "$1" >/dev/null 2>&1 || die "Missing $1. Install it and reru
 
 usage() {
   cat <<'EOF'
-Usage: scripts/bootstrap_demo.sh [--check | --keep-old-demo]
+Usage: scripts/bootstrap_demo.sh [--check] [--keep-old-demo] [--model MODEL]
+                                 [--served-name NAME] [--tool-parser PARSER]
 
 Resets only this checkout's Osprey deployment, installs pinned project
-dependencies, starts the local LFM2.5-230M vLLM server if needed, and brings
-up the Osprey accelerator, viewer/API, and authenticated web terminal.
+dependencies, starts the selected vLLM model if needed, and brings up the
+Osprey accelerator, viewer/API, and authenticated web terminal.
 
---check  Check host prerequisites without changing anything.
+--check        Check host prerequisites without changing anything.
+--model        Hugging Face ID or checkpoint directory (relative to repo root)
+               (env VLLM_MODEL; default LiquidAI/LFM2.5-230M).
+--served-name  Model ID the endpoint reports and the chat requests
+               (env VLLM_SERVED_NAME; default the model's last path part).
+--tool-parser  vLLM tool-call parser (env VLLM_TOOL_PARSER; default lfm2,
+               which only fits LFM models).
+VLLM_SERVE_ARGS replaces the extra serve flags; on macOS the default is
+"--max-model-len 4096 --gpu-memory-utilization 0.05", tuned for 230M.
 The old hackring-live-230m demo is stopped automatically when it is running.
 Its volumes and the Xopt stack remain. --keep-old-demo skips that cleanup.
 
@@ -38,15 +46,35 @@ EOF
 
 MODE=run
 CLEANUP_OLD_DEMO=1
-case "${1:-}" in
-  '') ;;
-  --check) MODE=check ;;
-  --cleanup-old-demo) CLEANUP_OLD_DEMO=1 ;;
-  --keep-old-demo) CLEANUP_OLD_DEMO=0 ;;
-  -h|--help) usage; exit 0 ;;
-  *) usage >&2; exit 2 ;;
-esac
-(( $# <= 1 )) || { usage >&2; exit 2; }
+VLLM_MODEL=${VLLM_MODEL:-LiquidAI/LFM2.5-230M}
+MODEL_ID=${VLLM_SERVED_NAME:-}
+VLLM_TOOL_PARSER=${VLLM_TOOL_PARSER:-lfm2}
+while (( $# )); do
+  case "$1" in
+    --check) MODE=check ;;
+    --cleanup-old-demo) CLEANUP_OLD_DEMO=1 ;;
+    --keep-old-demo) CLEANUP_OLD_DEMO=0 ;;
+    --model|--served-name|--tool-parser)
+      (( $# >= 2 )) && [[ -n $2 ]] || { usage >&2; exit 2; }
+      case "$1" in
+        --model) VLLM_MODEL=$2 ;;
+        --served-name) MODEL_ID=$2 ;;
+        --tool-parser) VLLM_TOOL_PARSER=$2 ;;
+      esac
+      shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) usage >&2; exit 2 ;;
+  esac
+  shift
+done
+MODEL_ID=${MODEL_ID:-$(basename "${VLLM_MODEL%/}")}
+if [[ -n ${VLLM_SERVE_ARGS+set} ]]; then
+  read -r -a serve_extra <<<"$VLLM_SERVE_ARGS"
+elif [[ $(uname -s) == Darwin ]]; then
+  serve_extra=(--max-model-len 4096 --gpu-memory-utilization 0.05)
+else
+  serve_extra=()
+fi
 
 [[ -f profile.yml && -f .env.example && -f data/pv_contract.json ]] || die 'Run from a complete hackring checkout.'
 for cmd in git uv npm docker curl; do need "$cmd"; done
@@ -73,7 +101,7 @@ fi
 
 model_ready() {
   curl -fsS --max-time 3 "$MODEL_URL" 2>/dev/null |
-    "$PY" -c 'import json,sys; assert any(m.get("id") == "LFM2.5-230M" for m in json.load(sys.stdin)["data"])' 2>/dev/null
+    "$PY" -c 'import json,sys; assert any(m.get("id") == sys.argv[1] for m in json.load(sys.stdin)["data"])' "$MODEL_ID" 2>/dev/null
 }
 
 port_free() {
@@ -89,6 +117,7 @@ if [[ $MODE == check ]]; then
     die 'vLLM is missing and no model server is available on 127.0.0.1:8000.'
   fi
   say 'Host checks passed: git, uv/Python 3.12, npm, Docker, curl, and vLLM or an existing model endpoint.'
+  printf 'Model: %s served as %s (tool parser %s)\n' "$VLLM_MODEL" "$MODEL_ID" "$VLLM_TOOL_PARSER"
   if [[ -n $VLLM_CMD ]]; then
     printf 'vLLM: %s\n' "$VLLM_CMD"
   else
@@ -155,11 +184,26 @@ elif [[ $CLEANUP_OLD_DEMO == 0 && -n $old_demo_running ]]; then
   say 'Keeping the earlier live demo running; Docker will host three Osprey stacks.'
 fi
 
+# A model switch replaces the vLLM server an earlier bootstrap started; other servers are left alone.
+if [[ -f "$BOOT/vllm.pid" ]] && ! model_ready; then
+  old_pid=$(cat "$BOOT/vllm.pid")
+  if [[ $old_pid =~ ^[0-9]+$ ]] && kill -0 "$old_pid" 2>/dev/null &&
+     [[ $(ps -p "$old_pid" -o command= 2>/dev/null || true) == *serve* ]]; then
+    say "Stopping this checkout's previous vLLM server (pid $old_pid) to serve $MODEL_ID"
+    kill "$old_pid"
+    for _ in {1..30}; do
+      kill -0 "$old_pid" 2>/dev/null || break
+      sleep 1
+    done
+    kill -0 "$old_pid" 2>/dev/null && die "Previous vLLM server $old_pid did not exit; stop it and rerun."
+  fi
+  rm -f "$BOOT/vllm.pid"
+fi
 if curl -fsS --max-time 3 "$MODEL_URL" >/dev/null 2>&1 && ! model_ready; then
   die "Port 8000 serves a different model; expected $MODEL_ID. Stop that server and rerun."
 fi
 if ! model_ready && ! port_free 8000; then
-  die 'Port 8000 is occupied without a working LFM2.5-230M endpoint. Stop that process and rerun.'
+  die "Port 8000 is occupied without a working $MODEL_ID endpoint. Stop that process and rerun."
 fi
 
 say 'Stopping this checkout’s previous web terminal and viewer, if present'
@@ -219,6 +263,7 @@ fi
 "$OSPREY" reset --repo "$ROOT" --yes
 cp .env.example .env
 chmod 600 .env
+printf 'VLLM_MODEL_NAME=%s\n' "$MODEL_ID" >> .env
 
 mkdir -p profiles
 "$PY" - "$ROOT" "$PORT_BASE" "$CA_PORT" "$PVA_PORT" <<'PY'
@@ -246,17 +291,15 @@ SETUPTOOLS_SCM_PRETEND_VERSION=2026.6.2+gd639869 \
   "$OSPREY" build --skip-deps --skip-lifecycle --dev
 npm --prefix frontend run build
 
-say 'Starting local LFM2.5-230M if needed'
+say "Starting local $MODEL_ID if needed"
 if ! model_ready; then
   if curl -fsS --max-time 3 "$MODEL_URL" >/dev/null 2>&1; then
     die "Port 8000 serves a different model; expected $MODEL_ID. Stop that server and rerun."
   fi
   [[ -n $VLLM_CMD ]] || die 'vLLM executable disappeared.'
-  model_args=(serve LiquidAI/LFM2.5-230M --served-model-name "$MODEL_ID"
-    --enable-auto-tool-choice --tool-call-parser lfm2 --host 127.0.0.1 --port 8000)
-  if [[ $(uname -s) == Darwin ]]; then
-    model_args+=(--max-model-len 4096 --gpu-memory-utilization 0.05)
-  fi
+  model_args=(serve "$VLLM_MODEL" --served-model-name "$MODEL_ID"
+    --enable-auto-tool-choice --tool-call-parser "$VLLM_TOOL_PARSER" --host 127.0.0.1 --port 8000
+    ${serve_extra[@]+"${serve_extra[@]}"})
   nohup "$VLLM_CMD" "${model_args[@]}" >"$BOOT/vllm.log" 2>&1 &
   echo $! >"$BOOT/vllm.pid"
   for _ in {1..180}; do

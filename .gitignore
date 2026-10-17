@@ -5,7 +5,8 @@
 /.uv-cache/
 /build/
 /profiles/bootstrap-local.yml
-/var/
+/var/*
+!/var/gym/
 /.env
 /.env.*
 !/.env.example
@@ -18,3 +19,11 @@ __pycache__/
 /.idea
 /.vscode/
 .pytest_cache/
+/datasets/v*/splits/*/*.jsonl
+/gym/cache/
+/gym/responses_api_agents/
+/gym/responses_api_models/
+/gym/**/.venv/
+/outputs/
+/gym/outputs/
+/gym/results/

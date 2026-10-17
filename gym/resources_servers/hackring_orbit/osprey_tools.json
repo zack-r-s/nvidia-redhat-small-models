@@ -1,0 +1,61 @@
+{
+  "source": "osprey d639869 controls MCP server, FastMCP list_tools()",
+  "tools": {
+    "channel_write": {
+      "description": "Write values to one or more control-system channels.\n\nEach operation is a dict with keys: channel (str), value (any), notes (str, optional).\nPreToolUse hooks handle human approval BEFORE this code runs.\n\nEvery result carries one `outcome` word, decided by the connector that\nperformed the write. Report the outcome that word names and nothing\nstronger — a write that was not confirmed is not a confirmed write, and you\nmust not describe it as one. The six words:\n\n- `refused` — nothing was written. Either OSPREY refused it on policy or\n  limits grounds and never sent it to the machine, or the control system\n  itself denied the write (`refusal_reason` `CONTROL_SYSTEM_REFUSED`), or\n  the address is not a channel of this facility (`CHANNEL_NOT_FOUND`).\n- `failed` — sent to the machine, which did not take it.\n- `confirmed` — a re-read of the channel holds the value sent. An alarm on\n  the channel does not change that: report `alarm_status` and\n  `alarm_severity` beside the confirmation, because a confirmed value in a\n  MAJOR alarm is worth telling the operator about.\n- `mismatch` — the re-read holds a different value. `observed_value` is what\n  the channel actually holds; a clamped or rounded setpoint appears here.\n- `unconfirmed` — sent, but not acknowledged in time or the re-read itself\n  failed, so what the channel holds now is unknown.\n- `unrequested` — confirmation is switched off for this channel; the value\n  was sent and nothing was checked.\n\n`summary.outcomes` counts the words this call produced.\n\nLeave `confirm` unset unless the operator asks for it: the deployment\nresolves it per channel from the limits database, which confirms by default.\nThis tool does not raise on a write that was not confirmed — it reports the\nword. (`osprey.runtime.write_channel`, on the Python path, raises.) It\nraises only when every write in the call came back `refused` or `failed`,\nwhich is the one case where no value reached any channel at all. A call\nmixing those with any other word returns normally, and the per-channel\n`outcome` is where you read what happened to each one.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "operations": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "description": "List of write operations, each with \"channel\", \"value\", and optional \"notes\"."
+          },
+          "confirm": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional override — re-read each channel and compare (true), or\nsend without checking (false). Omit it to let the deployment decide."
+          }
+        },
+        "required": [
+          "operations"
+        ],
+        "type": "object"
+      }
+    },
+    "channel_read": {
+      "description": "Read current values from one or more control-system channels.\n\nArray values come back inline as JSON lists. A value with more elements than\nthe configured inline budget - or one that no longer fits the budget left for\nthis call - is reported as a summary (shape, dtype, element count and, for\nnumeric data, min/max/mean) instead of raw numbers.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "channels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "List of channel/PV addresses to read."
+          },
+          "include_metadata": {
+            "default": true,
+            "type": "boolean",
+            "description": "If True, also report units, precision, alarm status and\ndescription for each channel, plus enum_label/enum_labels on the entries\nwhose channel is enum-typed (an enum reads as its integer index, and the\nlabel names the state that index stands for). Use channel_limits for the\nbounds a write is checked against - the control system does not report\nthose here."
+          }
+        },
+        "required": [
+          "channels"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

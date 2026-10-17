@@ -1,0 +1,13 @@
+{
+  "served_model_name": "LFM2.5-1.2B-Instruct",
+  "model_source": "LiquidAI/LFM2.5-1.2B-Instruct",
+  "max_model_len": 4096,
+  "base_url": "http://127.0.0.1:8010/v1",
+  "split": "validation",
+  "repo_commit": "261fe65",
+  "extra_args": [
+    "--num-repeats",
+    "4"
+  ],
+  "started_utc": "2026-10-17T22:32:20.634173+00:00"
+}

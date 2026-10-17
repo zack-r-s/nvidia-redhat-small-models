@@ -1,0 +1,4 @@
+# Out-of-tree Gym installs drop the ../.. line and add nemo-gym pinned to the CLI's version.
+-e nemo-gym[dev] @ ../../
+accelerator-toolbox>=0.9,<0.10
+pytest>=8
