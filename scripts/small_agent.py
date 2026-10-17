@@ -217,15 +217,16 @@ def verified_report(prompt: str, readings: dict, write_request: tuple[str, float
 
 async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     messages = [{"role": "system", "content": SYSTEM}, *history, {"role": "user", "content": prompt}]
-    start = len(messages) - 1
     force = wants_tool(prompt)
     write_request = requested_write(prompt)
     available_tools = tools if write_request else [tool for tool in tools if tool["function"]["name"] != "channel_write"]
     general_beam_request = bool(BEAM_POSITION.search(prompt)) and not any(pv in prompt for pv in KNOWN_READS)
     channel_request = bool(write_request or BEAM_POSITION.search(prompt) or any(pv in prompt for pv in KNOWN_READS))
     observed_readings: dict = {}
+    post_write_observed: set[str] = set()
     write_result: dict | None = None
     write_attempted = False
+    answer = ""
     for step in range(args.max_steps):
         resp = await http.post(
             "/chat/completions",
@@ -243,8 +244,8 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
         messages.append({k: v for k, v in msg.items() if v is not None})
         calls = msg.get("tool_calls") or []
         if not calls:
-            print(verified_report(prompt, observed_readings, write_request, write_result, write_attempted)
-                  if channel_request else (msg.get("content") or ""))
+            answer = (verified_report(prompt, observed_readings, write_request, write_result, write_attempted)
+                      if channel_request else (msg.get("content") or ""))
             break
         measured_beam = None
         for call in calls:
@@ -294,7 +295,10 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                 result = await mcp.call_tool(name, call_args)
                 text = "\n".join(getattr(part, "text", "") for part in result.content)
                 if name == "channel_read":
-                    observed_readings.update(readings_from(text))
+                    values = readings_from(text)
+                    observed_readings.update(values)
+                    if write_attempted:
+                        post_write_observed.update(values)
                 if name == "channel_read" and general_beam_request:
                     measured_beam = beam_position_report(text)
                 if name == "channel_write":
@@ -317,6 +321,7 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                         text += "\nPost-write readback:\n" + observed_text
                         values = readings_from(observed_text)
                         observed_readings.update(values)
+                        post_write_observed.update(values)
                         shown = ", ".join(f"{pv}={values[pv]['value']}" for pv in readbacks if pv in values)
                         readback_log = f"  [channel_read · post-write] {shown or json.dumps({'channels': readbacks})}"
             except Exception as exc:  # report tool errors to the model instead of crashing the REPL
@@ -331,17 +336,36 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                 dim(readback_log)
             messages.append({"role": "tool", "tool_call_id": call["id"], "content": text})
         if measured_beam:
-            print(measured_beam)
+            answer = measured_beam
+            break
+        if write_attempted:
+            # A write is complete from the operator's perspective only after
+            # every explicitly requested follow-up PV has been read again.
+            requested = [pv for pv in [*CONTRACT["bpm"], *CONTRACT["corrector_setpoints"],
+                                       *READBACKS.values()] if pv in prompt and pv != write_request[0]]
+            missing = [pv for pv in requested if pv not in post_write_observed]
+            if missing:
+                for pv in missing:
+                    observed_readings.pop(pv, None)  # a pre-write reading is not post-write evidence
+                try:
+                    follow_up = await mcp.call_tool("channel_read", {"channels": missing})
+                    follow_up_text = "\n".join(getattr(part, "text", "") for part in follow_up.content)
+                    values = readings_from(follow_up_text)
+                    observed_readings.update(values)
+                    shown = ", ".join(f"{pv}={values[pv]['value']}" for pv in missing if pv in values)
+                    dim(f"  [channel_read · requested] {shown or json.dumps({'channels': missing})}")
+                except Exception as exc:
+                    dim(f"  [channel_read · requested failed] {exc}")
+            answer = verified_report(prompt, observed_readings, write_request, write_result, write_attempted)
             break
     else:
-        print(verified_report(prompt, observed_readings, write_request, write_result, write_attempted)
-              if channel_request else f"(stopped after {args.max_steps} steps)")
-    history.extend(messages[start:])
-    # Small models degrade with context; keep only the last few exchanges.
-    # Trim at a user message so no tool result is left without its call.
-    del history[: max(0, len(history) - args.history)]
-    while history and history[0]["role"] != "user":
-        history.pop(0)
+        answer = (verified_report(prompt, observed_readings, write_request, write_result, write_attempted)
+                  if channel_request else f"(stopped after {args.max_steps} steps)")
+    print(answer)
+    # Keep concise, verified turns. Raw MCP envelopes can be thousands of
+    # tokens and exhaust the 230M model's 4096-token context in a few turns.
+    history.extend([{"role": "user", "content": prompt}, {"role": "assistant", "content": answer}])
+    del history[: max(0, len(history) - max(1, args.history // 2) * 2)]
 
 
 async def main(args) -> None:

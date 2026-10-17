@@ -126,8 +126,9 @@ def test_model_write_uses_verified_read_write_read_sequence(capsys, monkeypatch)
             return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))], isError=False)
 
     mcp = FakeMCP()
+    history = []
     asyncio.run(small_agent.turn(
-        prompt, [], mcp, FakeHTTP(),
+        prompt, history, mcp, FakeHTTP(),
         [{"type": "function", "function": {"name": name}} for name in ("channel_read", "channel_write")],
         {"channel_read": {"properties": {"channels": {"type": "array"}}},
          "channel_write": {"properties": {"operations": {"type": "array"}}}},
@@ -141,3 +142,110 @@ def test_model_write_uses_verified_read_write_read_sequence(capsys, monkeypatch)
     assert "confirmed for 0.2 mrad" in output
     assert f"{bpm}: 0.1 mm" in output
     assert "Set to 0.2 mm." not in output
+    assert [entry["role"] for entry in history] == ["user", "assistant"]
+    assert "Post-write readback" not in history[1]["content"]
+
+
+def test_write_alone_triggers_requested_post_write_read(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    setpoint = "RING:MAG:H01:KICK:SP"
+    readback = "RING:MAG:H01:KICK:RB"
+    bpm = "RING:DIAG:BPM01:POSITION:X"
+    prompt = f"Set {setpoint} to 0.2, then read {bpm}"
+
+    class FakeResponse:
+        is_error = False
+
+        def json(self):
+            return {"choices": [{"message": {"role": "assistant", "tool_calls": [{
+                "id": "write", "type": "function", "function": {"name": "channel_write",
+                    "arguments": json.dumps({"operations": [{"channel": setpoint, "value": 0.2}]})},
+            }]}}]}
+
+    class FakeHTTP:
+        calls = 0
+
+        async def post(self, path, json):
+            self.calls += 1
+            assert self.calls == 1, "a second model request should not be needed after a verified write"
+            return FakeResponse()
+
+    class FakeMCP:
+        calls = []
+
+        async def call_tool(self, name, args):
+            self.calls.append((name, args))
+            if name == "channel_write":
+                data = {"status": "success", "summary": {"results": [{
+                    "channel": setpoint, "outcome": "confirmed", "observed_value": 0.2,
+                }]}}
+            else:
+                values = {setpoint: 0.0, readback: 0.2, bpm: 0.7669}
+                data = {"status": "success", "summary": {"readings": {
+                    pv: {"value": values[pv]} for pv in args["channels"]}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))], isError=False)
+
+    history = []
+    mcp = FakeMCP()
+    asyncio.run(small_agent.turn(
+        prompt, history, mcp, FakeHTTP(),
+        [{"type": "function", "function": {"name": name}} for name in ("channel_read", "channel_write")],
+        {"channel_read": {"properties": {"channels": {"type": "array"}}},
+         "channel_write": {"properties": {"operations": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=3, history=8),
+    ))
+    assert [name for name, _ in mcp.calls] == [
+        "channel_read", "channel_write", "channel_read", "channel_read",
+    ]
+    assert mcp.calls[-1][1] == {"channels": [bpm]}
+    assert f"{bpm}: 0.7669 mm" in capsys.readouterr().out
+    assert [entry["role"] for entry in history] == ["user", "assistant"]
+
+
+def test_failed_post_write_read_does_not_report_stale_bpm(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    setpoint = "RING:MAG:H01:KICK:SP"
+    readback = "RING:MAG:H01:KICK:RB"
+    bpm = "RING:DIAG:BPM01:POSITION:X"
+    prompt = f"Set {setpoint} to 0.2, then read {bpm}"
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [
+                    {"id": "early", "type": "function", "function": {"name": "channel_read",
+                        "arguments": json_module.dumps({"channels": [bpm]})}},
+                    {"id": "write", "type": "function", "function": {"name": "channel_write",
+                        "arguments": json_module.dumps({"operations": [{"channel": setpoint, "value": 0.2}]})}},
+                ],
+            }}]})
+
+    class FakeMCP:
+        bpm_reads = 0
+
+        async def call_tool(self, name, args):
+            if name == "channel_write":
+                data = {"status": "success", "summary": {"results": [{
+                    "channel": setpoint, "outcome": "confirmed", "observed_value": 0.2,
+                }]}}
+            elif args["channels"] == [bpm]:
+                self.bpm_reads += 1
+                data = ({"status": "success", "summary": {"readings": {bpm: {"value": 0.0}}}}
+                        if self.bpm_reads == 1 else {"status": "error"})
+            else:
+                pv = args["channels"][0]
+                data = {"status": "success", "summary": {"readings": {
+                    pv: {"value": 0.0 if pv == setpoint else 0.2}}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json_module.dumps(data))], isError=False)
+
+    json_module = json
+    asyncio.run(small_agent.turn(
+        prompt, [], FakeMCP(), FakeHTTP(),
+        [{"type": "function", "function": {"name": name}} for name in ("channel_read", "channel_write")],
+        {"channel_read": {"properties": {"channels": {"type": "array"}}},
+         "channel_write": {"properties": {"operations": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=2, history=8),
+    ))
+    output = capsys.readouterr().out
+    assert f"{bpm}: no verified reading returned." in output
+    assert f"{bpm}: 0.0 mm" not in output
