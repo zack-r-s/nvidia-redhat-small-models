@@ -36,7 +36,7 @@ def make_ring() -> at.Lattice:
                     at.Corrector(f"H{device:02d}", 0.0, [0.0, 0.0]),
                     at.Corrector(f"V{device:02d}", 0.0, [0.0, 0.0]),
                     at.Corrector(f"ERR{device:02d}", 0.0, [0.0, 0.0]),
-                    at.Marker(f"BPM{device:02d}"),
+                    at.Monitor(f"BPM{device:02d}"),
                 ]
             )
         elements.extend(
