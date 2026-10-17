@@ -28,15 +28,16 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.history import FileHistory
 
+from hackring.deployment import identity
+
 REPO = Path(__file__).resolve().parents[1]
 load_dotenv(REPO / ".env", override=False)
 BUILD = REPO / "build"
 LOGS = REPO / "var" / "logs"
 CONTRACT = json.loads((REPO / "data" / "pv_contract.json").read_text())
 PROVIDER = yaml.safe_load((REPO / "providers.yml").read_text())["providers"]["vllm"]
-PROFILE = yaml.safe_load((REPO / "profile.yml").read_text())
-VA = PROFILE["virtual_accelerator"]
-VA_CONTAINER = f"{PROFILE['project_name']}-virtual-accelerator"
+PROJECT, CA_PORT, PVA_PORT = identity(REPO)
+VA_CONTAINER = f"{PROJECT}-virtual-accelerator"
 CHANNELS = CONTRACT["bpm"] + CONTRACT["corrector_setpoints"]
 READBACKS = {name: name.removesuffix(":SP") + ":RB" for name in CONTRACT["corrector_setpoints"]}
 KNOWN_READS = set(CHANNELS) | set(READBACKS.values())
@@ -69,10 +70,10 @@ def server_params() -> StdioServerParameters:
             "CONFIG_FILE": config,
             "OSPREY_CONFIG": config,
             "OSPREY_MCP_TOOL_PREFIX": "controls",
-            "EPICS_CA_NAME_SERVERS": f"127.0.0.1:{VA['port']}",
+            "EPICS_CA_NAME_SERVERS": f"127.0.0.1:{CA_PORT}",
             "EPICS_CA_AUTO_ADDR_LIST": "NO",
             "EPICS_CA_ADDR_LIST": "",
-            "EPICS_PVA_NAME_SERVERS": f"127.0.0.1:{VA['pva_port']}",
+            "EPICS_PVA_NAME_SERVERS": f"127.0.0.1:{PVA_PORT}",
             "EPICS_PVA_AUTO_ADDR_LIST": "NO",
             "EPICS_PVA_ADDR_LIST": "",
         },

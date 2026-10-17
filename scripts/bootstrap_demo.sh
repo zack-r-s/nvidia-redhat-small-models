@@ -92,6 +92,15 @@ if [[ $MODE == check ]]; then
   exit 0
 fi
 
+if [[ -f .env.variant ]]; then
+  selected_variant=$(sed -n 's/^OSPREY_PROFILE_VARIANT=//p' .env.variant | tail -1)
+  [[ -z $selected_variant || $selected_variant == bootstrap-local ]] ||
+    die ".env.variant selects '$selected_variant'; bootstrap will not replace another host variant."
+  if [[ $selected_variant == bootstrap-local && ! -f profiles/bootstrap-local.yml ]]; then
+    die '.env.variant selects bootstrap-local, but its profile overlay is missing.'
+  fi
+fi
+
 # Fail before changing deployment state if the model cannot be served locally.
 if curl -fsS --max-time 3 "$MODEL_URL" >/dev/null 2>&1; then
   : # Validate its exact model after the project Python environment is ready.
@@ -142,6 +151,34 @@ for port in 8001 5173; do
   fi
 done
 
+# Reserve a complete Osprey port block plus both EPICS protocol ports. The
+# selected overlay is host-local and never changes the checked-in profile.
+read -r PORT_BASE CA_PORT PVA_PORT < <("$PY" - <<'PY'
+import socket
+
+def free(port):
+    for kind in (socket.SOCK_STREAM, socket.SOCK_DGRAM):
+        with socket.socket(socket.AF_INET, kind) as sock:
+            try:
+                sock.bind(("127.0.0.1", port))
+            except OSError:
+                return False
+    return True
+
+for index in range(1, 21):
+    base = 10000 + 1000 * index
+    ca = 5064 + 1000 * index
+    pva = 5075 + 1000 * index
+    if all(free(port) for port in range(base, base + 1000)) and free(ca) and free(pva):
+        print(base, ca, pva)
+        break
+else:
+    raise SystemExit("No free Osprey port block and EPICS port pair found in the bootstrap range")
+PY
+)
+[[ -n ${PORT_BASE:-} ]] || die 'Could not select free deployment ports.'
+say "Selected isolated ports: block $PORT_BASE-$((PORT_BASE + 999)), CA $CA_PORT, PVA $PVA_PORT"
+
 say 'Resetting only this Osprey deployment'
 "$OSPREY" reset --repo "$ROOT" --dry-run
 if [[ -f .env ]]; then
@@ -151,6 +188,24 @@ fi
 "$OSPREY" reset --repo "$ROOT" --yes
 cp .env.example .env
 chmod 600 .env
+
+mkdir -p profiles
+"$PY" - "$ROOT" "$PORT_BASE" "$CA_PORT" "$PVA_PORT" <<'PY'
+import hashlib
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+base, ca, pva = map(int, sys.argv[2:])
+project = "hackring-demo-" + hashlib.sha256(str(root).encode()).hexdigest()[:8]
+(root / "profiles" / "bootstrap-local.yml").write_text(
+    f"project_name: {project}\n"
+    f"virtual_accelerator:\n  port: {ca}\n  pva_port: {pva}\n"
+    f"config:\n  deployment.port_base: {base}\n"
+)
+print(f"Host-local Osprey project: {project}")
+PY
+printf 'OSPREY_PROFILE_VARIANT=bootstrap-local\n' > .env.variant
 
 say 'Validating and rebuilding Osprey and frontend'
 PYTHONPATH=src "$PY" scripts/check_ring.py

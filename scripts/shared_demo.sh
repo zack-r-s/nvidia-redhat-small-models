@@ -10,12 +10,10 @@ for port in 8001 5173; do
   if lsof -iTCP:$port -sTCP:LISTEN >/dev/null 2>&1; then echo "Port $port is already in use." >&2; exit 1; fi
 done
 
-read -r PROJECT CA_PORT PVA_PORT < <($PY - <<'PY'
-import yaml
+read -r PROJECT CA_PORT PVA_PORT < <(PYTHONPATH=src $PY - <<'PY'
 from pathlib import Path
-profile = yaml.safe_load(Path('profile.yml').read_text())
-va = profile['virtual_accelerator']
-print(profile['project_name'], va['port'], va['pva_port'])
+from hackring.deployment import identity
+print(*identity(Path.cwd()))
 PY
 )
 export PYTHONPATH=src HACKRING_BACKEND=epics HACKRING_EPICS_SOURCE=osprey-epics

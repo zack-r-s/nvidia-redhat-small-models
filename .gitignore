@@ -3,6 +3,7 @@
 /.venv/
 /.uv-cache/
 /build/
+/profiles/bootstrap-local.yml
 /var/
 /.env
 /.env.*
