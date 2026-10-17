@@ -55,6 +55,8 @@ scripts/shared_demo.sh
 
 For the end-to-end check, record `/state`, ask chat to read `RING:MAG:H01:KICK:SP`, set it to `0.05` mrad, then read `RING:MAG:H01:KICK:RB`. The readback, at least one BPM measurement, `/state`, and the viewer must change together. An out-of-limit request above ±0.35 mrad must leave the setpoint unchanged. The API's `backend` field and viewer label should say `osprey-epics`/“Osprey” in this mode. `POST /scenario` is unavailable in EPICS mode; do not use its dev-only controls for this test.
 
+The small-model chat currently needs an explicit corrector setpoint and kick for a beam move. A vague “Move the beam” request asks for those details; target-orbit optimization is not yet wired into this chat loop.
+
 ## Frontend fixture and QA
 
 For UI work without Docker or inference, `scripts/demo.sh` runs the local PyAT machine and Xopt; `scripts/demo.sh --epics` uses a **caproto fixture IOC** on isolated CA port 6064, not Osprey. `?driver=1` exposes development-only presets for the local machine. The production viewer only issues `GET /state`; replay remains at `/?replay=/replay/demo.json`. The agent intent, action status, and target panels explicitly say “Unavailable” until an event contract exists. [Frontend QA notes](frontend/QA.md) describe the browser checks; `scripts/qa_state_match.py` and `scripts/qa_poll_order.py` cover displayed values and polling order. Pass `--chrome` to those QA scripts to use a system Chrome executable instead of Playwright's bundled browser.

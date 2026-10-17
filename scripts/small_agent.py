@@ -42,11 +42,14 @@ KNOWN_READS = set(CHANNELS) | set(READBACKS.values())
 TOOLS = {"channel_read", "channel_write", "channel_limits"}
 ACTION = re.compile(r"\b(read|set|write|kick|get|measure|report|show)\b", re.IGNORECASE)
 BEAM_POSITION = re.compile(r"\b(beam position|orbit|bpm)\b", re.IGNORECASE)
+MOVE_BEAM = re.compile(r"\b(move|shift|steer)\b.*\b(beam|orbit)\b|\b(beam|orbit)\b.*\b(move|shift|steer)\b", re.IGNORECASE)
 COMMANDS = {"/clear": "forget the conversation so far", "/help": "show commands", "/exit": "quit"}
 
 SYSTEM = (
-    "You operate a simulated FODO storage ring through tools. "
+    "You operate a simulated FODO storage ring through tools; this is not a physical machine. "
     "Read a channel before writing it. Only use channel names returned by tools. "
+    "You may adjust a corrector setpoint when the user specifies the channel and kick. "
+    "For a vague request to move the beam, ask for an exact corrector setpoint and kick. "
     "Answer briefly."
     f"\nBPM channels ({CONTRACT['units']['orbit']}): " + ", ".join(CONTRACT["bpm"])
     + f"\nCorrector setpoints ({CONTRACT['units']['kick']}, |kick| <= {CONTRACT['kick_limit_mrad']}): "
@@ -78,6 +81,18 @@ def server_params() -> StdioServerParameters:
 def wants_tool(prompt: str) -> bool:
     """Force a tool call only for prompts that name a channel or ask for a read/write."""
     return any(name in prompt for name in KNOWN_READS) or bool(ACTION.search(prompt) or BEAM_POSITION.search(prompt))
+
+
+def move_clarification(prompt: str) -> str | None:
+    """Do not let a small model invent a kick for an underspecified beam move."""
+    has_setpoint = any(name in prompt for name in CONTRACT["corrector_setpoints"])
+    has_kick = bool(re.search(r"[+-]?\d+(?:\.\d+)?\s*mrad\b", prompt, re.IGNORECASE))
+    if MOVE_BEAM.search(prompt) and not (has_setpoint and has_kick):
+        return (
+            "I can move the simulated beam with a corrector. Please specify the corrector setpoint "
+            "and kick in mrad. For a small test, say: Set RING:MAG:H01:KICK:SP to 0.05 mrad."
+        )
+    return None
 
 
 def coerce(args: dict, schema: dict | None) -> dict:
@@ -258,6 +273,10 @@ async def main(args) -> None:
                         for command, text in COMMANDS.items():
                             dim(f"  {command:<7} {text}")
                     elif prompt:
+                        clarification = move_clarification(prompt)
+                        if clarification:
+                            print(clarification)
+                            continue
                         try:
                             await turn(prompt, history, mcp, http, tools, schemas, args)
                         except (httpx.HTTPError, KeyError) as exc:
