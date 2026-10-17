@@ -6,6 +6,17 @@ This repo uses one 20-cell, 1 GeV PyAT storage ring for the Osprey controls agen
 
 Use Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js/npm, and an Osprey-supported Docker engine. From the repo root:
 
+For a clean local demo on a new machine, install and start Docker, install uv and Node.js/npm, and install vLLM separately. On Apple Silicon, the [vLLM Metal installer](https://docs.vllm.ai/projects/vllm-metal/en/latest/installation/) supplies `~/.venv-vllm-metal/bin/vllm`; on a supported NVIDIA Linux host, follow the [vLLM installation guide](https://docs.vllm.ai/en/latest/getting_started/installation/). Then run:
+
+```sh
+scripts/bootstrap_demo.sh --check
+scripts/bootstrap_demo.sh
+```
+
+The script installs the Python, pinned Osprey, and frontend dependencies; resets **only this checkout's Osprey deployment** with `osprey reset`; builds and starts the accelerator; starts local LFM2.5-230M if it is not already served; and opens the viewer/API and authenticated web terminal. It prints the chat login URL and viewer URL. Set `VLLM_BIN=/path/to/vllm` if the executable is outside `PATH`. Docker must already be running. The reset removes this deployment's containers, volumes, rendered `build/`, and agent memory, while retaining the source and audit log. The script saves any existing `.env` to ignored `var/bootstrap/env.before-bootstrap` before replacing it with the local vLLM example. Osprey refuses the reset when a different checkout owns containers with this deployment's project name. This command will not rewrite the lattice or checked-in profile; if another deployment uses its ports, stop that deployment or use a separate profile variant first.
+
+The manual setup below remains useful when working on only one part of the stack:
+
 ```sh
 uv venv --python 3.12
 uv pip install --python .venv/bin/python -e '.[dev]'
