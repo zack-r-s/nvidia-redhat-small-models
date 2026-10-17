@@ -5,3 +5,19 @@ Each immutable `vNNN/` directory is one complete collection pass. `v001/` is gen
 `attempts.jsonl` has one row per Xopt evaluation. Each row has `episode_id`, `step`, `split`, all 24 PVs in `read_before`, the eight proposed corrector settings and the subset of PVs actually written in `write`, all 24 PVs in `read_after`, objective metrics, and a completion status. Rows with the same episode ID are chronological; train, validation, and test assignments are at the episode level. `episodes.jsonl` stores seeds, initial state, and hidden calibration offsets needed to reproduce disturbances. Hidden offsets are not part of an attempt's model-visible PV observations. `manifest.json` records provenance, run settings, counts, and file checksums.
 
 This is raw machine and optimizer data, not LFM chat training data. A later language pass can append operator prompts and convert selected episodes into Liquid's `messages` and tool-call format without changing the physical observations.
+
+## GPT annotation pass
+
+`scripts/annotate_dataset.py` prepares one OpenAI Responses Batch request per attempt. It asks for a short operator prompt based on the pre-action BPM state and a separate retrospective observation. Only public BPM readings, commanded public setpoints, and objective values are sent; hidden episode faults are excluded. Results are joined by `custom_id`, not response order, into a separate annotation directory. The raw `attempts.jsonl` and its manifest remain untouched. Review a pilot before submitting the full pass: natural-language output is synthetic annotation, not measured machine truth.
+
+```sh
+uv pip install --python .venv/bin/python openai
+PYTHONPATH=src .venv/bin/python scripts/annotate_dataset.py prepare --model YOUR_STRUCTURED_OUTPUT_MODEL --limit 32 --output datasets/v001/annotations/pilot
+# Set OPENAI_API_KEY in your environment before the API commands below.
+.venv/bin/python scripts/annotate_dataset.py submit --output datasets/v001/annotations/pilot
+.venv/bin/python scripts/annotate_dataset.py status --output datasets/v001/annotations/pilot
+.venv/bin/python scripts/annotate_dataset.py fetch --output datasets/v001/annotations/pilot
+.venv/bin/python scripts/annotate_dataset.py join --output datasets/v001/annotations/pilot
+```
+
+For the complete pass, use a new `--output` directory and omit `--limit`. `prepare` is local only; `submit` uploads the prepared JSONL and starts the paid API batch. `fetch` requires a completed batch. The `join` command requires every requested annotation to succeed and writes `annotated_attempts.jsonl` with the original episode/step/split keys plus two text fields. The separate `annotation_manifest.json` records source and output checksums. The final model-training conversation conversion is a later step.
