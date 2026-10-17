@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "datasets/v001"
 SCHEMA = "hackring.operator_annotation/1"
+DEFAULT_MODEL = "gpt-6-luna"
 INSTRUCTIONS = (
     "You write short, plausible accelerator-operator language for synthetic orbit correction. "
     "Return exactly the requested JSON. The operator_prompt is a request an operator could have "
@@ -107,6 +108,8 @@ def prepare(args: argparse.Namespace) -> None:
                     "max_output_tokens": 180,
                 },
             }
+            if args.model == DEFAULT_MODEL:
+                request["body"]["reasoning"] = {"effort": "none"}
             out.write(json.dumps(request, separators=(",", ":"), allow_nan=False) + "\n")
             count += 1
             if args.limit is not None and count >= args.limit:
@@ -217,10 +220,11 @@ def join(args: argparse.Namespace) -> None:
         for row, _ in records(attempts):
             request_id = key(row)
             if request_id in annotations:
-                out.write(json.dumps({"schema": SCHEMA, "custom_id": request_id,
-                                      "episode_id": row["episode_id"], "step": row["step"],
-                                      "split": row["split"], **annotations[request_id]},
-                                     allow_nan=False) + "\n")
+                annotated = {**row, "annotation": {"schema": SCHEMA,
+                                                   "custom_id": request_id,
+                                                   "model": run["model"],
+                                                   **annotations[request_id]}}
+                out.write(json.dumps(annotated, allow_nan=False) + "\n")
                 count += 1
     write_json(args.output / "annotation_manifest.json", {
         **run, "annotations": count, "batch_output_sha256": digest(args.output / "batch_output.jsonl"),
@@ -234,12 +238,11 @@ def main() -> None:
     parser.add_argument("command", choices=("prepare", "submit", "status", "fetch", "join"))
     parser.add_argument("--dataset", type=Path, default=DATASET)
     parser.add_argument("--output", type=Path, default=DATASET / "annotations/gpt-v001")
-    parser.add_argument("--model", help="API model for prepare; select a structured-output capable model")
+    parser.add_argument("--model", default=DEFAULT_MODEL,
+                        help=f"API model for prepare (default: {DEFAULT_MODEL})")
     parser.add_argument("--limit", type=int, help="Prepare only this many rows for a pilot")
     args = parser.parse_args()
     if args.command == "prepare":
-        if not args.model:
-            parser.error("prepare requires --model")
         prepare(args)
     else:
         globals()[args.command](args)
