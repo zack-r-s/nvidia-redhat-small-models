@@ -89,3 +89,20 @@ cd frontend && npm run build
 ```
 
 The `ara/` research artifact, `build/`, `var/`, virtual environments, frontend dependencies, and `.env` secrets are gitignored.
+
+## Generate and validate Xopt traces
+
+The data lane records read → write → read attempts against the served PyAT accelerator through EPICS, using the same 24-PV contract as the chat and viewer. `datasets/v001/` contains 64 episodes and 4,096 attempts with episode-level train, validation, and test splits. The physical traces are separate from language annotations and model training. [Dataset documentation](datasets/README.md) describes the row schema, provenance, and annotation pass.
+
+The first collection used an isolated Osprey deployment at `/private/tmp/hackring-data-v001-monitor`. At that time the checked-in deck had `Marker` BPMs, so staging converted only those four zero-length elements to `Monitor` and verified the test orbit was unchanged. The merged main deck now uses `Monitor` directly; staging accepts it without changing the checked-in lattice or facility files. The recorded v001 manifest retains the historical conversion provenance.
+
+To stage a new isolated deployment, use a fresh `--deployment` path. It requires free CA/PVA ports 5064/5075 and the pinned Osprey source checkout described above. On this Mac, Rancher Desktop supplies the Docker socket:
+
+```sh
+PYTHONPATH=src .venv/bin/python scripts/prepare_dataset_va.py --deployment /private/tmp/hackring-data-next --build
+DOCKER_HOST=unix://$HOME/.rd/docker.sock .venv/bin/osprey up --repo /private/tmp/hackring-data-next --dev -d
+PYTHONPATH=src .venv/bin/python scripts/generate_dataset.py --deployment /private/tmp/hackring-data-next --output datasets/v002
+PYTHONPATH=src .venv/bin/python scripts/validate_dataset.py datasets/v002
+```
+
+The generator refuses to overwrite an output version. The full default pass is 64 episodes × 64 sequential Xopt evaluations with bounded ±0.35 mrad correctors. The driver sets hidden seeded disturbances, reads all public PVs, applies EPICS writes, and records the settled public PVs and objective after each attempt. Run `PYTHONPATH=src .venv/bin/python scripts/validate_dataset.py datasets/v001` to verify the checked-in first pass. The annotation script writes a separate version under `datasets/v001/annotations/`; it does not edit the raw traces. No fine-tuning is performed here.
