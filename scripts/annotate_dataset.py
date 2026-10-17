@@ -1,41 +1,34 @@
-"""Prepare, run, and join GPT Batch annotations for immutable Xopt attempts."""
+"""Annotate immutable Xopt attempts through direct OpenAI Responses calls."""
 
 from __future__ import annotations
 
 import argparse
+import asyncio
 import hashlib
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = ROOT / "datasets/v001"
-SCHEMA = "hackring.operator_annotation/1"
 DEFAULT_MODEL = "gpt-6-luna"
-INSTRUCTIONS = (
-    "You write short, plausible accelerator-operator language for synthetic orbit correction. "
-    "Return exactly the requested JSON. The operator_prompt is a request an operator could have "
-    "made BEFORE the action: base it only on the pre-action BPM readings and the standing goal "
-    "of centering the orbit with modest corrector kicks. Vary natural phrasing, but do not name "
-    "a specific corrector command or predict its outcome. The observation is a retrospective "
-    "sentence about the supplied read/write/read transition. Describe worsening or no change "
-    "honestly. Do not invent causes, hidden faults, unseen PVs, or physics measurements. "
-    "BPM positions are in mm and corrector settings are in mrad."
+SCHEMA = "hackring.operator_annotation/1"
+
+PROMPT_INSTRUCTIONS = (
+    "Write one short, natural operator request for a simulated storage ring. "
+    "The operator wants to bring the measured orbit toward center using modest corrector kicks. "
+    "Refer to one real feature of the supplied PRE-ACTION BPM readings so the request is specific "
+    "to this state. Use only those pre-action public PV readings. Do not prescribe a specific knob value, "
+    "claim to know a hidden fault, predict an outcome, or mention a later measurement. "
+    "Vary the wording naturally. BPM positions are mm; corrector settings are mrad."
 )
-FORMAT = {
-    "type": "json_schema",
-    "name": "operator_annotation",
-    "strict": True,
-    "schema": {
-        "type": "object",
-        "properties": {
-            "operator_prompt": {"type": "string"},
-            "observation": {"type": "string"},
-        },
-        "required": ["operator_prompt", "observation"],
-        "additionalProperties": False,
-    },
-}
+OBSERVATION_INSTRUCTIONS = (
+    "Write one short factual sentence describing this simulated read-write-read transition. "
+    "Use only the supplied public PVs and objective values. State whether the measured orbit "
+    "cost improved, worsened, or did not change. Do not infer causes, hidden faults, or intent. "
+    "BPM positions are mm; corrector settings are mrad."
+)
 
 
 def digest(path: Path) -> str:
@@ -58,194 +51,231 @@ def key(row: dict) -> str:
 
 
 def source(dataset: Path) -> tuple[Path, dict]:
-    manifest = json.loads((dataset / "manifest.json").read_text())
+    manifest_path = dataset / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
     attempts = dataset / "attempts.jsonl"
     if digest(attempts) != manifest["files_sha256"]["attempts.jsonl"]:
-        raise ValueError("attempts.jsonl differs from the immutable source manifest")
+        raise ValueError("attempts.jsonl differs from its immutable source manifest")
     return attempts, manifest
 
 
-def compact_pvs(pvs: dict) -> dict[str, float]:
-    return {name.split("RING:DIAG:", 1)[1]: round(value, 5)
-            for name, value in pvs.items() if name.startswith("RING:DIAG:")}
-
-
-def prepare(args: argparse.Namespace) -> None:
-    attempts, source_manifest = source(args.dataset)
-    if args.limit is not None and args.limit < 1:
+def selected_rows(attempts: Path, limit: int | None) -> list[dict]:
+    if limit is not None and limit < 1:
         raise ValueError("--limit must be positive")
-    if args.output.exists():
-        raise FileExistsError(f"annotation run already exists: {args.output}")
-    args.output.mkdir(parents=True)
-    seen: set[str] = set()
-    count = 0
-    with (args.output / "batch_input.jsonl").open("w") as out:
-        for row, _ in records(attempts):
-            request_id = key(row)
-            if request_id in seen:
-                raise ValueError(f"duplicate attempt ID: {request_id}")
-            seen.add(request_id)
-            # Hidden episode faults and other model-only metadata never enter the request.
-            context = {
-                "before_bpm_mm": compact_pvs(row["read_before"]),
-                "written_setpoints_mrad": {
-                    name: round(row["write"]["setpoints_mrad"][name], 5)
-                    for name in row["write"]["pvs_written"]
-                },
-                "after_bpm_mm": compact_pvs(row["read_after"]),
-                "before_orbit_cost": round(row["before_metrics"]["orbit_cost"], 7),
-                "after_orbit_cost": round(row["after_metrics"]["orbit_cost"], 7),
-            }
-            request = {
-                "custom_id": request_id,
-                "method": "POST",
-                "url": "/v1/responses",
-                "body": {
-                    "model": args.model,
-                    "instructions": INSTRUCTIONS,
-                    "input": json.dumps(context, separators=(",", ":")),
-                    "text": {"format": FORMAT},
-                    "max_output_tokens": 180,
-                },
-            }
-            if args.model == DEFAULT_MODEL:
-                request["body"]["reasoning"] = {"effort": "none"}
-            out.write(json.dumps(request, separators=(",", ":"), allow_nan=False) + "\n")
-            count += 1
-            if args.limit is not None and count >= args.limit:
-                break
-    write_json(args.output / "run.json", {
-        "schema": SCHEMA, "dataset": args.dataset.name,
-        "source_attempts_sha256": digest(attempts),
-        "source_manifest_sha256": digest(args.dataset / "manifest.json"),
-        "source_attempt_count": source_manifest["attempts"],
-        "request_count": count, "model": args.model,
-        "batch_input_sha256": digest(args.output / "batch_input.jsonl"),
-        "created_utc": datetime.now(timezone.utc).isoformat(),
-    })
-    print(f"Prepared {count} Batch requests in {args.output / 'batch_input.jsonl'}")
+    rows = []
+    seen = set()
+    for row, _ in records(attempts):
+        request_id = key(row)
+        if request_id in seen:
+            raise ValueError(f"duplicate attempt ID: {request_id}")
+        seen.add(request_id)
+        rows.append(row)
+        if limit is not None and len(rows) >= limit:
+            break
+    return rows
 
 
-def client():
-    try:
-        from openai import OpenAI
-    except ImportError as exc:
-        raise RuntimeError("Install the optional OpenAI SDK: uv pip install --python .venv/bin/python openai") from exc
-    return OpenAI()
+def rounded_pvs(pvs: dict[str, float]) -> dict[str, float]:
+    return {name: round(value, 6) for name, value in pvs.items()}
 
 
-def submit(args: argparse.Namespace) -> None:
-    run = json.loads((args.output / "run.json").read_text())
-    if (args.output / "batch.json").exists():
-        raise FileExistsError("batch.json already exists; refusing to submit twice")
-    path = args.output / "batch_input.jsonl"
-    if digest(path) != run["batch_input_sha256"]:
-        raise ValueError("batch input changed after preparation")
-    api = client()
-    with path.open("rb") as stream:
-        uploaded = api.files.create(file=stream, purpose="batch")
-    batch = api.batches.create(
-        input_file_id=uploaded.id, endpoint="/v1/responses", completion_window="24h",
-        metadata={"dataset": run["dataset"], "purpose": "operator-annotation"},
-    )
-    write_json(args.output / "batch.json", {
-        "id": batch.id, "input_file_id": uploaded.id, "status": batch.status,
-    })
-    print(f"Submitted {run['request_count']} requests as {batch.id} ({batch.status})")
+def prompt_context(row: dict) -> dict:
+    # This API call cannot leak future actions or outcomes: it receives only the first read.
+    return {"read_before": rounded_pvs(row["read_before"]),
+            "goal": "Center the BPM orbit while keeping corrector kicks modest."}
 
 
-def status(args: argparse.Namespace) -> None:
-    batch_id = json.loads((args.output / "batch.json").read_text())["id"]
-    batch = client().batches.retrieve(batch_id)
-    print(json.dumps({"id": batch.id, "status": batch.status,
-                      "request_counts": batch.request_counts.model_dump() if batch.request_counts else None,
-                      "output_file_id": batch.output_file_id,
-                      "error_file_id": batch.error_file_id}, indent=2))
+def observation_context(row: dict) -> dict:
+    before = row["before_metrics"]["orbit_cost"]
+    after = row["after_metrics"]["orbit_cost"]
+    trend = "improved" if after < before - 1e-12 else "worsened" if after > before + 1e-12 else "unchanged"
+    return {
+        "read_before": rounded_pvs(row["read_before"]),
+        "write": {name: round(row["write"]["setpoints_mrad"][name], 6)
+                  for name in row["write"]["pvs_written"]},
+        "read_after": rounded_pvs(row["read_after"]),
+        "orbit_cost_before": round(before, 8),
+        "orbit_cost_after": round(after, 8),
+        "orbit_cost_trend": trend,
+    }
 
 
-def fetch(args: argparse.Namespace) -> None:
-    batch_id = json.loads((args.output / "batch.json").read_text())["id"]
-    api = client()
-    batch = api.batches.retrieve(batch_id)
-    if batch.status != "completed" or not batch.output_file_id:
-        raise RuntimeError(f"batch is {batch.status}; wait until completed")
-    output = args.output / "batch_output.jsonl"
+def response_format(field: str) -> dict:
+    return {"type": "json_schema", "name": field, "strict": True,
+            "schema": {"type": "object", "properties": {field: {"type": "string"}},
+                       "required": [field], "additionalProperties": False}}
+
+
+def request(model: str, field: str, row: dict) -> dict:
+    if field == "operator_prompt":
+        instructions, context = PROMPT_INSTRUCTIONS, prompt_context(row)
+    elif field == "observation":
+        instructions, context = OBSERVATION_INSTRUCTIONS, observation_context(row)
+    else:
+        raise ValueError(field)
+    params = {"model": model, "instructions": instructions,
+              "input": json.dumps(context, separators=(",", ":")),
+              "text": {"format": response_format(field)},
+              "max_output_tokens": 120, "store": False}
+    if model == DEFAULT_MODEL:
+        params["reasoning"] = {"effort": "none"}
+    return params
+
+
+def parse_response(response, field: str) -> str:
+    if response.status != "completed":
+        raise ValueError(f"{field} response status: {response.status}")
+    value = json.loads(response.output_text)
+    if set(value) != {field}:
+        raise ValueError(f"{field} response has unexpected fields")
+    text = value[field]
+    if not isinstance(text, str) or not text.strip() or len(text) > 500:
+        raise ValueError(f"{field} response is empty or too long")
+    return text.strip()
+
+
+def run_settings(dataset: Path, attempts: Path, model: str, rows: list[dict]) -> dict:
+    return {"schema": SCHEMA, "dataset": dataset.name,
+            "source_attempts_sha256": digest(attempts),
+            "source_manifest_sha256": digest(dataset / "manifest.json"),
+            "annotator_sha256": digest(Path(__file__)),
+            "model": model, "selected_count": len(rows),
+            "first_id": key(rows[0]), "last_id": key(rows[-1]),
+            "created_utc": datetime.now(timezone.utc).isoformat()}
+
+
+def existing_progress(path: Path, expected: set[str]) -> dict[str, dict]:
+    progress = {}
+    if path.exists():
+        for record, _ in records(path):
+            request_id = record["custom_id"]
+            if request_id not in expected or request_id in progress:
+                raise ValueError(f"unexpected or duplicate progress ID: {request_id}")
+            if set(record) != {"custom_id", "operator_prompt", "observation"}:
+                raise ValueError(f"malformed progress record: {request_id}")
+            progress[request_id] = record
+    return progress
+
+
+async def annotate_row(api, row: dict, model: str) -> dict:
+    # The operator request is generated first from pre-action PVs only.
+    prompt_response = await api.responses.create(**request(model, "operator_prompt", row))
+    operator_prompt = parse_response(prompt_response, "operator_prompt")
+    observation_response = await api.responses.create(**request(model, "observation", row))
+    observation = parse_response(observation_response, "observation")
+    return {"custom_id": key(row), "operator_prompt": operator_prompt,
+            "observation": observation}
+
+
+async def collect(args: argparse.Namespace, rows: list[dict], completed: dict[str, dict]) -> None:
+    from openai import AsyncOpenAI
+
+    pending = [row for row in rows if key(row) not in completed]
+    if not pending:
+        return
+    queue = asyncio.Queue()
+    for row in pending:
+        queue.put_nowait(row)
+    failures = []
+    progress_path = args.output / "progress.jsonl"
+    async with AsyncOpenAI(max_retries=4, timeout=60) as api:
+        async def worker() -> None:
+            while not queue.empty():
+                try:
+                    row = queue.get_nowait()
+                except asyncio.QueueEmpty:
+                    return
+                try:
+                    annotation = await annotate_row(api, row, args.model)
+                    with progress_path.open("a") as stream:
+                        stream.write(json.dumps(annotation, allow_nan=False) + "\n")
+                        stream.flush()
+                    completed[annotation["custom_id"]] = annotation
+                    if len(completed) % 50 == 0 or len(completed) == len(rows):
+                        print(f"Annotated {len(completed)}/{len(rows)}", flush=True)
+                except Exception as exc:
+                    failures.append((key(row), str(exc)))
+                finally:
+                    queue.task_done()
+
+        await asyncio.gather(*(worker() for _ in range(min(args.workers, len(pending)))))
+    if failures:
+        print(f"{len(failures)} attempts failed; rerun the same command to resume.")
+        for request_id, error in failures[:5]:
+            print(f"  {request_id}: {error}")
+        raise RuntimeError("annotation incomplete")
+
+
+def finalize(args: argparse.Namespace, rows: list[dict], completed: dict[str, dict], run: dict) -> None:
+    if len(completed) != len(rows):
+        raise ValueError(f"only {len(completed)}/{len(rows)} attempts have both annotations")
+    output = args.output / "annotated_attempts.jsonl"
     if output.exists():
         raise FileExistsError(output)
-    output.write_bytes(api.files.content(batch.output_file_id).content)
-    if batch.error_file_id:
-        (args.output / "batch_errors.jsonl").write_bytes(api.files.content(batch.error_file_id).content)
-    print(f"Saved Batch result to {output}")
+    with output.open("w") as stream:
+        for row in rows:
+            note = completed[key(row)]
+            annotated = {**row, "annotation": {"schema": SCHEMA,
+                                                "custom_id": note["custom_id"],
+                                                "model": run["model"],
+                                                "operator_prompt": note["operator_prompt"],
+                                                "observation": note["observation"]}}
+            stream.write(json.dumps(annotated, allow_nan=False) + "\n")
+    write_json(args.output / "annotation_manifest.json", {
+        **run, "annotations": len(rows), "annotated_attempts_sha256": digest(output),
+        "progress_sha256": digest(args.output / "progress.jsonl"),
+    })
+    print(f"Saved {len(rows)} complete annotated rows to {output}")
 
 
-def response_text(body: dict) -> str:
-    if body.get("status") != "completed":
-        raise ValueError(f"incomplete response: {body.get('status')}")
-    parts = [part["text"] for item in body.get("output", [])
-             if item.get("type") == "message" for part in item.get("content", [])
-             if part.get("type") == "output_text"]
-    if len(parts) != 1:
-        raise ValueError(f"expected one output_text part, got {len(parts)}")
-    return parts[0]
-
-
-def join(args: argparse.Namespace) -> None:
+def run(args: argparse.Namespace) -> None:
+    if args.workers < 1:
+        raise ValueError("--workers must be positive")
     attempts, _ = source(args.dataset)
-    run = json.loads((args.output / "run.json").read_text())
-    if digest(attempts) != run["source_attempts_sha256"] or digest(args.dataset / "manifest.json") != run["source_manifest_sha256"]:
-        raise ValueError("source dataset changed after annotation preparation")
+    rows = selected_rows(attempts, args.limit)
+    if not rows:
+        raise ValueError("source has no attempts")
+    settings_path = args.output / "run.json"
+    if args.output.exists():
+        if not settings_path.exists():
+            raise FileExistsError(f"output exists without run.json: {args.output}")
+        settings = json.loads(settings_path.read_text())
+        expected = run_settings(args.dataset, attempts, args.model, rows)
+        for name in ("schema", "dataset", "source_attempts_sha256", "source_manifest_sha256",
+                     "annotator_sha256", "model", "selected_count", "first_id", "last_id"):
+            if settings[name] != expected[name]:
+                raise ValueError(f"cannot resume: run setting {name} changed")
+    else:
+        args.output.mkdir(parents=True)
+        settings = run_settings(args.dataset, attempts, args.model, rows)
+        write_json(settings_path, settings)
     if (args.output / "annotated_attempts.jsonl").exists():
         raise FileExistsError("annotated_attempts.jsonl already exists")
-    annotations = {}
-    for result, _ in records(args.output / "batch_output.jsonl"):
-        request_id = result["custom_id"]
-        if request_id in annotations:
-            raise ValueError(f"duplicate Batch result: {request_id}")
-        reply = result.get("response")
-        if result.get("error") or not reply or reply["status_code"] != 200:
-            raise ValueError(f"failed Batch result: {request_id}")
-        annotation = json.loads(response_text(reply["body"]))
-        if set(annotation) != {"operator_prompt", "observation"} or any(
-            not isinstance(value, str) or not value.strip() or len(value) > 500
-            for value in annotation.values()
-        ):
-            raise ValueError(f"invalid annotation: {request_id}")
-        annotations[request_id] = annotation
-    expected = {item["custom_id"] for item, _ in records(args.output / "batch_input.jsonl")}
-    if set(annotations) != expected or len(expected) != run["request_count"]:
-        raise ValueError(f"Batch coverage mismatch: {len(annotations)} results for {len(expected)} requests")
-    count = 0
-    out_path = args.output / "annotated_attempts.jsonl"
-    with out_path.open("w") as out:
-        for row, _ in records(attempts):
-            request_id = key(row)
-            if request_id in annotations:
-                annotated = {**row, "annotation": {"schema": SCHEMA,
-                                                   "custom_id": request_id,
-                                                   "model": run["model"],
-                                                   **annotations[request_id]}}
-                out.write(json.dumps(annotated, allow_nan=False) + "\n")
-                count += 1
-    write_json(args.output / "annotation_manifest.json", {
-        **run, "annotations": count, "batch_output_sha256": digest(args.output / "batch_output.jsonl"),
-        "annotated_attempts_sha256": digest(out_path),
-    })
-    print(f"Joined {count} annotations to {out_path}; raw attempts unchanged")
+    completed = existing_progress(args.output / "progress.jsonl", {key(row) for row in rows})
+    if len(completed) < len(rows):
+        if not os.environ.get("OPENAI_API_KEY"):
+            raise RuntimeError("Set OPENAI_API_KEY before running paid direct API annotation")
+        asyncio.run(collect(args, rows, completed))
+    finalize(args, rows, completed, settings)
+
+
+def preview(args: argparse.Namespace) -> None:
+    attempts, _ = source(args.dataset)
+    row = selected_rows(attempts, 1)[0]
+    for field in ("operator_prompt", "observation"):
+        print(json.dumps({"field": field, **request(args.model, field, row)}, indent=2))
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("prepare", "submit", "status", "fetch", "join"))
+    parser.add_argument("command", choices=("preview", "run"))
     parser.add_argument("--dataset", type=Path, default=DATASET)
-    parser.add_argument("--output", type=Path, default=DATASET / "annotations/gpt-v001")
-    parser.add_argument("--model", default=DEFAULT_MODEL,
-                        help=f"API model for prepare (default: {DEFAULT_MODEL})")
-    parser.add_argument("--limit", type=int, help="Prepare only this many rows for a pilot")
+    parser.add_argument("--output", type=Path, default=DATASET / "annotations/direct-v001")
+    parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument("--limit", type=int, help="annotate the first N attempts for a pilot")
+    parser.add_argument("--workers", type=int, default=2, help="maximum concurrent attempts (default: 2)")
     args = parser.parse_args()
-    if args.command == "prepare":
-        prepare(args)
-    else:
-        globals()[args.command](args)
+    globals()[args.command](args)
 
 
 if __name__ == "__main__":
