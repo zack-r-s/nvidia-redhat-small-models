@@ -18,12 +18,12 @@ from playwright.async_api import async_playwright
 DELAYS = [1.2, 0.05, 0.05, 0.05, 0.6, 0.05]  # first reply is slow; later ones are fast
 
 
-async def run(viewer: str, api: str) -> int:
+async def run(viewer: str, api: str, chrome: str | None) -> int:
     base = httpx.get(f"{api}/state").json()
     in_flight = max_in_flight = count = 0
 
     async with async_playwright() as pw:
-        browser = await pw.chromium.launch(args=["--use-gl=swiftshader", "--enable-unsafe-swiftshader"])
+        browser = await pw.chromium.launch(executable_path=chrome, args=["--use-gl=swiftshader", "--enable-unsafe-swiftshader"])
         page = await browser.new_page()
 
         async def handle(route):
@@ -69,5 +69,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--viewer", default="http://127.0.0.1:5173")
     parser.add_argument("--api", default="http://127.0.0.1:8001")
+    parser.add_argument("--chrome", help="Chrome/Chromium executable if Playwright's bundled browser is unavailable")
     args = parser.parse_args()
-    sys.exit(asyncio.run(run(args.viewer, args.api)))
+    sys.exit(asyncio.run(run(args.viewer, args.api, args.chrome)))

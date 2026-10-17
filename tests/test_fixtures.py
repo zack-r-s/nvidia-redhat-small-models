@@ -10,10 +10,13 @@ from pathlib import Path
 
 import pytest
 
-from hackring.machine import BPMS, LIMIT, SETPOINTS, LocalMachine
+from hackring.machine import BPMS, LIMIT, SETPOINTS, EpicsMachine, LocalMachine
 
 ROOT = Path(__file__).resolve().parents[1]
 CA_ENV = {
+    "HACKRING_EPICS_SOURCE": "caproto-epics",
+    "EPICS_CA_SERVER_PORT": "6064",
+    "EPICS_CA_REPEATER_PORT": "6065",
     "EPICS_CA_ADDR_LIST": "127.0.0.1",
     "EPICS_CA_AUTO_ADDR_LIST": "NO",
     "EPICS_CAS_INTF_ADDR_LIST": "127.0.0.1",
@@ -43,6 +46,8 @@ def ioc():
     proc = subprocess.Popen([sys.executable, str(ROOT / "scripts" / "ca_fixture.py"), "--seed", "7"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     os.environ.update(CA_ENV)
     try:
+        time.sleep(1)
+        assert proc.poll() is None, "fixture IOC did not start on isolated port 6064"
         yield
     finally:
         proc.terminate()
@@ -63,3 +68,11 @@ def test_epics_matches_local(ioc):
     time.sleep(0.5)
     for name in BPMS + [n.replace(":SP", ":RB") for n in SETPOINTS]:
         assert epics.caget(name, timeout=5) == pytest.approx(want[name], abs=1e-6)
+
+    state = EpicsMachine().read()
+    assert state["backend"] == "caproto-epics"
+    assert len(state["pvs"]) == 24
+    assert state["lattice"]["circumference_m"] > 0
+    assert [d["name"] for d in state["lattice"]["devices"] if d["kind"] == "bpm"] == [f"BPM{i:02d}" for i in range(1, 5)]
+    for name in BPMS:
+        assert state["pvs"][name] == pytest.approx(want[name], abs=1e-6)

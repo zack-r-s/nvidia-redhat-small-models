@@ -14,11 +14,12 @@ def main() -> int:
     p.add_argument("--viewer", default="http://127.0.0.1:5173")
     p.add_argument("--api", default="http://127.0.0.1:8001")
     p.add_argument("--shot", help="Optional screenshot path prefix")
+    p.add_argument("--chrome", help="Chrome/Chromium executable if Playwright's bundled browser is unavailable")
     a = p.parse_args()
     state = httpx.get(f"{a.api}/state").json()
     bad = 0
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(args=["--use-gl=swiftshader", "--enable-unsafe-swiftshader"])
+        browser = pw.chromium.launch(executable_path=a.chrome, args=["--use-gl=swiftshader", "--enable-unsafe-swiftshader"])
         for label, size in {"desktop": (1440, 900), "mobile": (390, 844)}.items():
             page = browser.new_page(viewport={"width": size[0], "height": size[1]})
             page.goto(a.viewer)

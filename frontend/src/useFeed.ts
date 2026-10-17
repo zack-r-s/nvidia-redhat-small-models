@@ -54,7 +54,11 @@ function useLiveFeed(enabled: boolean): Feed {
 
   const age = receivedAt === null ? Infinity : now - receivedAt;
   const status = !state || (error && age > STALE_MS * 4) ? "disconnected" : age > STALE_MS || error ? "stale" : "live";
-  return { status, state, receivedAt, error, source: `${API} (local PyAT fixture, not live Osprey)` };
+  const backend = state?.backend === "osprey-epics" ? "Osprey PyAT via EPICS"
+    : state?.backend === "caproto-epics" ? "caproto PyAT fixture via EPICS"
+    : state?.backend === "local-pyat" ? "local PyAT fixture"
+    : state?.backend === "epics" ? "EPICS backend" : "backend unknown";
+  return { status, state, receivedAt, error, source: `${API} (${backend})` };
 }
 
 /** Steps through recorded immutable snapshots; no interpolation between frames. */

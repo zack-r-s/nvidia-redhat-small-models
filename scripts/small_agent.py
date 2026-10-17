@@ -13,11 +13,13 @@ import asyncio
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 import httpx
 import yaml
+from dotenv import load_dotenv
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from prompt_toolkit import PromptSession, print_formatted_text
@@ -27,10 +29,12 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.history import FileHistory
 
 REPO = Path(__file__).resolve().parents[1]
+load_dotenv(REPO / ".env", override=False)
 BUILD = REPO / "build"
 LOGS = REPO / "var" / "logs"
 CONTRACT = json.loads((REPO / "data" / "pv_contract.json").read_text())
 PROVIDER = yaml.safe_load((REPO / "providers.yml").read_text())["providers"]["vllm"]
+VA = yaml.safe_load((REPO / "profile.yml").read_text())["virtual_accelerator"]
 CHANNELS = CONTRACT["bpm"] + CONTRACT["corrector_setpoints"]
 # Target switching and archiver history stay out of reach; a small model misfires them.
 TOOLS = {"channel_read", "channel_write", "channel_limits"}
@@ -50,9 +54,20 @@ SYSTEM = (
 def server_params() -> StdioServerParameters:
     config = str(BUILD / "config.yml")
     return StdioServerParameters(
-        command=str(BUILD / ".venv" / "bin" / "python"),
+        command=str(REPO / ".venv" / "bin" / "python"),
         args=["-m", "osprey.mcp_server.control_system"],
-        env={**os.environ, "CONFIG_FILE": config, "OSPREY_CONFIG": config, "OSPREY_MCP_TOOL_PREFIX": "controls"},
+        env={
+            **os.environ,
+            "CONFIG_FILE": config,
+            "OSPREY_CONFIG": config,
+            "OSPREY_MCP_TOOL_PREFIX": "controls",
+            "EPICS_CA_NAME_SERVERS": f"127.0.0.1:{VA['port']}",
+            "EPICS_CA_AUTO_ADDR_LIST": "NO",
+            "EPICS_CA_ADDR_LIST": "",
+            "EPICS_PVA_NAME_SERVERS": f"127.0.0.1:{VA['pva_port']}",
+            "EPICS_PVA_AUTO_ADDR_LIST": "NO",
+            "EPICS_PVA_ADDR_LIST": "",
+        },
         cwd=str(BUILD),
     )
 
@@ -142,6 +157,12 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
 
 
 async def main(args) -> None:
+    health = subprocess.run(
+        ["docker", "inspect", "--format", "{{.State.Health.Status}}", "hackring-virtual-accelerator"],
+        capture_output=True, text=True, check=False,
+    )
+    if health.returncode != 0 or health.stdout.strip() != "healthy":
+        raise RuntimeError("hackring-virtual-accelerator is not healthy; start this worktree's Osprey deployment first")
     LOGS.mkdir(parents=True, exist_ok=True)
     server_log = LOGS / "small_agent_mcp.log"
     # The controls server's FastMCP logging goes to a file, not the operator's terminal.

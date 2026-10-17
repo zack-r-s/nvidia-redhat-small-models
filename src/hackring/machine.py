@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from pathlib import Path
 
 import at
@@ -23,15 +24,14 @@ def _summary(pvs: dict[str, float]) -> dict[str, float]:
     }
 
 
-def _snapshot(pvs: dict[str, float], lattice: at.Lattice | None = None) -> dict:
+def _snapshot(pvs: dict[str, float], lattice: at.Lattice, backend: str) -> dict:
     devices = []
-    if lattice is not None:
-        spos = lattice.get_s_pos(range(len(lattice)))
-        for s, element in zip(spos, lattice):
-            name = element.FamName
-            if name.startswith(("BPM", "H", "V", "QF", "QD", "B")) and not name.startswith("ERR"):
-                devices.append({"name": name, "kind": "bpm" if name.startswith("BPM") else "corrector" if name.startswith(("H", "V")) else "quadrupole" if name.startswith("Q") else "dipole", "s_m": float(s)})
-    return {"schema": "hackring.state/1", "pvs": pvs, "summary": _summary(pvs), "lattice": {"circumference_m": float(lattice.get_s_pos(len(lattice))[0]) if lattice is not None else None, "devices": devices}}
+    spos = lattice.get_s_pos(range(len(lattice)))
+    for s, element in zip(spos, lattice):
+        name = element.FamName
+        if name.startswith(("BPM", "H", "V", "QF", "QD", "B")) and not name.startswith("ERR"):
+            devices.append({"name": name, "kind": "bpm" if name.startswith("BPM") else "corrector" if name.startswith(("H", "V")) else "quadrupole" if name.startswith("Q") else "dipole", "s_m": float(s)})
+    return {"schema": "hackring.state/1", "backend": backend, "pvs": pvs, "summary": _summary(pvs), "lattice": {"circumference_m": float(lattice.get_s_pos(len(lattice))[0]), "devices": devices}}
 
 
 class LocalMachine:
@@ -87,7 +87,7 @@ class LocalMachine:
         for sp, value in self.setpoints.items():
             pvs[sp] = value
             pvs[sp.replace(":SP", ":RB")] = value
-        return _snapshot(pvs, self.lattice)
+        return _snapshot(pvs, self.lattice, "local-pyat")
 
 
 class EpicsMachine:
@@ -97,13 +97,18 @@ class EpicsMachine:
         import epics
 
         self.epics = epics
+        self.backend = os.getenv("HACKRING_EPICS_SOURCE", "epics")
+        if self.backend not in {"epics", "osprey-epics", "caproto-epics"}:
+            raise ValueError("HACKRING_EPICS_SOURCE must be epics, osprey-epics, or caproto-epics")
+        # Geometry comes from the fixed deck; all live readings still come from EPICS.
+        self.lattice = at.load_lattice(str(ROOT / "data" / "facility" / "decks" / "RING.json"))
 
     def read(self) -> dict:
         names = BPMS + SETPOINTS + [name.replace(":SP", ":RB") for name in SETPOINTS]
         values = self.epics.caget_many(names)
         if any(value is None for value in values):
             raise RuntimeError("one or more EPICS PVs did not answer")
-        return _snapshot({name: float(value) for name, value in zip(names, values)})
+        return _snapshot({name: float(value) for name, value in zip(names, values)}, self.lattice, self.backend)
 
     def write(self, settings: dict[str, float]) -> dict:
         for name, value in settings.items():

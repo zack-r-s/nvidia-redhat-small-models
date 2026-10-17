@@ -6,7 +6,8 @@ const fmt = (v: number | undefined, d = 4) => (v === undefined || !Number.isFini
 
 export function StatusBar({ feed, now }: { feed: Feed; now: number }) {
   const intent = { live: "success", stale: "warning", disconnected: "danger", replay: "primary" } as const;
-  const label = { live: "Live (fixture)", stale: "Stale", disconnected: "Disconnected", replay: "Replay" }[feed.status];
+  const liveLabel = feed.state?.backend === "osprey-epics" ? "Live (Osprey)" : feed.state?.backend === "epics" ? "Live (EPICS)" : "Live (fixture)";
+  const label = { live: liveLabel, stale: "Stale", disconnected: "Disconnected", replay: "Replay" }[feed.status];
   const age = feed.receivedAt && feed.status !== "replay" ? Math.max(0, (now - feed.receivedAt) / 1000).toFixed(1) + " s ago" : null;
   return (
     <div className="statusbar" data-testid="status">
