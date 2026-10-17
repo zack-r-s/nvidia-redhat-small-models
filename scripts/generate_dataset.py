@@ -126,7 +126,11 @@ class ServedRing:
         if not changed:
             changed = [SETPOINTS[0]]
         for name in changed:
-            if self.epics.caput(name, settings[name], wait=True, timeout=5) != 1:
+            # Normal Xopt candidates often change every knob. Submit those CA
+            # puts together, then wait on the public readbacks and BPM tick.
+            # Episode reset keeps synchronous puts so its hidden faults are
+            # certainly applied even though all visible SPs are already zero.
+            if self.epics.caput(name, settings[name], wait=force_all, timeout=5) != 1:
                 raise RuntimeError(f"EPICS write failed: {name}")
         deadline = time.monotonic() + 8
         while time.monotonic() < deadline:
