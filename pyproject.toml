@@ -10,6 +10,7 @@ dependencies = [
   "prompt_toolkit>=3",
   "pyepics>=3.5",
   "PyYAML>=6",
+  "scipy>=1.14",
   "uvicorn>=0.30",
   "xopt>=3,<4",
 ]
