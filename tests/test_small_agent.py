@@ -345,3 +345,33 @@ def test_goal_rejects_wrong_plane_without_write(capsys, monkeypatch):
         [{"type": "function", "function": {"name": "channel_write"}}],
         {"channel_write": {}}, SimpleNamespace(model="test", temperature=0, max_tokens=32, history=8)))
     assert "No write was made" in capsys.readouterr().out
+
+
+def test_read_only_plane_comparison_uses_measured_bpms(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpm = small_agent.CONTRACT["bpm"]
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert all(tool["function"]["name"] != "channel_write" for tool in json["tools"])
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [{"id": "read", "function": {
+                    "name": "channel_read", "arguments": '{"channels":["RING:DIAG:BPM01:POSITION:X"]}'}}]
+            }}]})
+
+    class FakeMCP:
+        async def call_tool(self, name, args):
+            assert name == "channel_read"
+            assert args["channels"] == bpm
+            values = {pv: (0.2 if pv.endswith(":X") else 0.1) for pv in bpm}
+            data = {"status": "success", "summary": {"readings": {
+                pv: {"value": value} for pv, value in values.items()}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))], isError=False)
+
+    asyncio.run(small_agent.turn("Which orbit plane has the larger measured RMS?", [], FakeMCP(), FakeHTTP(),
+        [{"type": "function", "function": {"name": "channel_read"}},
+         {"type": "function", "function": {"name": "channel_write"}}],
+        {"channel_read": {"properties": {"channels": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=2, history=8)))
+    output = capsys.readouterr().out
+    assert "Measured RMS: X=0.2000 mm, Y=0.1000 mm. The X plane is larger." in output

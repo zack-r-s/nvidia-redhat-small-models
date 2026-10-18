@@ -206,6 +206,19 @@ def beam_position_report(text: str) -> str | None:
     return "\n".join(lines)
 
 
+def beam_plane_report(text: str) -> str | None:
+    readings = readings_from(text)
+    if not all(pv in readings for pv in CONTRACT["bpm"]):
+        return None
+    x = rms(readings, [pv for pv in CONTRACT["bpm"] if pv.endswith(":X")])
+    y = rms(readings, [pv for pv in CONTRACT["bpm"] if pv.endswith(":Y")])
+    if x is None or y is None:
+        return None
+    larger = "X" if x > y else "Y" if y > x else "neither"
+    return (f"Measured RMS: X={x:.4f} mm, Y={y:.4f} mm. "
+            + (f"The {larger} plane is larger." if larger != "neither" else "The planes are equal."))
+
+
 def verified_report(prompt: str, readings: dict, write_request: tuple[str, float] | None,
                     write_result: dict | None, write_attempted: bool = False) -> str:
     """Render only observations and write outcomes returned by Osprey."""
@@ -457,7 +470,8 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
                     if write_attempted:
                         post_write_observed.update(values)
                 if name == "channel_read" and general_beam_request:
-                    measured_beam = beam_position_report(text)
+                    comparison = bool(re.search(r"\b(which|larger|compare|comparison)\b.*\b(plane|rms)\b|\b(plane|rms)\b.*\b(larger|compare)\b", prompt, re.I))
+                    measured_beam = beam_plane_report(text) if comparison else beam_position_report(text)
                 if name == "channel_write":
                     try:
                         envelope = json.loads(text)
