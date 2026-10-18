@@ -1,0 +1,231 @@
+{
+  "cases": [
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "R01",
+      "max_normalized_sequence_ratio": 0.4795
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "R02",
+      "max_normalized_sequence_ratio": 0.5254
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "R03",
+      "max_normalized_sequence_ratio": 0.5124
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "R04",
+      "max_normalized_sequence_ratio": 0.5276
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "R05",
+      "max_normalized_sequence_ratio": 0.4812
+    },
+    {
+      "closest_training_source": "datasets/v004/train.jsonl",
+      "exact_training_match": false,
+      "id": "R06",
+      "max_normalized_sequence_ratio": 0.5165
+    },
+    {
+      "closest_training_source": "datasets/v004/train.jsonl",
+      "exact_training_match": false,
+      "id": "R07",
+      "max_normalized_sequence_ratio": 0.4114
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "R08",
+      "max_normalized_sequence_ratio": 0.4459
+    },
+    {
+      "closest_training_source": "datasets/v004/train.jsonl",
+      "exact_training_match": false,
+      "id": "R09",
+      "max_normalized_sequence_ratio": 0.4865
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "R10",
+      "max_normalized_sequence_ratio": 0.4615
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "R11",
+      "max_normalized_sequence_ratio": 0.4516
+    },
+    {
+      "closest_training_source": "datasets/v004/train.jsonl",
+      "exact_training_match": false,
+      "id": "R12",
+      "max_normalized_sequence_ratio": 0.4896
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "A01",
+      "max_normalized_sequence_ratio": 0.3644
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "A02",
+      "max_normalized_sequence_ratio": 0.4331
+    },
+    {
+      "closest_training_source": "datasets/v004/train.jsonl",
+      "exact_training_match": false,
+      "id": "A03",
+      "max_normalized_sequence_ratio": 0.4105
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "A04",
+      "max_normalized_sequence_ratio": 0.4806
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "A05",
+      "max_normalized_sequence_ratio": 0.4444
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "A06",
+      "max_normalized_sequence_ratio": 0.4851
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "A07",
+      "max_normalized_sequence_ratio": 0.3802
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "A08",
+      "max_normalized_sequence_ratio": 0.5806
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "A09",
+      "max_normalized_sequence_ratio": 0.434
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "A10",
+      "max_normalized_sequence_ratio": 0.4255
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "A11",
+      "max_normalized_sequence_ratio": 0.3882
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "A12",
+      "max_normalized_sequence_ratio": 0.4514
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "B01",
+      "max_normalized_sequence_ratio": 0.4878
+    },
+    {
+      "closest_training_source": "datasets/v004/train.jsonl",
+      "exact_training_match": false,
+      "id": "B02",
+      "max_normalized_sequence_ratio": 0.4785
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "B03",
+      "max_normalized_sequence_ratio": 0.4545
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "B04",
+      "max_normalized_sequence_ratio": 0.3495
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "B05",
+      "max_normalized_sequence_ratio": 0.4
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "B06",
+      "max_normalized_sequence_ratio": 0.5366
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "B07",
+      "max_normalized_sequence_ratio": 0.4526
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "B08",
+      "max_normalized_sequence_ratio": 0.3968
+    },
+    {
+      "closest_training_source": "datasets/v003/train.jsonl",
+      "exact_training_match": false,
+      "id": "B09",
+      "max_normalized_sequence_ratio": 0.4314
+    },
+    {
+      "closest_training_source": "datasets/v004/train.jsonl",
+      "exact_training_match": false,
+      "id": "B10",
+      "max_normalized_sequence_ratio": 0.479
+    },
+    {
+      "closest_training_source": "datasets/v002/sft/train.jsonl",
+      "exact_training_match": false,
+      "id": "B11",
+      "max_normalized_sequence_ratio": 0.4823
+    },
+    {
+      "closest_training_source": "datasets/v004/train.jsonl",
+      "exact_training_match": false,
+      "id": "B12",
+      "max_normalized_sequence_ratio": 0.4809
+    }
+  ],
+  "cases_sha256": "86623994c58baa00d390bd8d90aa992843269d67b93759995a4ea56ad8f1c90a",
+  "exact_matches": 0,
+  "highest_ratio": 0.5806,
+  "method": "lowercase alphanumeric normalization; Python SequenceMatcher ratio against every training user turn; semantic overlap still requires review",
+  "schema": "hackring.mark_iv_novelty_audit/1",
+  "training_files": {
+    "datasets/v002/sft/train.jsonl": "f5138f350b3eccea71e1a9205279ab1f50f4ff6794ca34e502a5bfc1f0582384",
+    "datasets/v003/train.jsonl": "34110e16cd883cb15d98a1148ab4d948c509caaa45d154c14b98761df1c197c3",
+    "datasets/v004/train.jsonl": "963b30fc40edec2215a4080b93cb3145bd8b73ad7397280318217dd37c63ec7b"
+  },
+  "training_turns": 2160
+}

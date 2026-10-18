@@ -1,0 +1,34 @@
+{
+  "by_plane": {
+    "both": {
+      "passed": 0,
+      "total": 10
+    },
+    "x": {
+      "passed": 0,
+      "total": 9
+    },
+    "y": {
+      "passed": 0,
+      "total": 9
+    }
+  },
+  "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+  "errors": {
+    "wrong correction effort": 28
+  },
+  "evaluation_series": "mark-iii",
+  "evaluator_sha256": "dfa4fbdee99ba7d55ec93deec512ae571b2bd1a353c7d18f3a77e285df3cf387",
+  "inference": "Transformers CPU greedy; no forced tool prefix; numeric solve by checked-in response teacher",
+  "intent_correct": 0,
+  "model": "/Users/zackstone/.cache/huggingface/hub/models--LiquidAI--LFM2.5-1.2B-Instruct/snapshots/0f604ada3f766f9f257460c4c9f0b5d6f69d431b",
+  "passed": 0,
+  "plant": "LocalMachine on checked-in PyAT ring with seeded error kicks",
+  "response_teacher_sha256": "8da906e2e4ca5cf449a2cfff8bd09994a29f60b1ea759d5f7dfe7dca3f2ae1cd",
+  "route_correct": 28,
+  "schema": "hackring.skill_eval/1",
+  "split": null,
+  "total": 28,
+  "traces_sha256": "89470ba0df3e5b88fc3a23bb221c750f756aee096a0f5477215f63bc00bbbc0d"
+}

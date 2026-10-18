@@ -1,0 +1,422 @@
+{
+  "case_results": [
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "read-bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "compare-planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: RING:DIAG:BPM01:POSITION:0.075",
+      "id": "exact-horizontal",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "nonliteral tool arguments",
+      "id": "exact-vertical",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "center-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "center-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "no complete channel_write tool call",
+      "id": "center-both-a",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "center-both-b",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-00-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-01-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: RING:DIAG:BPM02:POSITION:X",
+      "id": "new-02-exact",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-03-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-04-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "no complete channel_write tool call",
+      "id": "new-05-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-06-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-07-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: RING:DIAG:BPM02:POSITION:Y",
+      "id": "new-08-exact",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-09-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-10-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: None",
+      "id": "new-11-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-12-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-13-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "new-14-exact",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-15-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-16-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: None",
+      "id": "new-17-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-18-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-19-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "new-20-exact",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-21-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "new-22-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: None",
+      "id": "new-23-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-24-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-25-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: RING:DIAG:BPM02:POSITION:X",
+      "id": "new-26-exact",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-27-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-28-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "no complete channel_write tool call",
+      "id": "new-29-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-30-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-31-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "new-32-exact",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "no complete channel_write tool call",
+      "id": "new-33-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-34-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: None",
+      "id": "new-35-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-36-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-37-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "new-38-exact",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-39-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "malformed tool arguments",
+      "id": "new-40-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: None",
+      "id": "new-41-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-42-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-43-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "new-44-exact",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "new-45-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "too many correctors",
+      "id": "new-46-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": "disallowed or duplicate corrector: None",
+      "id": "new-47-both",
+      "passed": false
+    }
+  ],
+  "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "counts": {
+    "compare_planes": 9,
+    "correct": 28,
+    "exact_write": 10,
+    "read_bpms": 9
+  },
+  "created_utc": "2026-10-18T04:29:29.191259+00:00",
+  "deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+  "disturbance_mrad": 0.08,
+  "evaluation_series": "mark-iii",
+  "evaluator_sha256": "f52c46744a9b2a5a9f2e177d2c02fd83421fdc342f2609e78ac57ca46e6b2dcc",
+  "inference": "Transformers MPS greedy (bfloat16), verified harness pre-read; write tool name forced",
+  "model": "/Users/zackstone/.cache/huggingface/hub/models--LiquidAI--LFM2.5-1.2B-Instruct/snapshots/0f604ada3f766f9f257460c4c9f0b5d6f69d431b",
+  "passed": 0,
+  "passed_by_kind": {},
+  "plant": "LocalMachine on checked-in PyAT ring; seeded ERR kicks, not Osprey calibration offsets",
+  "pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+  "schema": "hackring.pyat_eval/1",
+  "software": {
+    "accelerator-toolbox": "0.9.0",
+    "torch": "2.14.1",
+    "transformers": "5.20.1"
+  },
+  "total": 56,
+  "traces_sha256": "b34d74037f57bcc3b1e5052bf2524a7acbb2c70cfab3ee70a461905f627ff1a3"
+}

@@ -1,0 +1,7 @@
+{
+  "base-230m": {"source": "LiquidAI/LFM2.5-230M", "revision": "40cb2ad3b3044d5a41eee083a6103c8b523afa45", "served_name": "LFM2.5-230M-base"},
+  "base-1p2b": {"source": "LiquidAI/LFM2.5-1.2B-Instruct", "revision": "0f604ada3f766f9f257460c4c9f0b5d6f69d431b", "served_name": "LFM2.5-1.2B-Instruct"},
+  "v002": {"source": "zack-r-s/hackring-LFM2.5-230M", "revision": "d95741556db29a6daa14136db4006edf7b9f6b9e", "served_name": "hackring-v002"},
+  "v003": {"source": "zack-r-s/hackring-LFM2.5-230M", "revision": "8ad5bc1668d56de4c0dce657fee44d1f1466b7cc", "served_name": "hackring-v003"},
+  "v004": {"source": "zack-r-s/hackring-LFM2.5-230M", "revision": "14419bfc11d03da0fb92902a7cd15e7d2a9d0fa4", "served_name": "LFM2.5-230M"}
+}

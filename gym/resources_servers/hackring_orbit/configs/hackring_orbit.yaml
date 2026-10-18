@@ -1,0 +1,34 @@
+hackring_orbit_resources_server:
+  resources_servers:
+    hackring_orbit:
+      entrypoint: app.py
+      domain: agent
+      verified: false
+      description: Correct the hackring PyAT orbit from one recorded episode; reward is the measured orbit-cost reduction
+hackring_orbit_simple_agent:
+  responses_api_agents:
+    simple_agent:
+      entrypoint: app.py
+      resources_server:
+        type: resources_servers
+        name: hackring_orbit_resources_server
+      model_server:
+        type: responses_api_models
+        name: policy_model
+      # One model call with tool_choice=required, matching the small agent's single write batch.
+      # Raising this lets the model write repeatedly but it still sees no new BPM reading unless
+      # channel_read is added to the task tools.
+      max_steps: 1
+      datasets:
+      - name: train
+        type: train
+        jsonl_fpath: resources_servers/hackring_orbit/data/train.jsonl
+        license: Apache 2.0
+      - name: validation
+        type: validation
+        jsonl_fpath: resources_servers/hackring_orbit/data/validation.jsonl
+        license: Apache 2.0
+      - name: example
+        type: example
+        jsonl_fpath: resources_servers/hackring_orbit/data/example.jsonl
+        license: Apache 2.0

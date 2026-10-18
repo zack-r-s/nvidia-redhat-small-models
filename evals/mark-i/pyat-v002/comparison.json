@@ -1,0 +1,342 @@
+{
+  "baseline": {
+    "by_kind": {
+      "compare_planes": {
+        "passed": 0,
+        "total": 9
+      },
+      "correct": {
+        "passed": 6,
+        "total": 28
+      },
+      "exact_write": {
+        "passed": 10,
+        "total": 10
+      },
+      "read_bpms": {
+        "passed": 5,
+        "total": 9
+      }
+    },
+    "correction_rms_reduction_mm": {
+      "center-both-a": -0.10151396885527914,
+      "center-both-b": -0.12498492800596683,
+      "center-x": -0.04234351474764303,
+      "center-y": -0.023405455774832218,
+      "new-03-x": -0.06324165532752296,
+      "new-04-y": -0.014919934330253709,
+      "new-05-both": -0.013097358419919714,
+      "new-09-x": -0.14652565867197145,
+      "new-10-y": 0.015687346675621994,
+      "new-11-both": -0.010824041311918497,
+      "new-15-x": 0.06160263306201544,
+      "new-16-y": -0.012899960190394265,
+      "new-17-both": -0.00603782907312056,
+      "new-21-x": -0.13815413437368684,
+      "new-22-y": -0.013400566126732585,
+      "new-23-both": -0.11943506248540914,
+      "new-27-x": 0.0005231249785572212,
+      "new-28-y": 0.011576406237814973,
+      "new-29-both": -0.15267802524343665,
+      "new-33-x": -0.08755632567405702,
+      "new-34-y": -0.01576847940671197,
+      "new-35-both": -0.20334659599421476,
+      "new-39-x": -0.058446130615108116,
+      "new-40-y": -0.012829833244316524,
+      "new-41-both": 0.05569270761413028,
+      "new-45-x": -0.015518817490111553,
+      "new-46-y": 0.016667823927775216,
+      "new-47-both": 0.01712151787640856
+    },
+    "correction_writes_accepted": 28,
+    "correction_writes_reducing_target_aggregate_rms": 7,
+    "model": "training/v001/output/LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-20261017_184147/LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_m-20261017_184147",
+    "passed": 21,
+    "report_sha256": "309370d6f6e6623b2ebd9f9a78707a6f17a0617ef803ec1f6db3ea61a4d39b3a",
+    "total": 56
+  },
+  "candidate": {
+    "by_kind": {
+      "compare_planes": {
+        "passed": 0,
+        "total": 9
+      },
+      "correct": {
+        "passed": 3,
+        "total": 28
+      },
+      "exact_write": {
+        "passed": 10,
+        "total": 10
+      },
+      "read_bpms": {
+        "passed": 7,
+        "total": 9
+      }
+    },
+    "correction_rms_reduction_mm": {
+      "center-both-a": -0.18879949936425455,
+      "center-both-b": 0.02659971447878995,
+      "center-x": -0.033923146984848496,
+      "center-y": -0.019212649855888553,
+      "new-03-x": -0.11393637047507832,
+      "new-04-y": -0.00941834266776602,
+      "new-05-both": 0.0447141750584821,
+      "new-09-x": -0.2068291766862351,
+      "new-10-y": -0.13572226693833117,
+      "new-11-both": 0.061019852929861035,
+      "new-15-x": 0.05457851438343858,
+      "new-16-y": -0.1271576765135377,
+      "new-17-both": 0.0022325185954557014,
+      "new-21-x": -0.08012089025342262,
+      "new-22-y": -0.13651236108973547,
+      "new-23-both": 0.0030979149315923382,
+      "new-27-x": -0.04969834487716057,
+      "new-28-y": -0.007729409729519521,
+      "new-29-both": 0.010996664541990886,
+      "new-33-x": -0.06613278248836807,
+      "new-34-y": -0.0306108993414633,
+      "new-35-both": -0.0761499790073161,
+      "new-39-x": -0.1173829064452068,
+      "new-40-y": -0.01106758820420245,
+      "new-41-both": 0.035107496228557356,
+      "new-45-x": -0.013920358089042767,
+      "new-46-y": -0.018037934168166903,
+      "new-47-both": 0.004461779686170009
+    },
+    "correction_writes_accepted": 28,
+    "correction_writes_reducing_target_aggregate_rms": 9,
+    "model": "training/v002/output/LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-20261017_191938/LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_m-20261017_191938",
+    "passed": 20,
+    "report_sha256": "0a5c0ec385014c27b6ccfdb96c629c6feb270a2e7053be3582c867c4c422591a",
+    "total": 56
+  },
+  "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "paired": {
+    "center-both-a": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "center-both-b": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "center-x": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "center-y": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "compare-planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "exact-horizontal": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "exact-vertical": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-00-read_bpms": {
+      "baseline_passed": false,
+      "candidate_passed": true
+    },
+    "new-01-compare_planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-02-exact": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-03-x": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-04-y": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-05-both": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-06-read_bpms": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-07-compare_planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-08-exact": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-09-x": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-10-y": {
+      "baseline_passed": true,
+      "candidate_passed": false
+    },
+    "new-11-both": {
+      "baseline_passed": false,
+      "candidate_passed": true
+    },
+    "new-12-read_bpms": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-13-compare_planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-14-exact": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-15-x": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-16-y": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-17-both": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-18-read_bpms": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-19-compare_planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-20-exact": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-21-x": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-22-y": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-23-both": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-24-read_bpms": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-25-compare_planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-26-exact": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-27-x": {
+      "baseline_passed": true,
+      "candidate_passed": false
+    },
+    "new-28-y": {
+      "baseline_passed": true,
+      "candidate_passed": false
+    },
+    "new-29-both": {
+      "baseline_passed": false,
+      "candidate_passed": true
+    },
+    "new-30-read_bpms": {
+      "baseline_passed": true,
+      "candidate_passed": false
+    },
+    "new-31-compare_planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-32-exact": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-33-x": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-34-y": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-35-both": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-36-read_bpms": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-37-compare_planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-38-exact": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-39-x": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-40-y": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-41-both": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-42-read_bpms": {
+      "baseline_passed": false,
+      "candidate_passed": true
+    },
+    "new-43-compare_planes": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-44-exact": {
+      "baseline_passed": true,
+      "candidate_passed": true
+    },
+    "new-45-x": {
+      "baseline_passed": false,
+      "candidate_passed": false
+    },
+    "new-46-y": {
+      "baseline_passed": true,
+      "candidate_passed": false
+    },
+    "new-47-both": {
+      "baseline_passed": true,
+      "candidate_passed": false
+    },
+    "read-bpms": {
+      "baseline_passed": false,
+      "candidate_passed": true
+    }
+  },
+  "schema": "hackring.pyat_eval_comparison/1"
+}

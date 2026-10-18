@@ -1,0 +1,83 @@
+{
+  "artifacts": {
+    "epoch_1_adapter": {
+      "adapter_sha256": "196cb3c86bf9771131c8ef59b26f968bbc8b083e6b7283289eb1fd61d66e6afe",
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-e1s108-20261017_191938"
+    },
+    "epoch_2_adapter": {
+      "adapter_sha256": "c9d90603c3d866370c0a860f45e78317af1ac813be9fdd079b84ef8f201b124d",
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-e2s216-20261017_191938"
+    },
+    "merged_model": {
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_m-20261017_191938",
+      "weights_sha256": "8d6c62dca73da002b0afa4a5e3036f48300caf34432b27f1ba41c796671d69c4"
+    }
+  },
+  "backend": "Apple M4 Pro MPS; Liquid single-process trainer via scripts/run_liquid_training.py",
+  "dataset_manifest_sha256": "dcfa860ed7f77c189dad0a00a48487bf016cfcf958fab753ca4c40067252106b",
+  "epochs": 2,
+  "job_sha256": "bc926e1f88fe680a584b56fe86f113162667729bbdeeab1f6469fa457a68ccf6",
+  "optimizer_steps": 216,
+  "pyat_eval": {
+    "baseline_by_kind": {
+      "compare_planes": {
+        "passed": 0,
+        "total": 9
+      },
+      "correct": {
+        "passed": 6,
+        "total": 28
+      },
+      "exact_write": {
+        "passed": 10,
+        "total": 10
+      },
+      "read_bpms": {
+        "passed": 5,
+        "total": 9
+      }
+    },
+    "baseline_passed": 21,
+    "baseline_report_sha256": "309370d6f6e6623b2ebd9f9a78707a6f17a0617ef803ec1f6db3ea61a4d39b3a",
+    "candidate_by_kind": {
+      "compare_planes": {
+        "passed": 0,
+        "total": 9
+      },
+      "correct": {
+        "passed": 3,
+        "total": 28
+      },
+      "exact_write": {
+        "passed": 10,
+        "total": 10
+      },
+      "read_bpms": {
+        "passed": 7,
+        "total": 9
+      }
+    },
+    "candidate_passed": 20,
+    "candidate_report_sha256": "0a5c0ec385014c27b6ccfdb96c629c6feb270a2e7053be3582c867c4c422591a",
+    "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+    "comparison_sha256": "06934b337ee49cda775ec502197b4931868a95ab1bd4ebba7213ccc5dfbb656d",
+    "finding": "BPM reports improved 5/9 to 7/9; exact writes held 10/10; plane comparisons stayed 0/9; successful corrections fell 6/28 to 3/28.",
+    "total": 56
+  },
+  "run_dir": "training/v002/output/LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-20261017_191938",
+  "schema": "hackring.liquid_training_result/1",
+  "status": "completed",
+  "test_sha256": "ed62987f065b5da862530a741dfea273c3f04ae575c72a09423dcb7e087c4799",
+  "train_runtime_seconds": 955.4,
+  "train_sha256": "34110e16cd883cb15d98a1148ab4d948c509caaa45d154c14b98761df1c197c3",
+  "upstream": {
+    "commit": "d9cc23dae5a16498ab7dc11958b80ca803e0440a",
+    "repository": "https://github.com/Liquid4All/liquid-finetune"
+  },
+  "validation_loss": {
+    "epoch_1": 0.08277219533920288,
+    "epoch_2": 0.07832647114992142
+  },
+  "validation_sha256": "8bcf802e8ac1fab89438f73137e0587fb43f3b069a49cd04bd67b52d49023f3b",
+  "version": "v002"
+}

@@ -1,0 +1,717 @@
+{
+  "cases_sha256": "86623994c58baa00d390bd8d90aa992843269d67b93759995a4ea56ad8f1c90a",
+  "gym": {
+    "base-1p2b": {
+      "answer_present": 144,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 8
+        },
+        "conditional_exact": {
+          "passed": 0,
+          "total": 16
+        },
+        "exact": {
+          "passed": 0,
+          "total": 24
+        },
+        "no_write": {
+          "passed": 21,
+          "total": 48
+        },
+        "read": {
+          "passed": 0,
+          "total": 48
+        }
+      },
+      "case_results": {
+        "A01": 0,
+        "A02": 0,
+        "A03": 0,
+        "A04": 0,
+        "A05": 0,
+        "A06": 0,
+        "A07": 0,
+        "A08": 0,
+        "A09": 0,
+        "A10": 0,
+        "A11": 0,
+        "A12": 0,
+        "B01": 0,
+        "B02": 0,
+        "B03": 0,
+        "B04": 0,
+        "B05": 4,
+        "B06": 0,
+        "B07": 4,
+        "B08": 4,
+        "B09": 4,
+        "B10": 0,
+        "B11": 2,
+        "B12": 3,
+        "R01": 0,
+        "R02": 0,
+        "R03": 0,
+        "R04": 0,
+        "R05": 0,
+        "R06": 0,
+        "R07": 0,
+        "R08": 0,
+        "R09": 0,
+        "R10": 0,
+        "R11": 0,
+        "R12": 0
+      },
+      "evidence_passed": 36,
+      "folder": "var/gym/mark-iv/LFM2.5-1.2B-Instruct/validation-20261018-015051",
+      "passed": 21,
+      "plant_passed": 77,
+      "rollouts_sha256": "4791ba8bbb8215771c47607bff0ce049da612197a8607e67c6798b65e52bca2f",
+      "run_sha256": "731087371c6b0e2e68740d04671cb30d4e685d29553ffb81d06635661e224ab5",
+      "total": 144
+    },
+    "base-230m": {
+      "answer_present": 113,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 8
+        },
+        "conditional_exact": {
+          "passed": 0,
+          "total": 16
+        },
+        "exact": {
+          "passed": 0,
+          "total": 24
+        },
+        "no_write": {
+          "passed": 11,
+          "total": 48
+        },
+        "read": {
+          "passed": 0,
+          "total": 48
+        }
+      },
+      "case_results": {
+        "A01": 0,
+        "A02": 0,
+        "A03": 0,
+        "A04": 0,
+        "A05": 0,
+        "A06": 0,
+        "A07": 0,
+        "A08": 0,
+        "A09": 0,
+        "A10": 0,
+        "A11": 0,
+        "A12": 0,
+        "B01": 0,
+        "B02": 0,
+        "B03": 0,
+        "B04": 0,
+        "B05": 0,
+        "B06": 0,
+        "B07": 4,
+        "B08": 0,
+        "B09": 0,
+        "B10": 4,
+        "B11": 0,
+        "B12": 3,
+        "R01": 0,
+        "R02": 0,
+        "R03": 0,
+        "R04": 0,
+        "R05": 0,
+        "R06": 0,
+        "R07": 0,
+        "R08": 0,
+        "R09": 0,
+        "R10": 0,
+        "R11": 0,
+        "R12": 0
+      },
+      "evidence_passed": 36,
+      "folder": "var/gym/mark-iv/LFM2.5-230M-base/validation-20261018-020430",
+      "passed": 11,
+      "plant_passed": 71,
+      "rollouts_sha256": "7bf6c9d40da02b4a7a212ec216dc452292b9f41ede10318ad96ff51805a1b240",
+      "run_sha256": "ddcc90dccb8fe8f50e8af827f4bfe10ceec56298d8c9df3e47c77fee29a27c4a",
+      "total": 144
+    },
+    "v002": {
+      "answer_present": 2,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 8
+        },
+        "conditional_exact": {
+          "passed": 0,
+          "total": 16
+        },
+        "exact": {
+          "passed": 0,
+          "total": 24
+        },
+        "no_write": {
+          "passed": 14,
+          "total": 48
+        },
+        "read": {
+          "passed": 0,
+          "total": 48
+        }
+      },
+      "case_results": {
+        "A01": 0,
+        "A02": 0,
+        "A03": 0,
+        "A04": 0,
+        "A05": 0,
+        "A06": 0,
+        "A07": 0,
+        "A08": 0,
+        "A09": 0,
+        "A10": 0,
+        "A11": 0,
+        "A12": 0,
+        "B01": 0,
+        "B02": 0,
+        "B03": 0,
+        "B04": 0,
+        "B05": 0,
+        "B06": 0,
+        "B07": 4,
+        "B08": 0,
+        "B09": 4,
+        "B10": 4,
+        "B11": 0,
+        "B12": 2,
+        "R01": 0,
+        "R02": 0,
+        "R03": 0,
+        "R04": 0,
+        "R05": 0,
+        "R06": 0,
+        "R07": 0,
+        "R08": 0,
+        "R09": 0,
+        "R10": 0,
+        "R11": 0,
+        "R12": 0
+      },
+      "evidence_passed": 36,
+      "folder": "var/gym/mark-iv/hackring-v002/validation-20261018-015445",
+      "passed": 14,
+      "plant_passed": 75,
+      "rollouts_sha256": "f49f3932db52c6fb6d4572e8a7e0ddbd192a4f25b9bd27e2ff2f4377e092241d",
+      "run_sha256": "c0617cee21083d38d6bd72bb40b5678bd37af4d44c85d1f1635b2ed3a619526e",
+      "total": 144
+    },
+    "v003": {
+      "answer_present": 72,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 8
+        },
+        "conditional_exact": {
+          "passed": 0,
+          "total": 16
+        },
+        "exact": {
+          "passed": 0,
+          "total": 24
+        },
+        "no_write": {
+          "passed": 28,
+          "total": 48
+        },
+        "read": {
+          "passed": 0,
+          "total": 48
+        }
+      },
+      "case_results": {
+        "A01": 0,
+        "A02": 0,
+        "A03": 0,
+        "A04": 0,
+        "A05": 0,
+        "A06": 0,
+        "A07": 0,
+        "A08": 0,
+        "A09": 0,
+        "A10": 0,
+        "A11": 0,
+        "A12": 0,
+        "B01": 0,
+        "B02": 0,
+        "B03": 1,
+        "B04": 0,
+        "B05": 4,
+        "B06": 3,
+        "B07": 4,
+        "B08": 4,
+        "B09": 4,
+        "B10": 4,
+        "B11": 0,
+        "B12": 4,
+        "R01": 0,
+        "R02": 0,
+        "R03": 0,
+        "R04": 0,
+        "R05": 0,
+        "R06": 0,
+        "R07": 0,
+        "R08": 0,
+        "R09": 0,
+        "R10": 0,
+        "R11": 0,
+        "R12": 0
+      },
+      "evidence_passed": 36,
+      "folder": "var/gym/mark-iv/hackring-v003/validation-20261018-015933",
+      "passed": 28,
+      "plant_passed": 92,
+      "rollouts_sha256": "d9104c761304dab6a7f9880cdf6deedfd93cc5d4046c80b0e1b155a9b6802d2c",
+      "run_sha256": "3839cb5781022e219c0e2524d59d96994019bcbd6698f1cf1d265f71d3b28d48",
+      "total": 144
+    },
+    "v004": {
+      "answer_present": 42,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 8
+        },
+        "conditional_exact": {
+          "passed": 0,
+          "total": 16
+        },
+        "exact": {
+          "passed": 0,
+          "total": 24
+        },
+        "no_write": {
+          "passed": 20,
+          "total": 48
+        },
+        "read": {
+          "passed": 0,
+          "total": 48
+        }
+      },
+      "case_results": {
+        "A01": 0,
+        "A02": 0,
+        "A03": 0,
+        "A04": 0,
+        "A05": 0,
+        "A06": 0,
+        "A07": 0,
+        "A08": 0,
+        "A09": 0,
+        "A10": 0,
+        "A11": 0,
+        "A12": 0,
+        "B01": 0,
+        "B02": 0,
+        "B03": 0,
+        "B04": 0,
+        "B05": 0,
+        "B06": 0,
+        "B07": 4,
+        "B08": 4,
+        "B09": 4,
+        "B10": 4,
+        "B11": 0,
+        "B12": 4,
+        "R01": 0,
+        "R02": 0,
+        "R03": 0,
+        "R04": 0,
+        "R05": 0,
+        "R06": 0,
+        "R07": 0,
+        "R08": 0,
+        "R09": 0,
+        "R10": 0,
+        "R11": 0,
+        "R12": 0
+      },
+      "evidence_passed": 36,
+      "folder": "var/gym/mark-iv/LFM2.5-230M/validation-20261018-020215",
+      "passed": 20,
+      "plant_passed": 84,
+      "rollouts_sha256": "c43025f1801f841f4df3d7d043ec923fea88e07a44a871807f1f81bda233981b",
+      "run_sha256": "01d59976fcabc152e53f16a203d2b531a56b5ace7aef31bbe980e1fc9859ad93",
+      "total": 144
+    }
+  },
+  "local": {
+    "base-1p2b": {
+      "answer_present": 36,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 1,
+          "total": 2
+        },
+        "conditional_exact": {
+          "passed": 1,
+          "total": 4
+        },
+        "exact": {
+          "passed": 0,
+          "total": 6
+        },
+        "no_write": {
+          "passed": 10,
+          "total": 12
+        },
+        "read": {
+          "passed": 2,
+          "total": 12
+        }
+      },
+      "case_results": {
+        "A01": false,
+        "A02": true,
+        "A03": false,
+        "A04": false,
+        "A05": false,
+        "A06": false,
+        "A07": true,
+        "A08": false,
+        "A09": false,
+        "A10": false,
+        "A11": false,
+        "A12": false,
+        "B01": true,
+        "B02": false,
+        "B03": true,
+        "B04": false,
+        "B05": true,
+        "B06": true,
+        "B07": true,
+        "B08": true,
+        "B09": true,
+        "B10": true,
+        "B11": true,
+        "B12": true,
+        "R01": false,
+        "R02": false,
+        "R03": false,
+        "R04": false,
+        "R05": true,
+        "R06": false,
+        "R07": false,
+        "R08": false,
+        "R09": false,
+        "R10": true,
+        "R11": false,
+        "R12": false
+      },
+      "evidence_passed": 14,
+      "passed": 14,
+      "plant_passed": 27,
+      "report": "evals/mark-iv/local/base-1p2b/report.json",
+      "report_sha256": "1744c63357eeb2934750ce8eb3070ca18e74c4c1aec819019a32e00851b708d6",
+      "total": 36,
+      "traces": "evals/mark-iv/local/base-1p2b/traces.jsonl",
+      "traces_sha256": "74c3f570d17d69de6639c34b8df0e1d82617a961c6988c06a4f2462aec887559"
+    },
+    "base-230m": {
+      "answer_present": 36,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 2
+        },
+        "conditional_exact": {
+          "passed": 1,
+          "total": 4
+        },
+        "exact": {
+          "passed": 0,
+          "total": 6
+        },
+        "no_write": {
+          "passed": 9,
+          "total": 12
+        },
+        "read": {
+          "passed": 0,
+          "total": 12
+        }
+      },
+      "case_results": {
+        "A01": false,
+        "A02": false,
+        "A03": false,
+        "A04": false,
+        "A05": false,
+        "A06": false,
+        "A07": true,
+        "A08": false,
+        "A09": false,
+        "A10": false,
+        "A11": false,
+        "A12": false,
+        "B01": true,
+        "B02": false,
+        "B03": true,
+        "B04": false,
+        "B05": true,
+        "B06": true,
+        "B07": true,
+        "B08": true,
+        "B09": true,
+        "B10": true,
+        "B11": true,
+        "B12": false,
+        "R01": false,
+        "R02": false,
+        "R03": false,
+        "R04": false,
+        "R05": false,
+        "R06": false,
+        "R07": false,
+        "R08": false,
+        "R09": false,
+        "R10": false,
+        "R11": false,
+        "R12": false
+      },
+      "evidence_passed": 14,
+      "passed": 10,
+      "plant_passed": 22,
+      "report": "evals/mark-iv/local/base-230m/report.json",
+      "report_sha256": "cff7024b6b21b9dbd42f2e0ab96eab9f9a79129bbb062de4cbc05cabb364e3ee",
+      "total": 36,
+      "traces": "evals/mark-iv/local/base-230m/traces.jsonl",
+      "traces_sha256": "8ae14bba4b0b0745d1940c9f2a811d2282dbc73f9704828e18747a727d46299c"
+    },
+    "v002": {
+      "answer_present": 36,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 2
+        },
+        "conditional_exact": {
+          "passed": 1,
+          "total": 4
+        },
+        "exact": {
+          "passed": 0,
+          "total": 6
+        },
+        "no_write": {
+          "passed": 11,
+          "total": 12
+        },
+        "read": {
+          "passed": 8,
+          "total": 12
+        }
+      },
+      "case_results": {
+        "A01": false,
+        "A02": false,
+        "A03": false,
+        "A04": false,
+        "A05": false,
+        "A06": false,
+        "A07": true,
+        "A08": false,
+        "A09": false,
+        "A10": false,
+        "A11": false,
+        "A12": false,
+        "B01": true,
+        "B02": true,
+        "B03": true,
+        "B04": false,
+        "B05": true,
+        "B06": true,
+        "B07": true,
+        "B08": true,
+        "B09": true,
+        "B10": true,
+        "B11": true,
+        "B12": true,
+        "R01": true,
+        "R02": true,
+        "R03": false,
+        "R04": true,
+        "R05": true,
+        "R06": true,
+        "R07": false,
+        "R08": false,
+        "R09": true,
+        "R10": true,
+        "R11": false,
+        "R12": true
+      },
+      "evidence_passed": 21,
+      "passed": 20,
+      "plant_passed": 25,
+      "report": "evals/mark-iv/local/v002/report.json",
+      "report_sha256": "6fb861e479f12f442bdb746f2fb3747f2905cc693d8380388025d6269ff4d713",
+      "total": 36,
+      "traces": "evals/mark-iv/local/v002/traces.jsonl",
+      "traces_sha256": "c661f98475aa2527fe177258a691245b21351a4699249cbbea9d7da1f9fe9af6"
+    },
+    "v003": {
+      "answer_present": 36,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 2
+        },
+        "conditional_exact": {
+          "passed": 1,
+          "total": 4
+        },
+        "exact": {
+          "passed": 0,
+          "total": 6
+        },
+        "no_write": {
+          "passed": 11,
+          "total": 12
+        },
+        "read": {
+          "passed": 7,
+          "total": 12
+        }
+      },
+      "case_results": {
+        "A01": false,
+        "A02": false,
+        "A03": false,
+        "A04": false,
+        "A05": false,
+        "A06": false,
+        "A07": true,
+        "A08": false,
+        "A09": false,
+        "A10": false,
+        "A11": false,
+        "A12": false,
+        "B01": true,
+        "B02": true,
+        "B03": true,
+        "B04": false,
+        "B05": true,
+        "B06": true,
+        "B07": true,
+        "B08": true,
+        "B09": true,
+        "B10": true,
+        "B11": true,
+        "B12": true,
+        "R01": true,
+        "R02": true,
+        "R03": false,
+        "R04": true,
+        "R05": true,
+        "R06": false,
+        "R07": false,
+        "R08": false,
+        "R09": false,
+        "R10": true,
+        "R11": true,
+        "R12": true
+      },
+      "evidence_passed": 21,
+      "passed": 19,
+      "plant_passed": 24,
+      "report": "evals/mark-iv/local/v003/report.json",
+      "report_sha256": "c46245d30093f8de0ca77c3ba1ba80677eb3b871c307b71e429202e815263a43",
+      "total": 36,
+      "traces": "evals/mark-iv/local/v003/traces.jsonl",
+      "traces_sha256": "281de5be2e788c532e2827f5bb90f58058e14d6b88d3710c771bfe0fa69b1af3"
+    },
+    "v004": {
+      "answer_present": 36,
+      "by_kind": {
+        "conditional_correct": {
+          "passed": 0,
+          "total": 2
+        },
+        "conditional_exact": {
+          "passed": 1,
+          "total": 4
+        },
+        "exact": {
+          "passed": 0,
+          "total": 6
+        },
+        "no_write": {
+          "passed": 10,
+          "total": 12
+        },
+        "read": {
+          "passed": 0,
+          "total": 12
+        }
+      },
+      "case_results": {
+        "A01": false,
+        "A02": false,
+        "A03": false,
+        "A04": false,
+        "A05": false,
+        "A06": false,
+        "A07": true,
+        "A08": false,
+        "A09": false,
+        "A10": false,
+        "A11": false,
+        "A12": false,
+        "B01": true,
+        "B02": false,
+        "B03": true,
+        "B04": false,
+        "B05": true,
+        "B06": true,
+        "B07": true,
+        "B08": true,
+        "B09": true,
+        "B10": true,
+        "B11": true,
+        "B12": true,
+        "R01": false,
+        "R02": false,
+        "R03": false,
+        "R04": false,
+        "R05": false,
+        "R06": false,
+        "R07": false,
+        "R08": false,
+        "R09": false,
+        "R10": false,
+        "R11": false,
+        "R12": false
+      },
+      "evidence_passed": 13,
+      "passed": 11,
+      "plant_passed": 24,
+      "report": "evals/mark-iv/local/v004/report.json",
+      "report_sha256": "5a01c8dc8aa453989cc04f830cecefbc791b9c5d2092d0b7417ecd9b595dca40",
+      "total": 36,
+      "traces": "evals/mark-iv/local/v004/traces.jsonl",
+      "traces_sha256": "27b3ac8db88646e0399adb0a02a63c114fcf973e0ae38c44666d27baf44b45dc"
+    }
+  },
+  "model_manifest_sha256": "fea623d8dae02ce3184bd2a1bff7ab4cd44d4eac2094886ce680d5219bce8918",
+  "novelty_audit_sha256": "5a89c7a9951185c8e541b1a1ecd6fca7b89a8dff32d8888b5f5d9d4b8f4094fd",
+  "schema": "hackring.mark_iv_results/1",
+  "scoring": "confirmed plant action plus requested PV reads; natural-language answer quality not automatically scored",
+  "task_sha256": "0d912b07ca990fba1a55103c526e5f660d92b4301527dfa14516ccfb50e2235c"
+}

@@ -1,0 +1,426 @@
+{
+  "case_results": [
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "read-bpms",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "compare-planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "exact-horizontal",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "exact-vertical",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.3136675129466587,
+      "before_target_rms_mm": 0.33211144582666124,
+      "error": null,
+      "id": "center-x",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.24380554559776366,
+      "before_target_rms_mm": 0.25009006351334845,
+      "error": null,
+      "id": "center-y",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.3261382963385695,
+      "before_target_rms_mm": 0.26750576077137705,
+      "error": null,
+      "id": "center-both-a",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.3574244227332154,
+      "before_target_rms_mm": 0.40201352973108007,
+      "error": null,
+      "id": "center-both-b",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-00-read_bpms",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-01-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-02-exact",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.26579037771846675,
+      "before_target_rms_mm": 0.21065530758159962,
+      "error": null,
+      "id": "new-03-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.12269885836640033,
+      "before_target_rms_mm": 0.11328051569863432,
+      "error": null,
+      "id": "new-04-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.130719507616345,
+      "before_target_rms_mm": 0.1815762304757206,
+      "error": null,
+      "id": "new-05-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-06-read_bpms",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-07-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-08-exact",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.248868586635441,
+      "before_target_rms_mm": 0.14879088601683524,
+      "error": null,
+      "id": "new-09-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.4449859015169115,
+      "before_target_rms_mm": 0.35557977162183185,
+      "error": null,
+      "id": "new-10-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.2611296679933963,
+      "before_target_rms_mm": 0.304853393812,
+      "error": null,
+      "id": "new-11-both",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-12-read_bpms",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-13-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-14-exact",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.22198360018132376,
+      "before_target_rms_mm": 0.27588525428190114,
+      "error": null,
+      "id": "new-15-x",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.04731743574178692,
+      "before_target_rms_mm": 0.05054936137819795,
+      "error": null,
+      "id": "new-16-y",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.2641942310447233,
+      "before_target_rms_mm": 0.2658703093998231,
+      "error": null,
+      "id": "new-17-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-18-read_bpms",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-19-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-20-exact",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.27136670157166654,
+      "before_target_rms_mm": 0.22214871171903688,
+      "error": null,
+      "id": "new-21-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.09224292189895658,
+      "before_target_rms_mm": 0.08666698765746443,
+      "error": null,
+      "id": "new-22-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.2920374456136709,
+      "before_target_rms_mm": 0.2471835949757018,
+      "error": null,
+      "id": "new-23-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-24-read_bpms",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-25-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-26-exact",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.36739442123819027,
+      "before_target_rms_mm": 0.3176960763610297,
+      "error": null,
+      "id": "new-27-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.25232903660674133,
+      "before_target_rms_mm": 0.3513121350632198,
+      "error": null,
+      "id": "new-28-y",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.27576493140657327,
+      "before_target_rms_mm": 0.17222178096198065,
+      "error": null,
+      "id": "new-29-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-30-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-31-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-32-exact",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.3201704721459252,
+      "before_target_rms_mm": 0.2696524251351613,
+      "error": null,
+      "id": "new-33-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.2612219816131747,
+      "before_target_rms_mm": 0.23061108227171143,
+      "error": null,
+      "id": "new-34-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.3030851184510671,
+      "before_target_rms_mm": 0.2263189478340695,
+      "error": null,
+      "id": "new-35-both",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-36-read_bpms",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-37-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-38-exact",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.3007724691285619,
+      "before_target_rms_mm": 0.18398898463218336,
+      "error": null,
+      "id": "new-39-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.4785813512530705,
+      "before_target_rms_mm": 0.46777108415066354,
+      "error": null,
+      "id": "new-40-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.15918495641090735,
+      "before_target_rms_mm": 0.22038015492640026,
+      "error": null,
+      "id": "new-41-both",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-42-read_bpms",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-43-compare_planes",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": null,
+      "before_target_rms_mm": null,
+      "error": null,
+      "id": "new-44-exact",
+      "passed": true
+    },
+    {
+      "after_target_rms_mm": 0.22564156427170995,
+      "before_target_rms_mm": 0.20193354060241064,
+      "error": null,
+      "id": "new-45-x",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.34903762899008767,
+      "before_target_rms_mm": 0.34771202900430714,
+      "error": null,
+      "id": "new-46-y",
+      "passed": false
+    },
+    {
+      "after_target_rms_mm": 0.14869664734002755,
+      "before_target_rms_mm": 0.15757941872830566,
+      "error": null,
+      "id": "new-47-both",
+      "passed": true
+    }
+  ],
+  "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "counts": {
+    "compare_planes": 9,
+    "correct": 28,
+    "exact_write": 10,
+    "read_bpms": 9
+  },
+  "created_utc": "2026-10-18T04:28:05.429946+00:00",
+  "deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+  "disturbance_mrad": 0.08,
+  "evaluation_series": "mark-iii",
+  "evaluator_sha256": "f52c46744a9b2a5a9f2e177d2c02fd83421fdc342f2609e78ac57ca46e6b2dcc",
+  "inference": "Transformers MPS greedy (bfloat16), verified harness pre-read; write tool name forced",
+  "model": "/Users/zackstone/.cache/huggingface/hub/models--zack-r-s--hackring-LFM2.5-230M/snapshots/8ad5bc1668d56de4c0dce657fee44d1f1466b7cc",
+  "passed": 26,
+  "passed_by_kind": {
+    "correct": 9,
+    "exact_write": 10,
+    "read_bpms": 7
+  },
+  "plant": "LocalMachine on checked-in PyAT ring; seeded ERR kicks, not Osprey calibration offsets",
+  "pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+  "schema": "hackring.pyat_eval/1",
+  "software": {
+    "accelerator-toolbox": "0.9.0",
+    "torch": "2.14.1",
+    "transformers": "5.20.1"
+  },
+  "total": 56,
+  "traces_sha256": "2e76e957079890e3d5523e52ed3768d7cec6ffd96671a1a189231e723aa4868d"
+}

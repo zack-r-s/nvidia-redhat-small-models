@@ -1,0 +1,204 @@
+{
+  "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "dataset_validation": "evals/mark-iii/dataset-validation.json",
+  "gym": {
+    "direct": {
+      "base-1p2b": {
+        "accepted_writes": 0,
+        "folder": "var/gym/mark-iii/direct/LFM2.5-1.2B-Instruct/validation-20261018-001931",
+        "mean_reward": 0.0,
+        "model_revision": "0f604ada3f766f9f257460c4c9f0b5d6f69d431b",
+        "model_source": "LiquidAI/LFM2.5-1.2B-Instruct",
+        "repo_commit_at_run": "98150c0",
+        "rollouts": 112,
+        "rollouts_sha256": "f6e1100c2f88f8b78da2f7366ddfd77d504fca517092313bc04efd39d2f59110",
+        "successes": 0,
+        "tasks": 28,
+        "tool_attempts": 112
+      },
+      "base-230m": {
+        "accepted_writes": 0,
+        "folder": "var/gym/mark-iii/direct/LFM2.5-230M-base/validation-20261018-002339",
+        "mean_reward": 0.0,
+        "model_revision": "40cb2ad3b3044d5a41eee083a6103c8b523afa45",
+        "model_source": "LiquidAI/LFM2.5-230M",
+        "repo_commit_at_run": "98150c0",
+        "rollouts": 112,
+        "rollouts_sha256": "bd10960fe70b1458297abbd075a8d7a50c1f9bf1636a22d57eb05ada9b63ec2d",
+        "successes": 0,
+        "tasks": 28,
+        "tool_attempts": 108
+      },
+      "v002": {
+        "accepted_writes": 69,
+        "folder": "var/gym/mark-iii/direct/hackring-v002/validation-20261018-001008",
+        "mean_reward": -0.002834753504300279,
+        "model_revision": "d95741556db29a6daa14136db4006edf7b9f6b9e",
+        "model_source": "zack-r-s/hackring-LFM2.5-230M",
+        "repo_commit_at_run": "98150c0",
+        "rollouts": 112,
+        "rollouts_sha256": "676ac38fa35f51b8aee2e7da8f292e9ce2339cced1ef8c407ab0659c7596455d",
+        "successes": 12,
+        "tasks": 28,
+        "tool_attempts": 150
+      },
+      "v003": {
+        "accepted_writes": 73,
+        "folder": "var/gym/mark-iii/direct/hackring-v003/validation-20261018-001359",
+        "mean_reward": 0.002171031030454497,
+        "model_revision": "8ad5bc1668d56de4c0dce657fee44d1f1466b7cc",
+        "model_source": "zack-r-s/hackring-LFM2.5-230M",
+        "repo_commit_at_run": "98150c0",
+        "rollouts": 112,
+        "rollouts_sha256": "4628f367a42bdf48a77e9d396ea1dc5fc791bb4ae5df870d4606004cfcbc9950",
+        "successes": 6,
+        "tasks": 28,
+        "tool_attempts": 178
+      }
+    },
+    "skill": {
+      "base-1p2b": {
+        "accepted_writes": 97,
+        "folder": "var/gym/mark-iii/skill/LFM2.5-1.2B-Instruct/validation-20261018-002029",
+        "mean_reward": 0.24998541282857262,
+        "model_revision": "0f604ada3f766f9f257460c4c9f0b5d6f69d431b",
+        "model_source": "LiquidAI/LFM2.5-1.2B-Instruct",
+        "raw_intent_correct": 0,
+        "repo_commit_at_run": "98150c0",
+        "rollouts": 112,
+        "rollouts_sha256": "3ec62bd63f6689454caa830d71e0c09d5020957bd2b244502ef3a3de7c175343",
+        "successes": 28,
+        "tasks": 28,
+        "tool_attempts": 351
+      },
+      "base-230m": {
+        "accepted_writes": 73,
+        "folder": "var/gym/mark-iii/skill/LFM2.5-230M-base/validation-20261018-002245",
+        "mean_reward": 0.6517700242270943,
+        "model_revision": "40cb2ad3b3044d5a41eee083a6103c8b523afa45",
+        "model_source": "LiquidAI/LFM2.5-230M",
+        "raw_intent_correct": 31,
+        "repo_commit_at_run": "98150c0",
+        "rollouts": 112,
+        "rollouts_sha256": "8af87ce8ad1fae3ac28374c5fd3f77500b1ef3bb8c444bdffc016e6059f34082",
+        "successes": 73,
+        "tasks": 28,
+        "tool_attempts": 85
+      },
+      "v004": {
+        "accepted_writes": 73,
+        "folder": "var/gym/mark-iii/skill/LFM2.5-230M/validation-20261018-002115",
+        "mean_reward": 0.6428211398758633,
+        "model_revision": "14419bfc11d03da0fb92902a7cd15e7d2a9d0fa4",
+        "model_source": "zack-r-s/hackring-LFM2.5-230M",
+        "raw_intent_correct": 42,
+        "repo_commit_at_run": "98150c0",
+        "rollouts": 112,
+        "rollouts_sha256": "11d273d40adb9d1a18f430f077193a8cf2bf9398928aacc321c1ee7fbc1973cd",
+        "successes": 72,
+        "tasks": 28,
+        "tool_attempts": 84
+      }
+    }
+  },
+  "live_smoke": "evals/mark-iii/live-fixture-v004.json",
+  "local": {
+    "direct": {
+      "base-1p2b": {
+        "inference": "Transformers MPS greedy (bfloat16), verified harness pre-read; write tool name forced",
+        "passed": 0,
+        "passed_by_kind": {},
+        "report": "evals/mark-iii/direct/base-1p2b/report.json",
+        "report_sha256": "fc31e352652c38b0608d46aac75683cc25bcf9ad6202f33a3feb1b3ea8dd389f",
+        "total": 56
+      },
+      "base-230m": {
+        "inference": "Transformers MPS greedy (bfloat16), verified harness pre-read; write tool name forced",
+        "passed": 1,
+        "passed_by_kind": {
+          "read_bpms": 1
+        },
+        "report": "evals/mark-iii/direct/base/report.json",
+        "report_sha256": "73f9de69b83d437ef7581c54bb52b9c7ad0f9f65a085af421d384a9df1698f13",
+        "total": 56
+      },
+      "v002": {
+        "inference": "Transformers MPS greedy (bfloat16), verified harness pre-read; write tool name forced",
+        "passed": 24,
+        "passed_by_kind": {
+          "correct": 7,
+          "exact_write": 10,
+          "read_bpms": 7
+        },
+        "report": "evals/mark-iii/direct/v002/report.json",
+        "report_sha256": "6f3cb665e3eaab85492f8a2aaa345485e8cf65e67553c7cc1a6acc83a9435dd2",
+        "total": 56
+      },
+      "v003": {
+        "inference": "Transformers MPS greedy (bfloat16), verified harness pre-read; write tool name forced",
+        "passed": 26,
+        "passed_by_kind": {
+          "correct": 9,
+          "exact_write": 10,
+          "read_bpms": 7
+        },
+        "report": "evals/mark-iii/direct/v003/report.json",
+        "report_sha256": "c3f1bc1f79b39ad34fda400e9200b950278234dedc25e7ca80364bffd64051cb",
+        "total": 56
+      }
+    },
+    "skill": {
+      "base-1p2b": {
+        "inference": "Transformers CPU greedy; no forced tool prefix; numeric solve by checked-in response teacher",
+        "intent_correct": 0,
+        "passed": 0,
+        "report": "evals/mark-iii/skill/base-1p2b/report.json",
+        "report_sha256": "61dbac717c8081edcfc5149a6dcf5aff9cfa960feac823a99521154bf8f715b6",
+        "route_correct": 28,
+        "total": 28
+      },
+      "base-230m": {
+        "inference": "Transformers CPU greedy; no forced tool prefix; numeric solve by checked-in response teacher",
+        "intent_correct": 0,
+        "passed": 0,
+        "report": "evals/mark-iii/skill/base/report.json",
+        "report_sha256": "ef4cb6b0e136e6322b7faa2edd4d5d44fd283e1f6deeb6c31d34bb8274758910",
+        "route_correct": 14,
+        "total": 28
+      },
+      "v004": {
+        "inference": "Transformers CPU greedy; no forced tool prefix; numeric solve by checked-in response teacher",
+        "intent_correct": 12,
+        "passed": 12,
+        "report": "evals/mark-iii/skill/v004/report.json",
+        "report_sha256": "db1c007f44440cfa868fb79e5405972362d7abfcda4296c4b5f612eaa8835e9c",
+        "route_correct": 28,
+        "total": 28
+      }
+    }
+  },
+  "paired_skill_comparison": {
+    "goal_success": {
+      "candidate_minus_base": -0.008928571428571428,
+      "resampling_unit": "28 frozen tasks; four rollouts per task; 20,000 seeded paired resamples",
+      "task_bootstrap_95_percent_interval": [
+        -0.22321428571428573,
+        0.20535714285714285
+      ]
+    },
+    "raw_intent_correct": {
+      "candidate_minus_base": 0.09821428571428571,
+      "resampling_unit": "28 frozen tasks; four rollouts per task; 20,000 seeded paired resamples",
+      "task_bootstrap_95_percent_interval": [
+        -0.10714285714285714,
+        0.29464285714285715
+      ]
+    }
+  },
+  "schema": "hackring.mark_iii_results/1",
+  "task_sha256": {
+    "direct": "a919d01d03accf67fa8c22406deb3df9b0a468efadcd464dea5b5ccc46e739f8",
+    "skill": "827ddbd76fc4d43b99717ba54c468c4085ef2ae97b176ea1198e5e0d26d75b32"
+  },
+  "ui_smoke": "evals/mark-iii/ui-smoke-v004.json"
+}

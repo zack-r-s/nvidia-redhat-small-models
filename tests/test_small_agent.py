@@ -42,6 +42,99 @@ def test_read_request_rejects_model_write(capsys):
     assert "[channel_write rejected]" in capsys.readouterr().out
 
 
+def test_beam_report_falls_back_to_measured_read_when_model_returns_no_tool(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpms = small_agent.CONTRACT["bpm"]
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert path == "/chat/completions"
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "content": "The beam is centered."}}]})
+
+    class FakeMCP:
+        def __init__(self):
+            self.calls = []
+
+        async def call_tool(self, name, args):
+            self.calls.append((name, args))
+            assert name == "channel_read" and args == {"channels": bpms}
+            data = {"status": "success", "summary": {"readings": {
+                pv: {"value": 0.1 if pv.endswith(":X") else -0.2} for pv in bpms}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))])
+
+    for prompt in ("report beam position", "report beam postion"):
+        mcp = FakeMCP()
+        history = []
+        asyncio.run(small_agent.turn(prompt, history, mcp, FakeHTTP(),
+            [{"type": "function", "function": {"name": "channel_read"}}],
+            {"channel_read": {}},
+            SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8)))
+        output = capsys.readouterr().out
+        assert "channel_read · fallback" in output
+        assert "BPM01: X=+0.1000, Y=-0.2000" in output
+        assert "The beam is centered" not in output
+        assert len(mcp.calls) == 1
+        assert "Measured beam position" in history[-1]["content"]
+
+
+def test_misspelled_beam_report_expands_partial_model_read(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpms = small_agent.CONTRACT["bpm"]
+    prompt = "report beam postion"
+    assert small_agent.beam_read_request(prompt)
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert json["tool_choice"] == "required"
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [{"id": "read", "function": {
+                    "name": "channel_read", "arguments": '{"channels":["RING:DIAG:BPM01:POSITION:X"]}'}}]}}]})
+
+    class FakeMCP:
+        async def call_tool(self, name, args):
+            assert name == "channel_read" and args == {"channels": bpms}
+            data = {"status": "success", "summary": {"readings": {
+                pv: {"value": 0.1 if pv.endswith(":X") else -0.2} for pv in bpms}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))])
+
+    asyncio.run(small_agent.turn(prompt, [], FakeMCP(), FakeHTTP(),
+        [{"type": "function", "function": {"name": "channel_read"}}],
+        {"channel_read": {"properties": {"channels": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8)))
+    output = capsys.readouterr().out
+    assert "BPM01: X=+0.1000, Y=-0.2000" in output
+    assert "BPM04: X=+0.1000, Y=-0.2000" in output
+    assert "(no reply)" not in output
+
+
+def test_all_sensor_data_reads_only_known_bpms(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpms = small_agent.CONTRACT["bpm"]
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert json["tool_choice"] == "required"
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [{"id": "read", "function": {
+                    "name": "channel_read", "arguments": '{"channels":["RING","DIAG","BPM"]}'}}]}}]})
+
+    class FakeMCP:
+        async def call_tool(self, name, args):
+            assert name == "channel_read" and args == {"channels": bpms}
+            data = {"status": "success", "summary": {"readings": {
+                pv: {"value": 0.1 if pv.endswith(":X") else -0.2} for pv in bpms}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))])
+
+    asyncio.run(small_agent.turn("report all sensor data", [], FakeMCP(), FakeHTTP(),
+        [{"type": "function", "function": {"name": "channel_read"}}],
+        {"channel_read": {"properties": {"channels": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8)))
+    output = capsys.readouterr().out
+    assert "BPM04: X=+0.1000, Y=-0.2000" in output
+    assert "unknown PV" not in output
+
+
 def test_known_setpoint_uses_contract_units_but_rejects_wrong_unit():
     assert small_agent.requested_write("Set RING:MAG:H01:KICK:SP to 0.2") == (
         "RING:MAG:H01:KICK:SP", 0.2,
@@ -51,19 +144,22 @@ def test_known_setpoint_uses_contract_units_but_rejects_wrong_unit():
     assert "mrad" in response
 
 
-def test_model_final_cannot_claim_an_unexecuted_write(capsys):
+def test_natural_corrector_alias_requires_absolute_mrad_and_resolves_bpm():
+    prompt = ("Set the first horizontal corrector to an absolute kick of +0.05 mrad, "
+              "then report the horizontal beam position at the first BPM")
+    assert small_agent.requested_write(prompt) == ("RING:MAG:H01:KICK:SP", 0.05)
+    assert small_agent.natural_bpm_read(prompt) == "RING:DIAG:BPM01:POSITION:X"
+    assert small_agent.requested_write("Set the first horizontal corrector by 0.05 mrad") is None
+    assert small_agent.requested_write("Set the first horizontal corrector to 0.05 mm") is None
+
+
+def test_exact_write_cannot_claim_an_unexecuted_write(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
     prompt = "Set RING:MAG:H01:KICK:SP to 0.2, then read RING:DIAG:BPM01:POSITION:X"
-
-    class FakeResponse:
-        is_error = False
-
-        def json(self):
-            return {"choices": [{"message": {"role": "assistant", "content": "Set to 0.2 mm."}}]}
 
     class FakeHTTP:
         async def post(self, path, json):
-            assert {tool["function"]["name"] for tool in json["tools"]} == {"channel_read", "channel_write"}
-            return FakeResponse()
+            raise AssertionError("explicit numeric writes use the measured harness path")
 
     class FakeMCP:
         async def call_tool(self, name, args):
@@ -76,7 +172,6 @@ def test_model_final_cannot_claim_an_unexecuted_write(capsys):
         SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8),
     ))
     output = capsys.readouterr().out
-    assert "0.2 mm" not in output
     assert "No write was made" in output
     assert "no verified reading returned" in output
 
@@ -135,9 +230,9 @@ def test_model_write_uses_verified_read_write_read_sequence(capsys, monkeypatch)
         SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=2, history=8),
     ))
     assert [(name, args.get("channels", [None])[0]) for name, args in mcp.calls] == [
-        ("channel_read", setpoint), ("channel_write", None),
-        ("channel_read", readback), ("channel_read", bpm),
+        ("channel_read", setpoint), ("channel_write", None), ("channel_read", readback),
     ]
+    assert mcp.calls[-1][1]["channels"] == [readback, bpm]
     output = capsys.readouterr().out
     assert "confirmed for 0.2 mrad" in output
     assert f"{bpm}: 0.1 mm" in output
@@ -194,10 +289,8 @@ def test_write_alone_triggers_requested_post_write_read(capsys, monkeypatch):
          "channel_write": {"properties": {"operations": {"type": "array"}}}},
         SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=3, history=8),
     ))
-    assert [name for name, _ in mcp.calls] == [
-        "channel_read", "channel_write", "channel_read", "channel_read",
-    ]
-    assert mcp.calls[-1][1] == {"channels": [bpm]}
+    assert [name for name, _ in mcp.calls] == ["channel_read", "channel_write", "channel_read"]
+    assert mcp.calls[-1][1] == {"channels": [readback, bpm]}
     assert f"{bpm}: 0.7669 mm" in capsys.readouterr().out
     assert [entry["role"] for entry in history] == ["user", "assistant"]
 
@@ -255,6 +348,9 @@ def test_goal_request_and_batch_validation():
     assert small_agent.goal_request("Center the horizontal orbit") == "x"
     assert small_agent.goal_request("Correct the vertical beam") == "y"
     assert small_agent.goal_request("Reduce the beam orbit") == "both"
+    assert small_agent.goal_request("The vertical orbit needs centering") == "y"
+    assert small_agent.goal_request("Steer both transverse planes toward the axis") == "both"
+    assert small_agent.goal_request("Steer the horizontal beam nearer the axis") == "x"
     assert small_agent.goal_request("Report the horizontal orbit") is None
     assert small_agent.goal_request("Do not correct the orbit") is None
     assert small_agent.goal_request("Set RING:MAG:H01:KICK:SP to 0.2, then center the orbit") is None
@@ -273,7 +369,7 @@ def test_goal_request_and_batch_validation():
             small_agent.valid_goal_operations(operations, allowed)
 
 
-def test_goal_correction_reads_before_and_after_write(capsys, monkeypatch):
+def test_legacy_goal_correction_reads_before_and_after_write(capsys, monkeypatch):
     monkeypatch.setattr(small_agent, "dim", print)
     bpm, correctors = small_agent.goal_channels("x")
     command = correctors[0]
@@ -308,7 +404,7 @@ def test_goal_correction_reads_before_and_after_write(capsys, monkeypatch):
 
     mcp = FakeMCP()
     history = []
-    asyncio.run(small_agent.turn("Center the horizontal orbit", history, mcp, FakeHTTP(),
+    asyncio.run(small_agent.goal_turn("Center the horizontal orbit", "x", history, mcp, FakeHTTP(),
         [{"type": "function", "function": {"name": "channel_read"}},
          {"type": "function", "function": {"name": "channel_write"}}],
         {"channel_write": {"properties": {"operations": {"type": "array"}}}},
@@ -345,3 +441,33 @@ def test_goal_rejects_wrong_plane_without_write(capsys, monkeypatch):
         [{"type": "function", "function": {"name": "channel_write"}}],
         {"channel_write": {}}, SimpleNamespace(model="test", temperature=0, max_tokens=32, history=8)))
     assert "No write was made" in capsys.readouterr().out
+
+
+def test_read_only_plane_comparison_uses_measured_bpms(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpm = small_agent.CONTRACT["bpm"]
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert all(tool["function"]["name"] != "channel_write" for tool in json["tools"])
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [{"id": "read", "function": {
+                    "name": "channel_read", "arguments": '{"channels":["RING:DIAG:BPM01:POSITION:X"]}'}}]
+            }}]})
+
+    class FakeMCP:
+        async def call_tool(self, name, args):
+            assert name == "channel_read"
+            assert args["channels"] == bpm
+            values = {pv: (0.2 if pv.endswith(":X") else 0.1) for pv in bpm}
+            data = {"status": "success", "summary": {"readings": {
+                pv: {"value": value} for pv, value in values.items()}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))], isError=False)
+
+    asyncio.run(small_agent.turn("Which orbit plane has the larger measured RMS?", [], FakeMCP(), FakeHTTP(),
+        [{"type": "function", "function": {"name": "channel_read"}},
+         {"type": "function", "function": {"name": "channel_write"}}],
+        {"channel_read": {"properties": {"channels": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=2, history=8)))
+    output = capsys.readouterr().out
+    assert "Measured RMS: X=0.2000 mm, Y=0.1000 mm. The X plane is larger." in output

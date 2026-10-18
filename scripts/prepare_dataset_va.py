@@ -47,7 +47,8 @@ def adapt_monitor_elements(deck: Path) -> list[str]:
     return changed
 
 
-def prepare(destination: Path) -> None:
+def prepare(destination: Path, *, ca_port: int = 5064, pva_port: int = 5075,
+            port_base: int = 10000, record_archive: bool = True) -> None:
     if destination.exists():
         raise FileExistsError(f"deployment already exists: {destination}; choose a new path")
     destination.mkdir(parents=True)
@@ -64,12 +65,16 @@ def prepare(destination: Path) -> None:
     profile["extends"] = "hello-world"
     profile["project_name"] = destination.name
     profile["config"]["control_system.connector.virtual_accelerator.serving"] = "served"
-    profile["config"]["archiver.type"] = "mongodb_archiver"
+    profile["config"]["archiver.type"] = "mongodb_archiver" if record_archive else "epics_archiver"
     profile["config"]["simulation.tick_s"] = 0.1
     profile["config"]["claude_code.servers.ariel.enabled"] = False
     profile["config"].pop("web_terminal.shell", None)
-    profile["virtual_accelerator"] = {"port": 5064, "pva_port": 5075}
-    profile["va_archiver"] = {}
+    profile["virtual_accelerator"] = {"port": ca_port, "pva_port": pva_port}
+    profile["config"]["deployment.port_base"] = port_base
+    if record_archive:
+        profile["va_archiver"] = {}
+    else:
+        profile.pop("va_archiver", None)
     (destination / "profile.yml").write_text(yaml.safe_dump(profile, sort_keys=False))
 
     env = (ROOT / ".env.example").read_text().rstrip() + "\n"
@@ -104,6 +109,8 @@ def prepare(destination: Path) -> None:
         "staged_pv_contract_sha256": digest(destination / "data/pv_contract.json"),
         "osprey_source_commit_prefix": PINNED_OSPREY_COMMIT,
         "temporary_wheel_metadata_version": TEMP_WHEEL_VERSION,
+        "ca_port": ca_port, "pva_port": pva_port, "port_base": port_base,
+        "record_archive": record_archive,
     }
     (destination / "dataset_deployment.json").write_text(json.dumps(provenance, indent=2) + "\n")
     print(f"Prepared {destination}; {len(changed)} temporary BPM class conversions; test orbit difference {provenance['test_orbit_max_abs_difference_m']:.3g} m")
@@ -112,9 +119,14 @@ def prepare(destination: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--deployment", type=Path, default=DEFAULT_DEPLOYMENT)
+    parser.add_argument("--ca-port", type=int, default=5064)
+    parser.add_argument("--pva-port", type=int, default=5075)
+    parser.add_argument("--port-base", type=int, default=10000)
+    parser.add_argument("--no-archive", action="store_true", help="omit the recording store in a data-only served deployment")
     parser.add_argument("--build", action="store_true", help="run osprey build in the temporary deployment")
     args = parser.parse_args()
-    prepare(args.deployment.resolve())
+    prepare(args.deployment.resolve(), ca_port=args.ca_port, pva_port=args.pva_port,
+            port_base=args.port_base, record_archive=not args.no_archive)
     if args.build:
         import osprey
 

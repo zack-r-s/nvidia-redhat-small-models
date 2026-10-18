@@ -1,0 +1,30 @@
+{
+  "served_model_name": "LFM2.5-1.2B-Instruct",
+  "model_source": "LiquidAI/LFM2.5-1.2B-Instruct",
+  "model_revision": "0f604ada3f766f9f257460c4c9f0b5d6f69d431b",
+  "model_revision_source": "VLLM_MODEL_REVISION",
+  "max_model_len": 4096,
+  "base_url": "http://127.0.0.1:8012/v1",
+  "vllm_version": "0.31.0",
+  "vllm_backend": "vllm-metal",
+  "vllm_command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/zackstone/.venv-vllm-metal/bin/vllm serve LiquidAI/LFM2.5-1.2B-Instruct --revision 0f604ada3f766f9f257460c4c9f0b5d6f69d431b --served-model-name LFM2.5-1.2B-Instruct --host 127.0.0.1 --port 8012 --enable-auto-tool-choice --tool-call-parser lfm2 --max-model-len 4096 --gpu-memory-utilization 0.4",
+  "nemo_gym_version": "0.4.0",
+  "eval_host": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M4 Pro"
+  },
+  "evaluation_series": "mark-iii",
+  "evaluation_interface": "orbit_correct",
+  "split": "validation",
+  "repo_commit": "98150c0",
+  "extra_args": [
+    "--num-repeats",
+    "4"
+  ],
+  "started_utc": "2026-10-18T04:20:30.626420+00:00",
+  "track": "skill",
+  "task_sha256": "827ddbd76fc4d43b99717ba54c468c4085ef2ae97b176ea1198e5e0d26d75b32",
+  "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "objective": "requested-plane BPM RMS-squared fractional reduction; one tool attempt"
+}

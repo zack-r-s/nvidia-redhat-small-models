@@ -1,26 +1,33 @@
-import { Card, H2, HTMLSelect, Switch, Tag } from "@blueprintjs/core";
+import { Button, Card, HTMLSelect, Popover, Switch, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
-import { Correctors, Readings, StatusBar, Unavailable } from "./Panels";
-import RingScene, { WINDOWS_MM, magnificationFor } from "./RingScene";
-import type { Device } from "./types";
+import { BeamSpots, RmsHistory } from "./BeamView";
+import Chat from "./Chat";
+import { AgentGoal, Correctors, Readings, StatusBar } from "./Panels";
+import RingScene, { PLAYBACK_SPEEDS, WINDOWS_MM, magnificationFor } from "./RingScene";
+import type { Device, TurnEvidence } from "./types";
 import { bpmPv, correctorPv } from "./types";
 import { useFeed } from "./useFeed";
 import { useHistory } from "./useHistory";
-import BeamView from "./BeamView";
 
 // Dev-only write harness; the dynamic import is dropped from production builds.
-const driverEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get("driver") === "1";
+const driverEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get("driver") === "1" && !new URLSearchParams(window.location.search).has("replay");
 const TestDriver = driverEnabled ? lazy(() => import("./TestDriver")) : null;
+
+type SideTab = "beam" | "readings" | "correctors" | "agent";
 
 export default function App() {
   const feed = useFeed();
   const [expert, setExpert] = useState(false);
   const [selected, setSelected] = useState<Device | null>(null);
+  const [tab, setTab] = useState<SideTab>("beam");
+  const [driverOpen, setDriverOpen] = useState(false);
+  const [turn, setTurn] = useState<TurnEvidence | null>(null);
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => { const t = window.setInterval(() => setNow(Date.now()), 250); return () => window.clearInterval(t); }, []);
   const { state } = feed;
   const history = useHistory(state);
   const [windowMm, setWindowMm] = useState(WINDOWS_MM[2]);
+  const [speedStep, setSpeedStep] = useState(2);
   const [clearedAt, setClearedAt] = useState(0);
   const shown = useMemo(() => history.filter((h) => h.t > clearedAt), [history, clearedAt]);
   const dim = feed.status === "stale" || feed.status === "disconnected";
@@ -39,34 +46,65 @@ export default function App() {
     );
   };
 
+  const empty = <span className="muted">No readings available.</span>;
+  const pane = (id: SideTab, content: React.ReactNode) => <div className="pane" hidden={tab !== id}>{content}</div>;
+
   return (
     <div className={`app-shell bp6-dark ${dim ? "is-dim" : ""}`}>
       <header className="topbar">
-        <div><div className="eyebrow">OSPREY / PYAT · READ-ONLY VIEWER</div><H2>FODO ring monitor</H2></div>
-        <Switch checked={expert} onChange={(e) => setExpert(e.currentTarget.checked)} label={expert ? "Expert (PV names)" : "Simple"} />
+        <div className="brand"><span className="eyebrow">{state?.backend === "osprey-epics" ? "OSPREY / PYAT" : "PYAT SHARED FIXTURE"}</span><strong>FODO ring monitor</strong></div>
+        <StatusBar feed={feed} now={now} />
+        <div className="topbar-actions">
+          {TestDriver && (
+            <Popover isOpen={driverOpen} onInteraction={setDriverOpen} placement="bottom-end" content={<div className="driver-pop"><Suspense fallback={null}><TestDriver onMachineChange={() => setTurn(null)} /></Suspense></div>}>
+              <Button small icon="wrench" intent="warning" minimal data-testid="driver-toggle">Test driver</Button>
+            </Popover>
+          )}
+          <Switch checked={expert} onChange={(e) => setExpert(e.currentTarget.checked)} label={expert ? "Expert" : "Simple"} />
+        </div>
       </header>
-      <StatusBar feed={feed} now={now} />
-      {TestDriver && <Suspense fallback={null}><TestDriver /></Suspense>}
-      <div className="grid">
-        <Card className="panel scene-card">
-          <h4>Ring schematic <span className="muted">(not the physical floor plan)</span></h4>
-          <div className="driver-row"><span className="muted">Tube display window</span><HTMLSelect value={windowMm} onChange={(e) => setWindowMm(Number(e.currentTarget.value))} options={WINDOWS_MM.map((w) => ({ value: w, label: `± ${w} mm` }))} data-testid="window-select" /></div>
-          <div className="scene">
-            {state ? <RingScene state={state} selected={selected?.name ?? null} onSelect={setSelected} dim={dim} windowMm={windowMm} /> : <div className="placeholder">{feed.status === "disconnected" ? "No machine data — viewer is disconnected." : "Waiting for machine state…"}</div>}
+      <main className="workspace">
+        <Card className="panel scene-card" data-testid="stage">
+          <div className="panel-head">
+            <h4>Ring <span className="muted">(schematic · {state?.orbit_profile ? "PyAT closed orbit" : "BPM readings"})</span></h4>
+            <span className="panel-tools">
+              <label className="playback-control">
+                <span className="muted">Playback</span>
+                <input type="range" min="0" max={PLAYBACK_SPEEDS.length - 1} step="1" value={speedStep}
+                  onChange={(e) => setSpeedStep(Number(e.currentTarget.value))} aria-label="Beam path playback speed"
+                  disabled={!state?.orbit_profile} data-testid="beam-speed" />
+                <span className="playback-value" data-testid="beam-speed-value">{state?.orbit_profile ? PLAYBACK_SPEEDS[speedStep].label : "—"}</span>
+              </label>
+              <span className="muted">Tube window</span>
+              <HTMLSelect minimal value={windowMm} onChange={(e) => setWindowMm(Number(e.currentTarget.value))} options={WINDOWS_MM.map((w) => ({ value: w, label: `± ${w} mm` }))} data-testid="window-select" />
+              <Popover placement="bottom-end" content={<div className="legend-pop muted">Grey ring = reference path · tube = vacuum-chamber look; its cross-section is the display window (± {windowMm} mm ≈ ×{state ? Math.round(magnificationFor(windowMm, state.lattice.circumference_m || 1)) : "—"}), not the physical pipe · red dot = measured BPM, yellow = beyond the window (drawn at the wall) · green marker and trail = sampled PyAT 4D closed orbit, available only with full local model state; drawing between samples and playback speed are display effects, not measured motion or physical revolution speed · tables show true PV values · click a device to inspect · drag to orbit</div>}>
+                <Button minimal small icon="info-sign" aria-label="Legend" />
+              </Popover>
+            </span>
           </div>
-          <div className="legend muted">Grey ring = reference path · translucent tube = vacuum chamber look; its cross-section is the display window (± {windowMm} mm ≈ ×{state ? Math.round(magnificationFor(windowMm, state.lattice.circumference_m || 1)) : "—"} magnification), not the physical pipe · red dots = measured BPM position, yellow = beyond the window (shown at the wall) · tables show true values · click a device to inspect · drag to orbit</div>
-          <div className="inspect">{selected ? inspect(selected) : <span className="muted">No device selected.</span>}</div>
+          <div className="scene">
+            {state ? <RingScene state={state} selected={selected?.name ?? null} onSelect={setSelected} dim={dim} windowMm={windowMm} speedStep={speedStep} active={feed.status === "live" || (feed.status === "replay" && !!feed.replay?.playing)} /> : <div className="placeholder">{feed.status === "disconnected" ? "No machine data — viewer is disconnected." : "Waiting for machine state…"}</div>}
+            <div className="inspect">{selected ? inspect(selected) : <span className="muted">Click a device to inspect.</span>}</div>
+          </div>
         </Card>
-        <div className="col">
-          {state ? <BeamView history={shown} onClear={() => setClearedAt(Date.now())} /> : null}
-          {state ? <><Readings state={state} expert={expert} /><Correctors state={state} expert={expert} /></> : <Card className="panel"><span className="muted">No readings available.</span></Card>}
-        </div>
-        <div className="status-row">
-        <Unavailable title="Agent intent" need="No agent-event contract from the backend yet." />
-        <Unavailable title="Osprey action status" need="No action/approval event stream is provided yet." />
-        <Unavailable title="Target & goal" need="No target or threshold contract exists, so success is not computed." />
-        </div>
-      </div>
+        <aside className="right">
+          <Card className="panel tabs-panel" data-testid="insight">
+            <Tabs id="insight-tabs" selectedTabId={tab} onChange={(id) => setTab(id as SideTab)} animate={false}>
+              <Tab id="beam" title="Beam" />
+              <Tab id="readings" title="Readings" />
+              <Tab id="correctors" title="Correctors" />
+              <Tab id="agent" title="Agent & goal" />
+            </Tabs>
+            <div className="panes">
+              {pane("beam", state ? <div className="beam-stack"><BeamSpots history={shown} onClear={() => setClearedAt(Date.now())} /><RmsHistory history={shown} /></div> : empty)}
+              {pane("readings", state ? <Readings state={state} expert={expert} /> : empty)}
+              {pane("correctors", state ? <Correctors state={state} expert={expert} /> : empty)}
+              {pane("agent", <AgentGoal turn={feed.status === "replay" ? null : turn} />)}
+            </div>
+          </Card>
+          <Card className="panel chat-panel" data-testid="chat-panel"><Chat onTurn={setTurn} onReset={() => setTurn(null)} disabled={feed.status === "replay"} /></Card>
+        </aside>
+      </main>
     </div>
   );
 }

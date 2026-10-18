@@ -1,0 +1,35 @@
+{
+  "architecture": "natural-language skill selection; deterministic bounded response solve; measured PyAT result",
+  "counts": {
+    "test": 72,
+    "train": 432,
+    "validation": 72
+  },
+  "deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+  "files_sha256": {
+    "index.jsonl": "9f6ba8da0fdd6711189af288d5478d571e5c9ee898469c35de702fa5d9e6d463",
+    "sources.jsonl": "671ebd5ff792af6e1ea9d04372b42f7c8a13b79d477a2c67d30264b2deb2927d",
+    "test.jsonl": "24783ef19f612f055f527251666a7d687444cde6fd8eeeeb3b5ee1dc2a586117",
+    "train.jsonl": "963b30fc40edec2215a4080b93cb3145bd8b73ad7397280318217dd37c63ec7b",
+    "validation.jsonl": "dfcc5dae1a6a73587310d05224738b91d0e744fc595ea28c54b4d7f2b16c6f5e"
+  },
+  "pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+  "response_teacher_sha256": "8da906e2e4ca5cf449a2cfff8bd09994a29f60b1ea759d5f7dfe7dca3f2ae1cd",
+  "schema": "hackring.lfm_conversations/1",
+  "seed_ranges": {
+    "test": {
+      "count": 24,
+      "first": 20270000
+    },
+    "train": {
+      "count": 144,
+      "first": 20268000
+    },
+    "validation": {
+      "count": 24,
+      "first": 20269000
+    }
+  },
+  "source": "fresh seed-disjoint local PyAT disturbances; no GPT annotation",
+  "version": "v004"
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "hackring.dataset_split/1",
+  "source_version": "v001",
+  "source_files_sha256": {
+    "attempts.jsonl": "ea2d4784d585d3844c64e1982b3064fd41476b97ca09c406d76bd2efb2c6fe10",
+    "episodes.jsonl": "a6fc534c932023f44c230d3311e5cd8fa7a9e97c918e7bec9e5a07bf45d6a3d5"
+  },
+  "method": "episode order; first fraction fine-tunes, remainder evaluates; generator split field ignored",
+  "finetune_fraction": 0.75,
+  "counts": {
+    "finetune": {
+      "episodes": 48,
+      "attempts": 3072
+    },
+    "eval": {
+      "episodes": 16,
+      "attempts": 1024
+    }
+  },
+  "episodes": {
+    "finetune": [
+      "ep-0000",
+      "ep-0001",
+      "ep-0002",
+      "ep-0003",
+      "ep-0004",
+      "ep-0005",
+      "ep-0006",
+      "ep-0007",
+      "ep-0008",
+      "ep-0009",
+      "ep-0010",
+      "ep-0011",
+      "ep-0012",
+      "ep-0013",
+      "ep-0014",
+      "ep-0015",
+      "ep-0016",
+      "ep-0017",
+      "ep-0018",
+      "ep-0019",
+      "ep-0020",
+      "ep-0021",
+      "ep-0022",
+      "ep-0023",
+      "ep-0024",
+      "ep-0025",
+      "ep-0026",
+      "ep-0027",
+      "ep-0028",
+      "ep-0029",
+      "ep-0030",
+      "ep-0031",
+      "ep-0032",
+      "ep-0033",
+      "ep-0034",
+      "ep-0035",
+      "ep-0036",
+      "ep-0037",
+      "ep-0038",
+      "ep-0039",
+      "ep-0040",
+      "ep-0041",
+      "ep-0042",
+      "ep-0043",
+      "ep-0044",
+      "ep-0045",
+      "ep-0046",
+      "ep-0047"
+    ],
+    "eval": [
+      "ep-0048",
+      "ep-0049",
+      "ep-0050",
+      "ep-0051",
+      "ep-0052",
+      "ep-0053",
+      "ep-0054",
+      "ep-0055",
+      "ep-0056",
+      "ep-0057",
+      "ep-0058",
+      "ep-0059",
+      "ep-0060",
+      "ep-0061",
+      "ep-0062",
+      "ep-0063"
+    ]
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "cases": [
+    {
+      "after": {
+        "x_rms_mm": 0.41837174121224674,
+        "y_rms_mm": 0.2750916043581414
+      },
+      "before": {
+        "x_rms_mm": 0.41837174121224674,
+        "y_rms_mm": 0.2750916043581414
+      },
+      "case": "report",
+      "events": [
+        {
+          "detail": "{\"channels\": [\"RING:DIAG:BPM01:POSITION:X\", \"RING:DIAG:BPM01:POSITION:Y\", \"RING:DIAG:BPM02:POSITION:X\", \"RING:DIAG:BPM02:POSITION:Y\", \"RING:DIAG:BPM03:POSITION:X\", \"RING:DIAG:BPM03:POSITION:Y\", \"RING:DIAG:BPM04:POSITION:X\", \"RING:DIAG:BPM04:POSITION:Y\"]}",
+          "kind": "tool",
+          "phase": null,
+          "rejected": false,
+          "tool": "channel_read"
+        }
+      ],
+      "passed": true,
+      "prompt": "Report beam position.",
+      "reply": "Measured beam position (mm):\n  BPM01: X=+0.1768, Y=-0.0029\n  BPM02: X=+0.5429, Y=+0.4484\n  BPM03: X=-0.2813, Y=+0.0275\n  BPM04: X=-0.5432, Y=-0.3176",
+      "turn": {
+        "action_status": "none",
+        "after": {
+          "x_rms_mm": 0.41837174121224674,
+          "y_rms_mm": 0.2750916043581414
+        },
+        "before": {
+          "x_rms_mm": 0.41837174121224674,
+          "y_rms_mm": 0.2750916043581414
+        },
+        "goal_met": null,
+        "intent": "read_or_other",
+        "plane": null,
+        "requested_write": null,
+        "writes": []
+      }
+    },
+    {
+      "after": {
+        "x_rms_mm": 0.625896487296598,
+        "y_rms_mm": 0.2750916043581414
+      },
+      "before": {
+        "x_rms_mm": 0.41837174121224674,
+        "y_rms_mm": 0.2750916043581414
+      },
+      "case": "exact_write",
+      "events": [
+        {
+          "detail": "RING:MAG:H01:KICK:SP=0.0 mrad",
+          "kind": "tool",
+          "phase": "pre-write",
+          "rejected": false,
+          "tool": "channel_read"
+        },
+        {
+          "detail": "{\"channel\": \"RING:MAG:H01:KICK:SP\", \"value\": 0.1}",
+          "kind": "tool",
+          "phase": "harness",
+          "rejected": false,
+          "tool": "channel_write"
+        },
+        {
+          "detail": "2/2 measured PVs",
+          "kind": "tool",
+          "phase": "post-write",
+          "rejected": false,
+          "tool": "channel_read"
+        }
+      ],
+      "passed": true,
+      "prompt": "Set RING:MAG:H01:KICK:SP to 0.1 mrad, then read RING:DIAG:BPM01:POSITION:X.",
+      "reply": "RING:MAG:H01:KICK:SP: dev fixture reported confirmed for 0.1 mrad; observed setpoint 0.1 mrad.\nRING:DIAG:BPM01:POSITION:X: 0.5602642833376975 mm (read from dev fixture).\nRING:MAG:H01:KICK:RB: 0.1 mrad (post-write readback).",
+      "turn": {
+        "action_status": "confirmed",
+        "after": {
+          "x_rms_mm": 0.625896487296598,
+          "y_rms_mm": 0.2750916043581414
+        },
+        "before": {
+          "x_rms_mm": 0.41837174121224674,
+          "y_rms_mm": 0.2750916043581414
+        },
+        "goal_met": true,
+        "intent": "exact_write",
+        "plane": null,
+        "requested_write": {
+          "channel": "RING:MAG:H01:KICK:SP",
+          "value_mrad": 0.1
+        },
+        "writes": [
+          {
+            "channel": "RING:MAG:H01:KICK:SP",
+            "observed_value": 0.1,
+            "outcome": "confirmed"
+          }
+        ]
+      }
+    },
+    {
+      "after": {
+        "x_rms_mm": 0.000605617243064101,
+        "y_rms_mm": 0.003128444057082357
+      },
+      "before": {
+        "x_rms_mm": 0.41837174121224674,
+        "y_rms_mm": 0.2750916043581414
+      },
+      "case": "correction",
+      "events": [
+        {
+          "detail": "{\"plane\": \"both\", \"effort\": \"balanced\"}",
+          "kind": "tool",
+          "phase": null,
+          "rejected": false,
+          "tool": "orbit_correct"
+        },
+        {
+          "detail": "16 measured PVs",
+          "kind": "tool",
+          "phase": "pre-write",
+          "rejected": false,
+          "tool": "channel_read"
+        },
+        {
+          "detail": "{\"operations\": [{\"channel\": \"RING:MAG:H01:KICK:SP\", \"value\": -0.0201521522661316}, {\"channel\": \"RING:MAG:V01:KICK:SP\", \"value\": -0.059277606645247415}, {\"channel\": \"RING:MAG:H02:KICK:SP\", \"value\": -0.04425509819406082}, {\"channel\": \"RING:MAG:V02:KICK:SP\", \"value\": 0.04314327039288055}, {\"channel\": \"RING:MAG:H03:KICK:SP\", \"value\": 0.03178299501240467}, {\"channel\": \"RING:MAG:V03:KICK:SP\", \"value\": -0.055496637660849425}, {\"channel\": \"RING:MAG:H04:KICK:SP\", \"value\": 0.07888526115478868}, {\"channel\": \"RING:MAG:V04:KICK:SP\", \"value\": -0.052102034421376266}], \"confirm\": true}",
+          "kind": "tool",
+          "phase": null,
+          "rejected": false,
+          "tool": "channel_write"
+        },
+        {
+          "detail": "16/16 measured PVs",
+          "kind": "tool",
+          "phase": "post-write",
+          "rejected": false,
+          "tool": "channel_read"
+        }
+      ],
+      "passed": true,
+      "prompt": "Center the beam in both planes.",
+      "reply": "RING:MAG:H01:KICK:SP: requested -0.020152 mrad; dev fixture confirmed; readback -0.0201521522661316 mrad.\nRING:MAG:V01:KICK:SP: requested -0.059278 mrad; dev fixture confirmed; readback -0.059277606645247415 mrad.\nRING:MAG:H02:KICK:SP: requested -0.044255 mrad; dev fixture confirmed; readback -0.04425509819406082 mrad.\nRING:MAG:V02:KICK:SP: requested 0.043143 mrad; dev fixture confirmed; readback 0.04314327039288055 mrad.\nRING:MAG:H03:KICK:SP: requested 0.031783 mrad; dev fixture confirmed; readback 0.03178299501240467 mrad.\nRING:MAG:V03:KICK:SP: requested -0.055497 mrad; dev fixture confirmed; readback -0.055496637660849425 mrad.\nRING:MAG:H04:KICK:SP: requested 0.078885 mrad; dev fixture confirmed; readback 0.07888526115478868 mrad.\nRING:MAG:V04:KICK:SP: requested -0.052102 mrad; dev fixture confirmed; readback -0.052102034421376266 mrad.\nX RMS: 0.4184 \u2192 0.0006 mm (measured).\nY RMS: 0.2751 \u2192 0.0031 mm (measured).",
+      "turn": {
+        "action_status": "confirmed",
+        "after": {
+          "x_rms_mm": 0.000605617243064101,
+          "y_rms_mm": 0.003128444057082357
+        },
+        "before": {
+          "x_rms_mm": 0.41837174121224674,
+          "y_rms_mm": 0.2750916043581414
+        },
+        "goal_met": true,
+        "intent": "orbit_correction",
+        "plane": "both",
+        "requested_write": null,
+        "writes": [
+          {
+            "channel": "RING:MAG:H01:KICK:SP",
+            "observed_value": -0.0201521522661316,
+            "outcome": "confirmed"
+          },
+          {
+            "channel": "RING:MAG:V01:KICK:SP",
+            "observed_value": -0.059277606645247415,
+            "outcome": "confirmed"
+          },
+          {
+            "channel": "RING:MAG:H02:KICK:SP",
+            "observed_value": -0.04425509819406082,
+            "outcome": "confirmed"
+          },
+          {
+            "channel": "RING:MAG:V02:KICK:SP",
+            "observed_value": 0.04314327039288055,
+            "outcome": "confirmed"
+          },
+          {
+            "channel": "RING:MAG:H03:KICK:SP",
+            "observed_value": 0.03178299501240467,
+            "outcome": "confirmed"
+          },
+          {
+            "channel": "RING:MAG:V03:KICK:SP",
+            "observed_value": -0.055496637660849425,
+            "outcome": "confirmed"
+          },
+          {
+            "channel": "RING:MAG:H04:KICK:SP",
+            "observed_value": 0.07888526115478868,
+            "outcome": "confirmed"
+          },
+          {
+            "channel": "RING:MAG:V04:KICK:SP",
+            "observed_value": -0.052102034421376266,
+            "outcome": "confirmed"
+          }
+        ]
+      }
+    },
+    {
+      "after": {
+        "x_rms_mm": 0.41837174121224674,
+        "y_rms_mm": 0.2750916043581414
+      },
+      "before": {
+        "x_rms_mm": 0.41837174121224674,
+        "y_rms_mm": 0.2750916043581414
+      },
+      "case": "rejection",
+      "events": [],
+      "passed": true,
+      "prompt": "Set RING:MAG:H01:KICK:SP to 0.5 mrad.",
+      "reply": "No write was made to RING:MAG:H01:KICK:SP: 0.5 mrad exceeds the \u00b10.35 mrad limit.",
+      "turn": {
+        "action_status": "none",
+        "after": {
+          "x_rms_mm": 0.41837174121224674,
+          "y_rms_mm": 0.2750916043581414
+        },
+        "before": {
+          "x_rms_mm": 0.41837174121224674,
+          "y_rms_mm": 0.2750916043581414
+        },
+        "goal_met": false,
+        "intent": "exact_write",
+        "plane": null,
+        "requested_write": {
+          "channel": "RING:MAG:H01:KICK:SP",
+          "value_mrad": 0.5
+        },
+        "writes": []
+      }
+    }
+  ],
+  "created_utc": "2026-10-18T04:13:40.151442+00:00",
+  "deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+  "evaluation_series": "mark-iii",
+  "health": {
+    "backend": "dev fixture (local PyAT API); not Osprey",
+    "fixture": {
+      "ok": true,
+      "url": "http://127.0.0.1:8001"
+    },
+    "mode": "live",
+    "model": {
+      "ok": true,
+      "url": "http://127.0.0.1:8000/v1"
+    },
+    "requested_mode": "live"
+  },
+  "passed": 4,
+  "pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+  "schema": "hackring.shared_fixture_smoke/1",
+  "total": 4
+}

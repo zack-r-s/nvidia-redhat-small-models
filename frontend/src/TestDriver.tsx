@@ -30,7 +30,7 @@ const PRESETS: { id: string; label: string; note: string; steps: Step[]; expectR
   { id: "reject", label: "Out-of-limit write: H01 = 0.50 mrad (expect rejection)", note: "Machine must reject and stay unchanged.", expectReject: true, steps: [["/write", { settings: kicks({ H01: 0.5 }) }]] },
 ];
 
-export default function TestDriver() {
+export default function TestDriver({ onMachineChange }: { onMachineChange?: () => void }) {
   const [id, setId] = useState(PRESETS[0].id);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<{ intent: "success" | "danger" | "warning"; text: string } | null>(null);
@@ -49,6 +49,7 @@ export default function TestDriver() {
         }
       }
       setResult({ intent: "success", text: `Applied: ${target.label}` });
+      onMachineChange?.();
     } catch (cause) {
       setResult({ intent: "danger", text: cause instanceof Error ? cause.message : "Request failed" });
     } finally { setBusy(false); }

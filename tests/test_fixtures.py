@@ -28,8 +28,29 @@ KICKS = {name: 0.05 * ((-1) ** i) * (i + 1) / 8 for i, name in enumerate(SETPOIN
 
 def test_local_scenario_is_deterministic():
     a, b = LocalMachine(), LocalMachine()
-    assert a.reset(seed=7)["pvs"] == b.reset(seed=7)["pvs"]
-    assert a.write(KICKS)["state"]["pvs"] == b.write(KICKS)["state"]["pvs"]
+    assert a.reset(seed=7) == b.reset(seed=7)
+    assert a.write(KICKS)["state"] == b.write(KICKS)["state"]
+
+
+def test_closed_orbit_profile_follows_pyat_without_changing_pvs():
+    machine = LocalMachine()
+    before = machine.reset(seed=7)
+    profile = before["orbit_profile"]
+    samples = profile["samples"]
+    assert profile["kind"] == "pyat-closed-orbit-4d"
+    assert len(samples) > 400
+    assert samples[0]["s_m"] == 0
+    assert samples[-1]["s_m"] == pytest.approx(before["lattice"]["circumference_m"])
+    assert all(a["s_m"] <= b["s_m"] for a, b in zip(samples, samples[1:]))
+    for number in range(1, 5):
+        name = f"BPM{number:02d}"
+        s = next(device["s_m"] for device in before["lattice"]["devices"] if device["name"] == name)
+        point = next(p for p in samples if p["s_m"] == pytest.approx(s, abs=1e-9))
+        for axis in ("X", "Y"):
+            assert point[f"{axis.lower()}_mm"] == pytest.approx(before["pvs"][f"RING:DIAG:{name}:POSITION:{axis}"], abs=3e-5)
+    after = machine.write({SETPOINTS[0]: 0.1})["state"]
+    assert after["orbit_profile"]["samples"] != samples
+    assert after["pvs"][SETPOINTS[0]] == 0.1
 
 
 def test_limit_rejected_and_state_unchanged():
@@ -71,6 +92,7 @@ def test_epics_matches_local(ioc):
 
     state = EpicsMachine().read()
     assert state["backend"] == "caproto-epics"
+    assert "orbit_profile" not in state
     assert len(state["pvs"]) == 24
     assert state["lattice"]["circumference_m"] > 0
     assert [d["name"] for d in state["lattice"]["devices"] if d["kind"] == "bpm"] == [f"BPM{i:02d}" for i in range(1, 5)]

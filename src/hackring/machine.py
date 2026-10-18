@@ -87,7 +87,21 @@ class LocalMachine:
         for sp, value in self.setpoints.items():
             pvs[sp] = value
             pvs[sp.replace(":SP", ":RB")] = value
-        return _snapshot(pvs, self.lattice, "local-pyat")
+        state = _snapshot(pvs, self.lattice, "local-pyat")
+        # A display-only copy of the current lattice gives Three a sampled PyAT
+        # closed orbit. The public BPM calculation and checked-in deck are unchanged.
+        display_lattice = self.lattice.slice(size=0.2)
+        sample_indices = range(len(display_lattice) + 1)
+        _, sampled_orbit = at.find_orbit4(display_lattice, refpts=sample_indices)
+        positions = display_lattice.get_s_pos(sample_indices)
+        state["orbit_profile"] = {
+            "kind": "pyat-closed-orbit-4d",
+            "samples": [
+                {"s_m": float(s), "x_mm": float(point[0] * 1e3), "y_mm": float(point[2] * 1e3)}
+                for s, point in zip(positions, sampled_orbit)
+            ],
+        }
+        return state
 
 
 class EpicsMachine:
