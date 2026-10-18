@@ -30,3 +30,5 @@ __pycache__/
 /gym/results/
 /gym/resources_servers/hackring_mark_iii/data/*_metrics.json
 /gym/resources_servers/hackring_mark_iii/data/*_prepare.jsonl
+/gym/resources_servers/hackring_mark_iv/data/*_metrics*.json
+/gym/resources_servers/hackring_mark_iv/data/*_prepare.jsonl

@@ -1,0 +1,39 @@
+{
+  "answer_quality_scored": false,
+  "by_kind": {
+    "conditional_correct": {
+      "passed": 0,
+      "total": 2
+    },
+    "conditional_exact": {
+      "passed": 1,
+      "total": 4
+    },
+    "exact": {
+      "passed": 0,
+      "total": 6
+    },
+    "no_write": {
+      "passed": 9,
+      "total": 12
+    },
+    "read": {
+      "passed": 0,
+      "total": 12
+    }
+  },
+  "cases_sha256": "86623994c58baa00d390bd8d90aa992843269d67b93759995a4ea56ad8f1c90a",
+  "created_utc": "2026-10-18T06:04:24.334627+00:00",
+  "deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+  "disturbance_mrad": 0.08,
+  "evidence_passed": 14,
+  "inference": "deployed fixture chat harness over vLLM, temperature 0.2",
+  "model": "LFM2.5-230M-base",
+  "model_revision": "40cb2ad3b3044d5a41eee083a6103c8b523afa45",
+  "model_source": "LiquidAI/LFM2.5-230M",
+  "passed": 10,
+  "plant_passed": 22,
+  "schema": "hackring.mark_iv_local/1",
+  "total": 36,
+  "traces_sha256": "8ae14bba4b0b0745d1940c9f2a811d2282dbc73f9704828e18747a727d46299c"
+}
