@@ -96,7 +96,7 @@ For UI work without Docker or inference, `scripts/demo.sh --manual` starts the l
 
 ### Chat-UI dev mode (no Docker, no Osprey)
 
-`scripts/dev_up.sh` starts the local PyAT fixture API (8001), a **dev chat bridge** (8002, `src/hackring/chat_bridge.py`), and the viewer (5173), seeds the disturbance (`--seed`, default 7), and opens the browser. It does not need the served Osprey accelerator.
+`scripts/dev_up.sh` starts the local PyAT fixture API (8001), a **dev chat bridge** (8002, `src/hackring/chat_bridge.py`), and the viewer (5173), seeds the disturbance (`--seed`, default 7), and opens the browser. It does not need the served Osprey accelerator. The Osprey bootstrap does not start the bridge, so its viewer shows "Chat bridge offline"; `scripts/bootstrap_demo.sh --dev-chat` brings up the Osprey stack and web terminal as usual but serves the viewer through `dev_up.sh --live` instead, so the chat panel works against the dev fixture (not the Osprey accelerator). Rerunning the bootstrap with or without `--dev-chat` switches between the two viewers.
 
 - **Live model:** if a vLLM server answers on `VLLM_BASE_URL` (default `http://127.0.0.1:8000/v1`) with the ID in `VLLM_MODEL_NAME` (or the provider default), the bridge runs the merged small agent's own turn logic (`scripts/small_agent.py`, imported unmodified) against a thin stand-in for Osprey's `channel_read`/`channel_write`/`channel_limits` tools. V004 correction requests use the same bounded `orbit_correct` skill and update this fixture's state. On an 8 GiB Mac start vLLM with `--gpu-memory-utilization 0.4`; the bootstrap script's 0.05 is too small.
 - **Scripted mode** (`--scripted`, or automatic when no model is up): deterministic model-free replies for building the UI.

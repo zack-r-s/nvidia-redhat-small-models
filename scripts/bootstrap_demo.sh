@@ -17,15 +17,19 @@ need() { command -v "$1" >/dev/null 2>&1 || die "Missing $1. Install it and reru
 
 usage() {
   cat <<'EOF'
-Usage: scripts/bootstrap_demo.sh [--check] [--keep-old-demo] [--model MODEL]
-                                 [--revision REVISION] [--served-name NAME]
-                                 [--tool-parser PARSER]
+Usage: scripts/bootstrap_demo.sh [--check] [--keep-old-demo] [--dev-chat]
+                                 [--model MODEL] [--revision REVISION]
+                                 [--served-name NAME] [--tool-parser PARSER]
 
 Resets only this checkout's Osprey deployment, installs pinned project
 dependencies, starts the selected vLLM model if needed, and brings up the
 Osprey accelerator, viewer/API, and authenticated web terminal.
 
 --check        Check host prerequisites without changing anything.
+--dev-chat     Serve the viewer with its chat panel through scripts/dev_up.sh
+               (fixture API 8001, chat bridge 8002, viewer 5173) instead of the
+               Osprey viewer. The viewer and chat then show the local PyAT dev
+               fixture, not Osprey; the Osprey stack and web terminal still start.
 --model        Hugging Face ID or checkpoint directory (relative to repo root)
                (env VLLM_MODEL; default LiquidAI/LFM2.5-230M).
 --revision     Hugging Face model tag or commit (env VLLM_REVISION).
@@ -49,6 +53,7 @@ EOF
 
 MODE=run
 CLEANUP_OLD_DEMO=1
+DEV_CHAT=0
 VLLM_MODEL=${VLLM_MODEL:-${HACKRING_VLLM_MODEL:-LiquidAI/LFM2.5-230M}}
 VLLM_REVISION=${VLLM_REVISION:-${HACKRING_VLLM_REVISION:-}}
 MODEL_ID=${VLLM_SERVED_NAME:-}
@@ -58,6 +63,7 @@ while (( $# )); do
     --check) MODE=check ;;
     --cleanup-old-demo) CLEANUP_OLD_DEMO=1 ;;
     --keep-old-demo) CLEANUP_OLD_DEMO=0 ;;
+    --dev-chat) DEV_CHAT=1 ;;
     --model|--revision|--served-name|--tool-parser)
       (( $# >= 2 )) && [[ -n $2 ]] || { usage >&2; exit 2; }
       case "$1" in
@@ -123,6 +129,8 @@ port_free() {
   "$PY" - "$1" <<'PY'
 import socket, sys
 with socket.socket() as sock:
+    # Like uvicorn and vite: lingering TIME_WAIT sockets do not block a new server, a listener does.
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(('127.0.0.1', int(sys.argv[1])))
 PY
 }
@@ -159,7 +167,7 @@ fi
 
 say 'Installing project and pinned Osprey dependencies'
 mkdir -p "$BOOT"
-uv venv --python 3.12 "$ROOT/.venv"
+uv venv --allow-existing --python 3.12 "$ROOT/.venv"
 uv pip install --python "$PY" -e '.[dev]'
 if [[ ! -d "$OSPREY_SRC/.git" ]]; then
   git clone https://github.com/als-apg/osprey.git "$OSPREY_SRC"
@@ -227,7 +235,8 @@ if [[ -f "$BOOT/viewer.pid" ]]; then
   old_pid=$(cat "$BOOT/viewer.pid")
   if [[ $old_pid =~ ^[0-9]+$ ]] && kill -0 "$old_pid" 2>/dev/null; then
     old_command=$(ps -p "$old_pid" -o command= 2>/dev/null || true)
-    if [[ $old_command == *"$ROOT/scripts/shared_demo.sh"* ]]; then
+    # Either viewer mode: the Osprey viewer, or dev_up.sh, which stops its children on TERM.
+    if [[ $old_command == *"$ROOT/scripts/shared_demo.sh"* || $old_command == *"scripts/dev_up.sh"* ]]; then
       kill "$old_pid"
       for _ in {1..20}; do kill -0 "$old_pid" 2>/dev/null || break; sleep 0.25; done
     fi
@@ -235,7 +244,11 @@ if [[ -f "$BOOT/viewer.pid" ]]; then
   rm -f "$BOOT/viewer.pid"
 fi
 
-for port in 8001 5173; do
+viewer_ports=(8001 5173)
+(( DEV_CHAT )) && viewer_ports+=(8002)
+for port in "${viewer_ports[@]}"; do
+  # A stopped viewer's servers can take a few seconds to release their ports.
+  for _ in {1..40}; do port_free "$port" && break; sleep 0.5; done
   if ! port_free "$port"; then
     die "Port $port is occupied by another process. Stop it before resetting this deployment."
   fi
@@ -338,10 +351,18 @@ if ! "$OSPREY" up --dev -d; then
   die 'Osprey did not become healthy. See the startup error above and var/logs.'
 fi
 
-say 'Starting viewer API and frontend'
-nohup "$ROOT/scripts/shared_demo.sh" >"$BOOT/viewer.log" 2>&1 &
+if (( DEV_CHAT )); then
+  say 'Starting dev-fixture viewer, machine API, and chat bridge (not Osprey)'
+  # dev_up.sh runs from the repo root and reads VLLM_BASE_URL; the bridge takes the served name from .env.
+  nohup "$ROOT/scripts/dev_up.sh" --live --no-open >"$BOOT/viewer.log" 2>&1 &
+  viewer_urls=(http://127.0.0.1:8001/state http://127.0.0.1:8002/chat/health http://127.0.0.1:5173/)
+else
+  say 'Starting viewer API and frontend'
+  nohup "$ROOT/scripts/shared_demo.sh" >"$BOOT/viewer.log" 2>&1 &
+  viewer_urls=(http://127.0.0.1:8001/state http://127.0.0.1:5173/)
+fi
 echo $! >"$BOOT/viewer.pid"
-for url in http://127.0.0.1:8001/state http://127.0.0.1:5173/; do
+for url in "${viewer_urls[@]}"; do
   ready=0
   for _ in {1..60}; do
     if curl -fsS --max-time 3 "$url" >/dev/null 2>&1; then ready=1; break; fi
@@ -353,5 +374,11 @@ done
 
 say 'Starting authenticated Osprey web terminal'
 "$OSPREY" web --repo "$ROOT" --detach
-printf '\nViewer: http://127.0.0.1:5173/\nMachine: http://127.0.0.1:8001/state\n'
+if (( DEV_CHAT )); then
+  printf '\nViewer: http://127.0.0.1:5173/?driver=1  (dev fixture with chat panel, not Osprey)\n'
+  printf 'Machine: http://127.0.0.1:8001/state  (local PyAT fixture)\nChat: http://127.0.0.1:8002/chat\n'
+  printf 'Osprey web terminal (above) still drives the served accelerator, which this viewer does not show.\n'
+else
+  printf '\nViewer: http://127.0.0.1:5173/\nMachine: http://127.0.0.1:8001/state\n'
+fi
 printf 'Logs: %s\n' "$BOOT"
