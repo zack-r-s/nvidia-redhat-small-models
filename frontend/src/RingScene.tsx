@@ -2,6 +2,9 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { Line2 } from "three/examples/jsm/lines/Line2.js";
+import { LineGeometry } from "three/examples/jsm/lines/LineGeometry.js";
+import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import type { Device, MachineState } from "./types";
 import { bpmPv } from "./types";
 
@@ -13,17 +16,24 @@ const TUBE_R = 0.16;
 export const WINDOWS_MM = [0.5, 1, 2, 5];
 /** These are display laps per second, not the beam's physical revolution rate. */
 export const PLAYBACK_SPEEDS = [
-  { label: "¼×", lapsPerSecond: 0.25, tail: 0.08 },
-  { label: "½×", lapsPerSecond: 0.5, tail: 0.14 },
-  { label: "1×", lapsPerSecond: 1, tail: 0.24 },
-  { label: "2×", lapsPerSecond: 2, tail: 0.42 },
-  { label: "Max", lapsPerSecond: 8, tail: 1 },
+  { label: "¼×", lapsPerSecond: 0.25 },
+  { label: "½×", lapsPerSecond: 0.5 },
+  { label: "1×", lapsPerSecond: 1 },
+  { label: "2×", lapsPerSecond: 2 },
+  { label: "Max", lapsPerSecond: 8 },
 ] as const;
 /** Equivalent magnification of the window mapping (scene length / true length, both relative to the ring). */
 export const magnificationFor = (windowMm: number, circumference_m: number) => TUBE_R / (windowMm * 1e-3 * (RADIUS / (circumference_m / (2 * Math.PI))));
 
 type OrbitSample = NonNullable<MachineState["orbit_profile"]>["samples"][number];
-const TAIL_POINTS = 96;
+const TRAIL_GREEN = new THREE.Color("#4ade80");
+
+/** Display-only age gradient: every sampled point remains visible for a full lap. */
+function trailIntensity(samplePhase: number, headPhase: number, maxSpeed: boolean) {
+  if (maxSpeed) return 0.9;
+  const age = (headPhase - samplePhase + 1) % 1;
+  return 0.4 + 0.6 * (1 - age) ** 1.3;
+}
 
 /** A linear drawing interpolation between dense PyAT samples; it is never used as machine data. */
 function orbitAt(samples: OrbitSample[], s: number) {
@@ -61,40 +71,28 @@ function OrbitPlayback({ state, windowMm, speedStep, active }: { state: MachineS
     [pathKey],
   );
   const valid = circumference > 0 && samples.length > 2 && samples[0].s_m === 0 && samples[samples.length - 1].s_m >= circumference - 1e-8;
-  const fullGeometry = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    if (!valid) return geometry;
-    // Each vertex is a PyAT result; Three connects the dense samples only for display.
-    const positions = samples.slice(0, -1).flatMap((p) => scenePos(p.s_m, p.x_mm, p.y_mm, circumference, windowMm).pos.toArray());
-    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    return geometry;
-  }, [samples, circumference, windowMm, valid]);
-  const tailGeometry = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(TAIL_POINTS * 3), 3));
-    const colors = new Float32Array(TAIL_POINTS * 3);
-    for (let i = 0; i < TAIL_POINTS; i++) {
-      const intensity = 0.06 + 0.94 * (i / (TAIL_POINTS - 1)) ** 2;
-      colors[3 * i] = 0.12 * intensity;
-      colors[3 * i + 1] = intensity;
-      colors[3 * i + 2] = 0.38 * intensity;
-    }
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    return geometry;
-  }, []);
-  const tailLine = useMemo(() => {
-    const line = new THREE.Line(tailGeometry, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.92, depthTest: false }));
+  const trailLine = useMemo(() => {
+    const geometry = new LineGeometry();
+    const material = new LineMaterial({ vertexColors: true, linewidth: 3, transparent: true, opacity: 1, depthTest: false, depthWrite: false });
+    const line = new Line2(geometry, material);
     line.frustumCulled = false;
     line.renderOrder = 10;
     line.raycast = () => {};
+    if (!valid) return line;
+    // Each vertex is a PyAT result; Three connects the dense samples only for display.
+    const positions = samples.flatMap((p) => scenePos(p.s_m, p.x_mm, p.y_mm, circumference, windowMm).pos.toArray());
+    const colors = samples.flatMap((p) => {
+      const intensity = trailIntensity(p.s_m / circumference, 0, false);
+      return [TRAIL_GREEN.r * intensity, TRAIL_GREEN.g * intensity, TRAIL_GREEN.b * intensity];
+    });
+    geometry.setPositions(positions);
+    geometry.setColors(colors);
     return line;
-  }, [tailGeometry]);
+  }, [samples, circumference, windowMm, valid]);
   const marker = useRef<THREE.Mesh>(null);
   const phase = useRef(0);
   const previousPath = useRef("");
-  useEffect(() => () => { fullGeometry.dispose(); }, [fullGeometry]);
-  useEffect(() => () => { tailGeometry.dispose(); }, [tailGeometry]);
-  useEffect(() => () => { (tailLine.material as THREE.Material).dispose(); }, [tailLine]);
+  useEffect(() => () => { trailLine.geometry.dispose(); trailLine.material.dispose(); }, [trailLine]);
   useFrame((_, delta) => {
     if (!valid || !marker.current) return;
     if (previousPath.current !== pathKey) {
@@ -105,23 +103,25 @@ function OrbitPlayback({ state, windowMm, speedStep, active }: { state: MachineS
     }
     const head = orbitAt(samples, phase.current * circumference);
     marker.current.position.copy(scenePos(phase.current * circumference, head.x, head.y, circumference, windowMm).pos);
-    if (speedStep === PLAYBACK_SPEEDS.length - 1) return;
-    const positions = tailGeometry.getAttribute("position") as THREE.BufferAttribute;
-    for (let i = 0; i < TAIL_POINTS; i++) {
-      const behind = PLAYBACK_SPEEDS[speedStep].tail * (1 - i / (TAIL_POINTS - 1));
-      const p = (phase.current - behind + 1) % 1;
-      const value = orbitAt(samples, p * circumference);
-      const v = scenePos(p * circumference, value.x, value.y, circumference, windowMm).pos;
-      positions.setXYZ(i, v.x, v.y, v.z);
+    const colorBuffer = (trailLine.geometry.getAttribute("instanceColorStart") as THREE.InterleavedBufferAttribute).data;
+    const colors = colorBuffer.array as Float32Array;
+    for (let i = 0; i < samples.length - 1; i++) {
+      const start = trailIntensity(samples[i].s_m / circumference, phase.current, speedStep === PLAYBACK_SPEEDS.length - 1);
+      const end = trailIntensity(samples[i + 1].s_m / circumference, phase.current, speedStep === PLAYBACK_SPEEDS.length - 1);
+      const offset = i * 6;
+      colors[offset] = TRAIL_GREEN.r * start;
+      colors[offset + 1] = TRAIL_GREEN.g * start;
+      colors[offset + 2] = TRAIL_GREEN.b * start;
+      colors[offset + 3] = TRAIL_GREEN.r * end;
+      colors[offset + 4] = TRAIL_GREEN.g * end;
+      colors[offset + 5] = TRAIL_GREEN.b * end;
     }
-    positions.needsUpdate = true;
+    colorBuffer.needsUpdate = true;
   });
   if (!valid) return null;
   return (
     <>
-      {speedStep === PLAYBACK_SPEEDS.length - 1
-        ? <lineLoop geometry={fullGeometry} frustumCulled={false} renderOrder={10} raycast={() => null}><lineBasicMaterial color="#4ade80" transparent opacity={1} depthTest={false} /></lineLoop>
-        : <primitive object={tailLine} />}
+      <primitive object={trailLine} />
       <mesh ref={marker} renderOrder={11} raycast={() => null}>
         <sphereGeometry args={[0.09, 16, 16]} />
         <meshStandardMaterial color="#4ade80" emissive="#16a34a" emissiveIntensity={0.8} depthTest={false} />
