@@ -1,0 +1,26 @@
+{
+  "served_model_name": "LFM2.5-1.2B-Instruct",
+  "model_source": "LiquidAI/LFM2.5-1.2B-Instruct",
+  "model_revision": "0f604ada3f766f9f257460c4c9f0b5d6f69d431b",
+  "model_revision_source": "vllm --revision",
+  "max_model_len": 4096,
+  "base_url": "http://127.0.0.1:8012/v1",
+  "vllm_version": "0.31.0",
+  "vllm_backend": "vllm-metal",
+  "vllm_command": "/opt/homebrew/Cellar/python@3.12/3.12.15/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /opt/homebrew/bin/vllm serve LiquidAI/LFM2.5-1.2B-Instruct --revision 0f604ada3f766f9f257460c4c9f0b5d6f69d431b --served-model-name LFM2.5-1.2B-Instruct --enable-auto-tool-choice --tool-call-parser lfm2 --host 127.0.0.1 --port 8012 --max-model-len 4096 --gpu-memory-utilization 0.1",
+  "nemo_gym_version": "0.4.0",
+  "eval_host": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M2 Max"
+  },
+  "evaluation_series": "mark-ii",
+  "evaluation_interface": "channel_write",
+  "split": "validation",
+  "repo_commit": "e83200c",
+  "extra_args": [
+    "--num-repeats",
+    "4"
+  ],
+  "started_utc": "2026-10-18T02:29:26.104687+00:00"
+}

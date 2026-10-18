@@ -1,0 +1,26 @@
+{
+  "served_model_name": "hackring-LFM2.5-230M-v002",
+  "model_source": "zack-r-s/hackring-LFM2.5-230M",
+  "model_revision": "d95741556db29a6daa14136db4006edf7b9f6b9e",
+  "model_revision_source": "vllm --revision",
+  "max_model_len": 4096,
+  "base_url": "http://127.0.0.1:8012/v1",
+  "vllm_version": "0.31.0",
+  "vllm_backend": "vllm-metal",
+  "vllm_command": "/opt/homebrew/Cellar/python@3.12/3.12.15/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /opt/homebrew/bin/vllm serve zack-r-s/hackring-LFM2.5-230M --revision d95741556db29a6daa14136db4006edf7b9f6b9e --served-model-name hackring-LFM2.5-230M-v002 --enable-auto-tool-choice --tool-call-parser lfm2 --host 127.0.0.1 --port 8012 --max-model-len 4096 --gpu-memory-utilization 0.05",
+  "nemo_gym_version": "0.4.0",
+  "eval_host": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M2 Max"
+  },
+  "evaluation_series": "mark-ii",
+  "evaluation_interface": "channel_write",
+  "split": "validation",
+  "repo_commit": "e83200c",
+  "extra_args": [
+    "--num-repeats",
+    "4"
+  ],
+  "started_utc": "2026-10-18T02:31:52.469162+00:00"
+}
