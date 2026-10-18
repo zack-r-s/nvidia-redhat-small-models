@@ -1,0 +1,36 @@
+{
+  "counts": {
+    "test": 128,
+    "train": 864,
+    "validation": 128
+  },
+  "deck_sha256": "51237593c7c2ada6640f28759e9ae03bc820878e07d96da9f344c783a990564a",
+  "files_sha256": {
+    "index.jsonl": "93e20cf1929efa2b43758ca7b2c89128e8b489b6f17c9b111a6097af83e188dc",
+    "local_actions.jsonl": "9e8d2a7afbe1f6a041d8d100c52909c848e8553f98180539da0d6a34de769241",
+    "test.jsonl": "ed62987f065b5da862530a741dfea273c3f04ae575c72a09423dcb7e087c4799",
+    "train.jsonl": "34110e16cd883cb15d98a1148ab4d948c509caaa45d154c14b98761df1c197c3",
+    "validation.jsonl": "8bcf802e8ac1fab89438f73137e0587fb43f3b069a49cd04bd67b52d49023f3b"
+  },
+  "local_actions": 320,
+  "local_seeds": {
+    "test": {
+      "count": 8,
+      "first": 20266000
+    },
+    "train": {
+      "count": 64,
+      "first": 20264000
+    },
+    "validation": {
+      "count": 8,
+      "first": 20265000
+    }
+  },
+  "parent_manifest_sha256": "6f84b8c992ff749bed0c11c394b83cb280039fb81eec9f0c1c9a5b8587734518",
+  "pv_contract_sha256": "76db69b6c14bcf871d581af081396840975418969758a8366306163c8dd70dfa",
+  "response_teacher_sha256": "8da906e2e4ca5cf449a2cfff8bd09994a29f60b1ea759d5f7dfe7dca3f2ae1cd",
+  "schema": "hackring.lfm_conversations/1",
+  "source": "v002 canonical Osprey conversations plus new measured local PyAT seed-distinct conversations",
+  "version": "v003"
+}

@@ -1,0 +1,1120 @@
+{"split": "train", "row": 0, "task_id": "seed-20262011-y", "variant": "canonical"}
+{"split": "train", "row": 1, "task_id": "seed-20262057-x", "variant": "canonical"}
+{"split": "train", "row": 2, "task_id": "seed-20262107-y", "variant": "canonical"}
+{"split": "train", "row": 3, "task_id": "seed-20262040-x", "variant": "read_only"}
+{"split": "train", "row": 4, "source": "local-pyat", "task_id": "local-20264050-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 5, "task_id": "seed-20262010-y", "variant": "canonical"}
+{"split": "train", "row": 6, "source": "local-pyat", "task_id": "local-20264036-y", "kind": "y"}
+{"split": "train", "row": 7, "task_id": "seed-20262050-x", "variant": "canonical"}
+{"split": "train", "row": 8, "task_id": "seed-20262044-both", "variant": "canonical"}
+{"split": "train", "row": 9, "source": "local-pyat", "task_id": "local-20264002-y", "kind": "y"}
+{"split": "train", "row": 10, "source": "local-pyat", "task_id": "local-20264013-x", "kind": "read_bpms"}
+{"split": "train", "row": 11, "task_id": "seed-20262024-x", "variant": "read_only"}
+{"split": "train", "row": 12, "task_id": "seed-20262123-x", "variant": "read_only"}
+{"split": "train", "row": 13, "task_id": "seed-20262114-y", "variant": "canonical"}
+{"split": "train", "row": 14, "task_id": "seed-20262112-x", "variant": "canonical"}
+{"split": "train", "row": 15, "task_id": "seed-20262038-y", "variant": "canonical"}
+{"split": "train", "row": 16, "task_id": "seed-20262002-x", "variant": "canonical"}
+{"split": "train", "row": 17, "task_id": "seed-20262016-y", "variant": "canonical"}
+{"split": "train", "row": 18, "source": "local-pyat", "task_id": "local-20264051-y", "kind": "y"}
+{"split": "train", "row": 19, "source": "local-pyat", "task_id": "local-20264024-x", "kind": "read_bpms"}
+{"split": "train", "row": 20, "task_id": "seed-20262073-y", "variant": "canonical"}
+{"split": "train", "row": 21, "source": "local-pyat", "task_id": "local-20264008-y", "kind": "y"}
+{"split": "train", "row": 22, "task_id": "seed-20262004-both", "variant": "canonical"}
+{"split": "train", "row": 23, "source": "local-pyat", "task_id": "local-20264041-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 24, "source": "local-pyat", "task_id": "local-20264041-x", "kind": "x"}
+{"split": "train", "row": 25, "task_id": "seed-20262039-x", "variant": "read_only"}
+{"split": "train", "row": 26, "task_id": "seed-20262051-exact_write", "variant": "canonical"}
+{"split": "train", "row": 27, "task_id": "seed-20262102-x", "variant": "canonical"}
+{"split": "train", "row": 28, "task_id": "seed-20262096-x", "variant": "canonical"}
+{"split": "train", "row": 29, "source": "local-pyat", "task_id": "local-20264046-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 30, "source": "local-pyat", "task_id": "local-20264058-both", "kind": "both"}
+{"split": "train", "row": 31, "source": "local-pyat", "task_id": "local-20264001-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 32, "task_id": "seed-20262017-both", "variant": "canonical"}
+{"split": "train", "row": 33, "task_id": "seed-20262091-x", "variant": "read_only"}
+{"split": "train", "row": 34, "source": "local-pyat", "task_id": "local-20264030-both", "kind": "both"}
+{"split": "train", "row": 35, "task_id": "seed-20262093-exact_write", "variant": "canonical"}
+{"split": "train", "row": 36, "task_id": "seed-20262118-x", "variant": "read_only"}
+{"split": "train", "row": 37, "task_id": "seed-20262029-x", "variant": "read_only"}
+{"split": "train", "row": 38, "task_id": "seed-20262073-both", "variant": "canonical"}
+{"split": "train", "row": 39, "task_id": "seed-20262041-x", "variant": "read_only"}
+{"split": "train", "row": 40, "task_id": "seed-20262070-x", "variant": "canonical"}
+{"split": "train", "row": 41, "task_id": "seed-20262037-x", "variant": "canonical"}
+{"split": "train", "row": 42, "task_id": "seed-20262041-y", "variant": "canonical"}
+{"split": "train", "row": 43, "source": "local-pyat", "task_id": "local-20264001-x", "kind": "x"}
+{"split": "train", "row": 44, "source": "local-pyat", "task_id": "local-20264035-x", "kind": "read_bpms"}
+{"split": "train", "row": 45, "source": "local-pyat", "task_id": "local-20264051-x", "kind": "compare_planes"}
+{"split": "train", "row": 46, "task_id": "seed-20262097-exact_write", "variant": "canonical"}
+{"split": "train", "row": 47, "task_id": "seed-20262059-exact_write", "variant": "canonical"}
+{"split": "train", "row": 48, "task_id": "seed-20262018-exact_write", "variant": "canonical"}
+{"split": "train", "row": 49, "source": "local-pyat", "task_id": "local-20264029-x", "kind": "read_bpms"}
+{"split": "train", "row": 50, "source": "local-pyat", "task_id": "local-20264038-both", "kind": "both"}
+{"split": "train", "row": 51, "task_id": "seed-20262074-y", "variant": "canonical"}
+{"split": "train", "row": 52, "task_id": "seed-20262047-y", "variant": "canonical"}
+{"split": "train", "row": 53, "source": "local-pyat", "task_id": "local-20264014-x", "kind": "compare_planes"}
+{"split": "train", "row": 54, "task_id": "seed-20262123-x", "variant": "canonical"}
+{"split": "train", "row": 55, "source": "local-pyat", "task_id": "local-20264003-x", "kind": "compare_planes"}
+{"split": "train", "row": 56, "source": "local-pyat", "task_id": "local-20264035-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 57, "task_id": "seed-20262034-exact_write", "variant": "canonical"}
+{"split": "train", "row": 58, "source": "local-pyat", "task_id": "local-20264049-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 59, "source": "local-pyat", "task_id": "local-20264037-y", "kind": "y"}
+{"split": "train", "row": 60, "task_id": "seed-20262078-x", "variant": "canonical"}
+{"split": "train", "row": 61, "task_id": "seed-20262109-x", "variant": "read_only"}
+{"split": "train", "row": 62, "task_id": "seed-20262090-both", "variant": "canonical"}
+{"split": "train", "row": 63, "task_id": "seed-20262100-y", "variant": "canonical"}
+{"split": "train", "row": 64, "task_id": "seed-20262100-exact_write", "variant": "canonical"}
+{"split": "train", "row": 65, "source": "local-pyat", "task_id": "local-20264005-both", "kind": "both"}
+{"split": "train", "row": 66, "source": "local-pyat", "task_id": "local-20264057-x", "kind": "read_bpms"}
+{"split": "train", "row": 67, "task_id": "seed-20262031-x", "variant": "canonical"}
+{"split": "train", "row": 68, "source": "local-pyat", "task_id": "local-20264046-y", "kind": "y"}
+{"split": "train", "row": 69, "source": "local-pyat", "task_id": "local-20264039-x", "kind": "x"}
+{"split": "train", "row": 70, "task_id": "seed-20262105-x", "variant": "canonical"}
+{"split": "train", "row": 71, "source": "local-pyat", "task_id": "local-20264059-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 72, "task_id": "seed-20262103-exact_write", "variant": "canonical"}
+{"split": "train", "row": 73, "source": "local-pyat", "task_id": "local-20264047-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 74, "source": "local-pyat", "task_id": "local-20264022-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 75, "task_id": "seed-20262045-x", "variant": "canonical"}
+{"split": "train", "row": 76, "task_id": "seed-20262010-x", "variant": "read_only"}
+{"split": "train", "row": 77, "task_id": "seed-20262025-x", "variant": "read_only"}
+{"split": "train", "row": 78, "source": "local-pyat", "task_id": "local-20264017-x", "kind": "compare_planes"}
+{"split": "train", "row": 79, "source": "local-pyat", "task_id": "local-20264060-y", "kind": "y"}
+{"split": "train", "row": 80, "task_id": "seed-20262076-exact_write", "variant": "canonical"}
+{"split": "train", "row": 81, "task_id": "seed-20262034-x", "variant": "read_only"}
+{"split": "train", "row": 82, "source": "local-pyat", "task_id": "local-20264042-x", "kind": "compare_planes"}
+{"split": "train", "row": 83, "task_id": "seed-20262028-exact_write", "variant": "canonical"}
+{"split": "train", "row": 84, "source": "local-pyat", "task_id": "local-20264019-x", "kind": "read_bpms"}
+{"split": "train", "row": 85, "source": "local-pyat", "task_id": "local-20264003-x", "kind": "x"}
+{"split": "train", "row": 86, "task_id": "seed-20262105-both", "variant": "canonical"}
+{"split": "train", "row": 87, "task_id": "seed-20262054-x", "variant": "canonical"}
+{"split": "train", "row": 88, "source": "local-pyat", "task_id": "local-20264026-x", "kind": "x"}
+{"split": "train", "row": 89, "task_id": "seed-20262122-x", "variant": "canonical"}
+{"split": "train", "row": 90, "source": "local-pyat", "task_id": "local-20264013-x", "kind": "compare_planes"}
+{"split": "train", "row": 91, "source": "local-pyat", "task_id": "local-20264033-x", "kind": "read_bpms"}
+{"split": "train", "row": 92, "task_id": "seed-20262066-x", "variant": "read_only"}
+{"split": "train", "row": 93, "task_id": "seed-20262098-y", "variant": "canonical"}
+{"split": "train", "row": 94, "task_id": "seed-20262068-both", "variant": "canonical"}
+{"split": "train", "row": 95, "task_id": "seed-20262110-y", "variant": "canonical"}
+{"split": "train", "row": 96, "task_id": "seed-20262110-exact_write", "variant": "canonical"}
+{"split": "train", "row": 97, "task_id": "seed-20262124-x", "variant": "canonical"}
+{"split": "train", "row": 98, "task_id": "seed-20262099-exact_write", "variant": "canonical"}
+{"split": "train", "row": 99, "source": "local-pyat", "task_id": "local-20264056-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 100, "source": "local-pyat", "task_id": "local-20264029-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 101, "task_id": "seed-20262083-both", "variant": "canonical"}
+{"split": "train", "row": 102, "task_id": "seed-20262015-both", "variant": "canonical"}
+{"split": "train", "row": 103, "task_id": "seed-20262048-exact_write", "variant": "canonical"}
+{"split": "train", "row": 104, "task_id": "seed-20262100-x", "variant": "read_only"}
+{"split": "train", "row": 105, "task_id": "seed-20262054-x", "variant": "read_only"}
+{"split": "train", "row": 106, "source": "local-pyat", "task_id": "local-20264009-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 107, "task_id": "seed-20262025-both", "variant": "canonical"}
+{"split": "train", "row": 108, "task_id": "seed-20262081-both", "variant": "canonical"}
+{"split": "train", "row": 109, "source": "local-pyat", "task_id": "local-20264053-x", "kind": "x"}
+{"split": "train", "row": 110, "task_id": "seed-20262059-y", "variant": "canonical"}
+{"split": "train", "row": 111, "task_id": "seed-20262098-exact_write", "variant": "canonical"}
+{"split": "train", "row": 112, "task_id": "seed-20262060-y", "variant": "canonical"}
+{"split": "train", "row": 113, "source": "local-pyat", "task_id": "local-20264039-x", "kind": "read_bpms"}
+{"split": "train", "row": 114, "task_id": "seed-20262083-x", "variant": "read_only"}
+{"split": "train", "row": 115, "source": "local-pyat", "task_id": "local-20264025-y", "kind": "y"}
+{"split": "train", "row": 116, "source": "local-pyat", "task_id": "local-20264040-x", "kind": "x"}
+{"split": "train", "row": 117, "task_id": "seed-20262003-both", "variant": "canonical"}
+{"split": "train", "row": 118, "task_id": "seed-20262039-x", "variant": "canonical"}
+{"split": "train", "row": 119, "source": "local-pyat", "task_id": "local-20264044-x", "kind": "compare_planes"}
+{"split": "train", "row": 120, "task_id": "seed-20262119-y", "variant": "canonical"}
+{"split": "train", "row": 121, "source": "local-pyat", "task_id": "local-20264054-x", "kind": "compare_planes"}
+{"split": "train", "row": 122, "source": "local-pyat", "task_id": "local-20264003-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 123, "task_id": "seed-20262100-both", "variant": "canonical"}
+{"split": "train", "row": 124, "source": "local-pyat", "task_id": "local-20264044-both", "kind": "both"}
+{"split": "train", "row": 125, "task_id": "seed-20262024-x", "variant": "canonical"}
+{"split": "train", "row": 126, "task_id": "seed-20262071-x", "variant": "canonical"}
+{"split": "train", "row": 127, "task_id": "seed-20262011-both", "variant": "canonical"}
+{"split": "train", "row": 128, "source": "local-pyat", "task_id": "local-20264050-y", "kind": "y"}
+{"split": "train", "row": 129, "task_id": "seed-20262025-x", "variant": "canonical"}
+{"split": "train", "row": 130, "task_id": "seed-20262088-y", "variant": "canonical"}
+{"split": "train", "row": 131, "task_id": "seed-20262074-exact_write", "variant": "canonical"}
+{"split": "train", "row": 132, "source": "local-pyat", "task_id": "local-20264059-x", "kind": "read_bpms"}
+{"split": "train", "row": 133, "task_id": "seed-20262027-exact_write", "variant": "canonical"}
+{"split": "train", "row": 134, "task_id": "seed-20262086-y", "variant": "canonical"}
+{"split": "train", "row": 135, "source": "local-pyat", "task_id": "local-20264053-x", "kind": "compare_planes"}
+{"split": "train", "row": 136, "source": "local-pyat", "task_id": "local-20264063-y", "kind": "y"}
+{"split": "train", "row": 137, "source": "local-pyat", "task_id": "local-20264027-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 138, "task_id": "seed-20262033-x", "variant": "read_only"}
+{"split": "train", "row": 139, "task_id": "seed-20262015-y", "variant": "canonical"}
+{"split": "train", "row": 140, "source": "local-pyat", "task_id": "local-20264049-y", "kind": "y"}
+{"split": "train", "row": 141, "task_id": "seed-20262017-exact_write", "variant": "canonical"}
+{"split": "train", "row": 142, "source": "local-pyat", "task_id": "local-20264009-x", "kind": "compare_planes"}
+{"split": "train", "row": 143, "task_id": "seed-20262078-both", "variant": "canonical"}
+{"split": "train", "row": 144, "task_id": "seed-20262034-y", "variant": "canonical"}
+{"split": "train", "row": 145, "source": "local-pyat", "task_id": "local-20264001-y", "kind": "y"}
+{"split": "train", "row": 146, "task_id": "seed-20262069-x", "variant": "read_only"}
+{"split": "train", "row": 147, "task_id": "seed-20262101-x", "variant": "read_only"}
+{"split": "train", "row": 148, "task_id": "seed-20262106-both", "variant": "canonical"}
+{"split": "train", "row": 149, "task_id": "seed-20262116-x", "variant": "canonical"}
+{"split": "train", "row": 150, "source": "local-pyat", "task_id": "local-20264011-y", "kind": "y"}
+{"split": "train", "row": 151, "task_id": "seed-20262094-exact_write", "variant": "canonical"}
+{"split": "train", "row": 152, "task_id": "seed-20262104-y", "variant": "canonical"}
+{"split": "train", "row": 153, "source": "local-pyat", "task_id": "local-20264033-y", "kind": "y"}
+{"split": "train", "row": 154, "source": "local-pyat", "task_id": "local-20264040-x", "kind": "read_bpms"}
+{"split": "train", "row": 155, "source": "local-pyat", "task_id": "local-20264038-x", "kind": "x"}
+{"split": "train", "row": 156, "source": "local-pyat", "task_id": "local-20264029-x", "kind": "x"}
+{"split": "train", "row": 157, "source": "local-pyat", "task_id": "local-20264061-x", "kind": "read_bpms"}
+{"split": "train", "row": 158, "source": "local-pyat", "task_id": "local-20264056-x", "kind": "compare_planes"}
+{"split": "train", "row": 159, "task_id": "seed-20262003-x", "variant": "read_only"}
+{"split": "train", "row": 160, "source": "local-pyat", "task_id": "local-20264010-both", "kind": "both"}
+{"split": "train", "row": 161, "source": "local-pyat", "task_id": "local-20264043-x", "kind": "compare_planes"}
+{"split": "train", "row": 162, "task_id": "seed-20262083-x", "variant": "canonical"}
+{"split": "train", "row": 163, "source": "local-pyat", "task_id": "local-20264022-both", "kind": "both"}
+{"split": "train", "row": 164, "task_id": "seed-20262081-y", "variant": "canonical"}
+{"split": "train", "row": 165, "task_id": "seed-20262021-both", "variant": "canonical"}
+{"split": "train", "row": 166, "task_id": "seed-20262101-x", "variant": "canonical"}
+{"split": "train", "row": 167, "task_id": "seed-20262081-x", "variant": "read_only"}
+{"split": "train", "row": 168, "source": "local-pyat", "task_id": "local-20264044-x", "kind": "read_bpms"}
+{"split": "train", "row": 169, "task_id": "seed-20262018-x", "variant": "canonical"}
+{"split": "train", "row": 170, "task_id": "seed-20262079-y", "variant": "canonical"}
+{"split": "train", "row": 171, "source": "local-pyat", "task_id": "local-20264021-x", "kind": "x"}
+{"split": "train", "row": 172, "task_id": "seed-20262001-x", "variant": "canonical"}
+{"split": "train", "row": 173, "source": "local-pyat", "task_id": "local-20264043-x", "kind": "read_bpms"}
+{"split": "train", "row": 174, "source": "local-pyat", "task_id": "local-20264060-x", "kind": "compare_planes"}
+{"split": "train", "row": 175, "task_id": "seed-20262099-both", "variant": "canonical"}
+{"split": "train", "row": 176, "task_id": "seed-20262020-both", "variant": "canonical"}
+{"split": "train", "row": 177, "source": "local-pyat", "task_id": "local-20264009-x", "kind": "read_bpms"}
+{"split": "train", "row": 178, "source": "local-pyat", "task_id": "local-20264038-y", "kind": "y"}
+{"split": "train", "row": 179, "task_id": "seed-20262107-x", "variant": "read_only"}
+{"split": "train", "row": 180, "task_id": "seed-20262013-x", "variant": "canonical"}
+{"split": "train", "row": 181, "task_id": "seed-20262122-exact_write", "variant": "canonical"}
+{"split": "train", "row": 182, "source": "local-pyat", "task_id": "local-20264046-x", "kind": "read_bpms"}
+{"split": "train", "row": 183, "source": "local-pyat", "task_id": "local-20264057-x", "kind": "compare_planes"}
+{"split": "train", "row": 184, "source": "local-pyat", "task_id": "local-20264002-both", "kind": "both"}
+{"split": "train", "row": 185, "task_id": "seed-20262071-both", "variant": "canonical"}
+{"split": "train", "row": 186, "source": "local-pyat", "task_id": "local-20264010-x", "kind": "x"}
+{"split": "train", "row": 187, "source": "local-pyat", "task_id": "local-20264016-x", "kind": "compare_planes"}
+{"split": "train", "row": 188, "source": "local-pyat", "task_id": "local-20264037-both", "kind": "both"}
+{"split": "train", "row": 189, "task_id": "seed-20262004-x", "variant": "canonical"}
+{"split": "train", "row": 190, "source": "local-pyat", "task_id": "local-20264053-both", "kind": "both"}
+{"split": "train", "row": 191, "source": "local-pyat", "task_id": "local-20264010-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 192, "source": "local-pyat", "task_id": "local-20264011-both", "kind": "both"}
+{"split": "train", "row": 193, "task_id": "seed-20262074-x", "variant": "canonical"}
+{"split": "train", "row": 194, "source": "local-pyat", "task_id": "local-20264020-x", "kind": "compare_planes"}
+{"split": "train", "row": 195, "task_id": "seed-20262075-x", "variant": "canonical"}
+{"split": "train", "row": 196, "task_id": "seed-20262049-y", "variant": "canonical"}
+{"split": "train", "row": 197, "source": "local-pyat", "task_id": "local-20264015-x", "kind": "read_bpms"}
+{"split": "train", "row": 198, "task_id": "seed-20262044-x", "variant": "read_only"}
+{"split": "train", "row": 199, "source": "local-pyat", "task_id": "local-20264030-x", "kind": "read_bpms"}
+{"split": "train", "row": 200, "source": "local-pyat", "task_id": "local-20264001-x", "kind": "read_bpms"}
+{"split": "train", "row": 201, "source": "local-pyat", "task_id": "local-20264015-x", "kind": "x"}
+{"split": "train", "row": 202, "source": "local-pyat", "task_id": "local-20264060-x", "kind": "read_bpms"}
+{"split": "train", "row": 203, "task_id": "seed-20262020-x", "variant": "read_only"}
+{"split": "train", "row": 204, "task_id": "seed-20262002-exact_write", "variant": "canonical"}
+{"split": "train", "row": 205, "source": "local-pyat", "task_id": "local-20264043-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 206, "task_id": "seed-20262001-both", "variant": "canonical"}
+{"split": "train", "row": 207, "source": "local-pyat", "task_id": "local-20264055-both", "kind": "both"}
+{"split": "train", "row": 208, "source": "local-pyat", "task_id": "local-20264032-y", "kind": "y"}
+{"split": "train", "row": 209, "source": "local-pyat", "task_id": "local-20264062-y", "kind": "y"}
+{"split": "train", "row": 210, "source": "local-pyat", "task_id": "local-20264019-y", "kind": "y"}
+{"split": "train", "row": 211, "task_id": "seed-20262086-both", "variant": "canonical"}
+{"split": "train", "row": 212, "task_id": "seed-20262017-x", "variant": "canonical"}
+{"split": "train", "row": 213, "source": "local-pyat", "task_id": "local-20264063-x", "kind": "read_bpms"}
+{"split": "train", "row": 214, "task_id": "seed-20262015-x", "variant": "read_only"}
+{"split": "train", "row": 215, "task_id": "seed-20262088-x", "variant": "read_only"}
+{"split": "train", "row": 216, "source": "local-pyat", "task_id": "local-20264024-x", "kind": "compare_planes"}
+{"split": "train", "row": 217, "source": "local-pyat", "task_id": "local-20264052-y", "kind": "y"}
+{"split": "train", "row": 218, "source": "local-pyat", "task_id": "local-20264027-y", "kind": "y"}
+{"split": "train", "row": 219, "task_id": "seed-20262043-exact_write", "variant": "canonical"}
+{"split": "train", "row": 220, "task_id": "seed-20262055-x", "variant": "canonical"}
+{"split": "train", "row": 221, "task_id": "seed-20262097-x", "variant": "canonical"}
+{"split": "train", "row": 222, "task_id": "seed-20262119-both", "variant": "canonical"}
+{"split": "train", "row": 223, "source": "local-pyat", "task_id": "local-20264042-y", "kind": "y"}
+{"split": "train", "row": 224, "source": "local-pyat", "task_id": "local-20264047-both", "kind": "both"}
+{"split": "train", "row": 225, "source": "local-pyat", "task_id": "local-20264045-x", "kind": "read_bpms"}
+{"split": "train", "row": 226, "task_id": "seed-20262010-exact_write", "variant": "canonical"}
+{"split": "train", "row": 227, "source": "local-pyat", "task_id": "local-20264053-y", "kind": "y"}
+{"split": "train", "row": 228, "task_id": "seed-20262113-x", "variant": "canonical"}
+{"split": "train", "row": 229, "task_id": "seed-20262098-x", "variant": "canonical"}
+{"split": "train", "row": 230, "task_id": "seed-20262059-x", "variant": "read_only"}
+{"split": "train", "row": 231, "source": "local-pyat", "task_id": "local-20264034-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 232, "source": "local-pyat", "task_id": "local-20264007-y", "kind": "y"}
+{"split": "train", "row": 233, "source": "local-pyat", "task_id": "local-20264025-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 234, "task_id": "seed-20262029-both", "variant": "canonical"}
+{"split": "train", "row": 235, "source": "local-pyat", "task_id": "local-20264003-y", "kind": "y"}
+{"split": "train", "row": 236, "source": "local-pyat", "task_id": "local-20264051-both", "kind": "both"}
+{"split": "train", "row": 237, "source": "local-pyat", "task_id": "local-20264058-x", "kind": "x"}
+{"split": "train", "row": 238, "task_id": "seed-20262093-x", "variant": "canonical"}
+{"split": "train", "row": 239, "source": "local-pyat", "task_id": "local-20264036-x", "kind": "x"}
+{"split": "train", "row": 240, "source": "local-pyat", "task_id": "local-20264034-x", "kind": "read_bpms"}
+{"split": "train", "row": 241, "source": "local-pyat", "task_id": "local-20264008-x", "kind": "read_bpms"}
+{"split": "train", "row": 242, "task_id": "seed-20262068-y", "variant": "canonical"}
+{"split": "train", "row": 243, "source": "local-pyat", "task_id": "local-20264012-x", "kind": "x"}
+{"split": "train", "row": 244, "source": "local-pyat", "task_id": "local-20264009-x", "kind": "x"}
+{"split": "train", "row": 245, "source": "local-pyat", "task_id": "local-20264048-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 246, "task_id": "seed-20262073-exact_write", "variant": "canonical"}
+{"split": "train", "row": 247, "task_id": "seed-20262122-x", "variant": "read_only"}
+{"split": "train", "row": 248, "source": "local-pyat", "task_id": "local-20264018-y", "kind": "y"}
+{"split": "train", "row": 249, "task_id": "seed-20262035-x", "variant": "read_only"}
+{"split": "train", "row": 250, "task_id": "seed-20262124-both", "variant": "canonical"}
+{"split": "train", "row": 251, "source": "local-pyat", "task_id": "local-20264024-x", "kind": "x"}
+{"split": "train", "row": 252, "source": "local-pyat", "task_id": "local-20264034-x", "kind": "compare_planes"}
+{"split": "train", "row": 253, "source": "local-pyat", "task_id": "local-20264032-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 254, "source": "local-pyat", "task_id": "local-20264001-x", "kind": "compare_planes"}
+{"split": "train", "row": 255, "task_id": "seed-20262060-both", "variant": "canonical"}
+{"split": "train", "row": 256, "task_id": "seed-20262104-x", "variant": "read_only"}
+{"split": "train", "row": 257, "source": "local-pyat", "task_id": "local-20264002-x", "kind": "compare_planes"}
+{"split": "train", "row": 258, "task_id": "seed-20262103-x", "variant": "read_only"}
+{"split": "train", "row": 259, "task_id": "seed-20262123-exact_write", "variant": "canonical"}
+{"split": "train", "row": 260, "task_id": "seed-20262004-y", "variant": "canonical"}
+{"split": "train", "row": 261, "task_id": "seed-20262037-both", "variant": "canonical"}
+{"split": "train", "row": 262, "task_id": "seed-20262011-exact_write", "variant": "canonical"}
+{"split": "train", "row": 263, "source": "local-pyat", "task_id": "local-20264057-y", "kind": "y"}
+{"split": "train", "row": 264, "task_id": "seed-20262105-x", "variant": "read_only"}
+{"split": "train", "row": 265, "source": "local-pyat", "task_id": "local-20264034-x", "kind": "x"}
+{"split": "train", "row": 266, "source": "local-pyat", "task_id": "local-20264006-y", "kind": "y"}
+{"split": "train", "row": 267, "task_id": "seed-20262079-both", "variant": "canonical"}
+{"split": "train", "row": 268, "task_id": "seed-20262114-x", "variant": "canonical"}
+{"split": "train", "row": 269, "source": "local-pyat", "task_id": "local-20264014-x", "kind": "read_bpms"}
+{"split": "train", "row": 270, "source": "local-pyat", "task_id": "local-20264051-x", "kind": "x"}
+{"split": "train", "row": 271, "task_id": "seed-20262053-exact_write", "variant": "canonical"}
+{"split": "train", "row": 272, "task_id": "seed-20262112-y", "variant": "canonical"}
+{"split": "train", "row": 273, "source": "local-pyat", "task_id": "local-20264040-y", "kind": "y"}
+{"split": "train", "row": 274, "task_id": "seed-20262072-x", "variant": "canonical"}
+{"split": "train", "row": 275, "source": "local-pyat", "task_id": "local-20264027-x", "kind": "x"}
+{"split": "train", "row": 276, "source": "local-pyat", "task_id": "local-20264024-y", "kind": "y"}
+{"split": "train", "row": 277, "task_id": "seed-20262020-x", "variant": "canonical"}
+{"split": "train", "row": 278, "source": "local-pyat", "task_id": "local-20264012-y", "kind": "y"}
+{"split": "train", "row": 279, "source": "local-pyat", "task_id": "local-20264013-y", "kind": "y"}
+{"split": "train", "row": 280, "task_id": "seed-20262031-exact_write", "variant": "canonical"}
+{"split": "train", "row": 281, "source": "local-pyat", "task_id": "local-20264018-x", "kind": "x"}
+{"split": "train", "row": 282, "task_id": "seed-20262101-exact_write", "variant": "canonical"}
+{"split": "train", "row": 283, "source": "local-pyat", "task_id": "local-20264045-both", "kind": "both"}
+{"split": "train", "row": 284, "source": "local-pyat", "task_id": "local-20264033-x", "kind": "x"}
+{"split": "train", "row": 285, "task_id": "seed-20262064-both", "variant": "canonical"}
+{"split": "train", "row": 286, "task_id": "seed-20262105-y", "variant": "canonical"}
+{"split": "train", "row": 287, "task_id": "seed-20262082-x", "variant": "read_only"}
+{"split": "train", "row": 288, "task_id": "seed-20262001-exact_write", "variant": "canonical"}
+{"split": "train", "row": 289, "source": "local-pyat", "task_id": "local-20264037-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 290, "task_id": "seed-20262088-exact_write", "variant": "canonical"}
+{"split": "train", "row": 291, "task_id": "seed-20262010-both", "variant": "canonical"}
+{"split": "train", "row": 292, "task_id": "seed-20262074-both", "variant": "canonical"}
+{"split": "train", "row": 293, "source": "local-pyat", "task_id": "local-20264029-both", "kind": "both"}
+{"split": "train", "row": 294, "source": "local-pyat", "task_id": "local-20264047-x", "kind": "x"}
+{"split": "train", "row": 295, "task_id": "seed-20262066-y", "variant": "canonical"}
+{"split": "train", "row": 296, "task_id": "seed-20262082-both", "variant": "canonical"}
+{"split": "train", "row": 297, "task_id": "seed-20262020-exact_write", "variant": "canonical"}
+{"split": "train", "row": 298, "task_id": "seed-20262044-x", "variant": "canonical"}
+{"split": "train", "row": 299, "task_id": "seed-20262012-x", "variant": "read_only"}
+{"split": "train", "row": 300, "source": "local-pyat", "task_id": "local-20264058-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 301, "task_id": "seed-20262050-exact_write", "variant": "canonical"}
+{"split": "train", "row": 302, "task_id": "seed-20262000-x", "variant": "canonical"}
+{"split": "train", "row": 303, "task_id": "seed-20262091-x", "variant": "canonical"}
+{"split": "train", "row": 304, "task_id": "seed-20262102-exact_write", "variant": "canonical"}
+{"split": "train", "row": 305, "task_id": "seed-20262003-exact_write", "variant": "canonical"}
+{"split": "train", "row": 306, "task_id": "seed-20262049-x", "variant": "canonical"}
+{"split": "train", "row": 307, "task_id": "seed-20262064-exact_write", "variant": "canonical"}
+{"split": "train", "row": 308, "task_id": "seed-20262000-exact_write", "variant": "canonical"}
+{"split": "train", "row": 309, "task_id": "seed-20262043-y", "variant": "canonical"}
+{"split": "train", "row": 310, "source": "local-pyat", "task_id": "local-20264008-x", "kind": "compare_planes"}
+{"split": "train", "row": 311, "source": "local-pyat", "task_id": "local-20264048-x", "kind": "x"}
+{"split": "train", "row": 312, "source": "local-pyat", "task_id": "local-20264020-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 313, "task_id": "seed-20262003-y", "variant": "canonical"}
+{"split": "train", "row": 314, "source": "local-pyat", "task_id": "local-20264042-both", "kind": "both"}
+{"split": "train", "row": 315, "source": "local-pyat", "task_id": "local-20264013-both", "kind": "both"}
+{"split": "train", "row": 316, "task_id": "seed-20262015-exact_write", "variant": "canonical"}
+{"split": "train", "row": 317, "task_id": "seed-20262037-x", "variant": "read_only"}
+{"split": "train", "row": 318, "task_id": "seed-20262072-both", "variant": "canonical"}
+{"split": "train", "row": 319, "task_id": "seed-20262069-exact_write", "variant": "canonical"}
+{"split": "train", "row": 320, "task_id": "seed-20262041-x", "variant": "canonical"}
+{"split": "train", "row": 321, "task_id": "seed-20262043-x", "variant": "canonical"}
+{"split": "train", "row": 322, "source": "local-pyat", "task_id": "local-20264002-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 323, "source": "local-pyat", "task_id": "local-20264002-x", "kind": "read_bpms"}
+{"split": "train", "row": 324, "task_id": "seed-20262082-y", "variant": "canonical"}
+{"split": "train", "row": 325, "source": "local-pyat", "task_id": "local-20264057-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 326, "source": "local-pyat", "task_id": "local-20264018-x", "kind": "compare_planes"}
+{"split": "train", "row": 327, "task_id": "seed-20262070-x", "variant": "read_only"}
+{"split": "train", "row": 328, "source": "local-pyat", "task_id": "local-20264033-both", "kind": "both"}
+{"split": "train", "row": 329, "source": "local-pyat", "task_id": "local-20264023-both", "kind": "both"}
+{"split": "train", "row": 330, "task_id": "seed-20262016-exact_write", "variant": "canonical"}
+{"split": "train", "row": 331, "task_id": "seed-20262109-y", "variant": "canonical"}
+{"split": "train", "row": 332, "source": "local-pyat", "task_id": "local-20264021-x", "kind": "read_bpms"}
+{"split": "train", "row": 333, "task_id": "seed-20262090-x", "variant": "read_only"}
+{"split": "train", "row": 334, "task_id": "seed-20262047-both", "variant": "canonical"}
+{"split": "train", "row": 335, "task_id": "seed-20262118-x", "variant": "canonical"}
+{"split": "train", "row": 336, "source": "local-pyat", "task_id": "local-20264056-x", "kind": "x"}
+{"split": "train", "row": 337, "task_id": "seed-20262061-y", "variant": "canonical"}
+{"split": "train", "row": 338, "task_id": "seed-20262124-exact_write", "variant": "canonical"}
+{"split": "train", "row": 339, "task_id": "seed-20262004-x", "variant": "read_only"}
+{"split": "train", "row": 340, "source": "local-pyat", "task_id": "local-20264055-x", "kind": "read_bpms"}
+{"split": "train", "row": 341, "task_id": "seed-20262116-x", "variant": "read_only"}
+{"split": "train", "row": 342, "source": "local-pyat", "task_id": "local-20264059-y", "kind": "y"}
+{"split": "train", "row": 343, "task_id": "seed-20262115-x", "variant": "read_only"}
+{"split": "train", "row": 344, "task_id": "seed-20262066-x", "variant": "canonical"}
+{"split": "train", "row": 345, "task_id": "seed-20262119-exact_write", "variant": "canonical"}
+{"split": "train", "row": 346, "source": "local-pyat", "task_id": "local-20264017-x", "kind": "read_bpms"}
+{"split": "train", "row": 347, "task_id": "seed-20262040-both", "variant": "canonical"}
+{"split": "train", "row": 348, "source": "local-pyat", "task_id": "local-20264015-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 349, "task_id": "seed-20262029-x", "variant": "canonical"}
+{"split": "train", "row": 350, "task_id": "seed-20262044-y", "variant": "canonical"}
+{"split": "train", "row": 351, "source": "local-pyat", "task_id": "local-20264028-both", "kind": "both"}
+{"split": "train", "row": 352, "source": "local-pyat", "task_id": "local-20264026-x", "kind": "read_bpms"}
+{"split": "train", "row": 353, "task_id": "seed-20262010-x", "variant": "canonical"}
+{"split": "train", "row": 354, "source": "local-pyat", "task_id": "local-20264025-x", "kind": "x"}
+{"split": "train", "row": 355, "source": "local-pyat", "task_id": "local-20264007-x", "kind": "read_bpms"}
+{"split": "train", "row": 356, "source": "local-pyat", "task_id": "local-20264031-x", "kind": "compare_planes"}
+{"split": "train", "row": 357, "task_id": "seed-20262053-x", "variant": "canonical"}
+{"split": "train", "row": 358, "source": "local-pyat", "task_id": "local-20264049-both", "kind": "both"}
+{"split": "train", "row": 359, "source": "local-pyat", "task_id": "local-20264042-x", "kind": "x"}
+{"split": "train", "row": 360, "task_id": "seed-20262107-exact_write", "variant": "canonical"}
+{"split": "train", "row": 361, "task_id": "seed-20262113-both", "variant": "canonical"}
+{"split": "train", "row": 362, "source": "local-pyat", "task_id": "local-20264033-x", "kind": "compare_planes"}
+{"split": "train", "row": 363, "source": "local-pyat", "task_id": "local-20264021-both", "kind": "both"}
+{"split": "train", "row": 364, "source": "local-pyat", "task_id": "local-20264020-both", "kind": "both"}
+{"split": "train", "row": 365, "source": "local-pyat", "task_id": "local-20264008-x", "kind": "x"}
+{"split": "train", "row": 366, "task_id": "seed-20262021-exact_write", "variant": "canonical"}
+{"split": "train", "row": 367, "task_id": "seed-20262018-both", "variant": "canonical"}
+{"split": "train", "row": 368, "task_id": "seed-20262043-x", "variant": "read_only"}
+{"split": "train", "row": 369, "task_id": "seed-20262076-x", "variant": "canonical"}
+{"split": "train", "row": 370, "task_id": "seed-20262097-x", "variant": "read_only"}
+{"split": "train", "row": 371, "source": "local-pyat", "task_id": "local-20264022-x", "kind": "x"}
+{"split": "train", "row": 372, "task_id": "seed-20262096-x", "variant": "read_only"}
+{"split": "train", "row": 373, "task_id": "seed-20262045-exact_write", "variant": "canonical"}
+{"split": "train", "row": 374, "task_id": "seed-20262116-exact_write", "variant": "canonical"}
+{"split": "train", "row": 375, "source": "local-pyat", "task_id": "local-20264048-both", "kind": "both"}
+{"split": "train", "row": 376, "task_id": "seed-20262065-exact_write", "variant": "canonical"}
+{"split": "train", "row": 377, "source": "local-pyat", "task_id": "local-20264047-y", "kind": "y"}
+{"split": "train", "row": 378, "source": "local-pyat", "task_id": "local-20264054-both", "kind": "both"}
+{"split": "train", "row": 379, "source": "local-pyat", "task_id": "local-20264009-y", "kind": "y"}
+{"split": "train", "row": 380, "task_id": "seed-20262124-x", "variant": "read_only"}
+{"split": "train", "row": 381, "source": "local-pyat", "task_id": "local-20264011-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 382, "source": "local-pyat", "task_id": "local-20264045-x", "kind": "x"}
+{"split": "train", "row": 383, "task_id": "seed-20262013-x", "variant": "read_only"}
+{"split": "train", "row": 384, "source": "local-pyat", "task_id": "local-20264024-both", "kind": "both"}
+{"split": "train", "row": 385, "source": "local-pyat", "task_id": "local-20264029-y", "kind": "y"}
+{"split": "train", "row": 386, "source": "local-pyat", "task_id": "local-20264006-x", "kind": "x"}
+{"split": "train", "row": 387, "task_id": "seed-20262110-x", "variant": "read_only"}
+{"split": "train", "row": 388, "source": "local-pyat", "task_id": "local-20264002-x", "kind": "x"}
+{"split": "train", "row": 389, "source": "local-pyat", "task_id": "local-20264041-y", "kind": "y"}
+{"split": "train", "row": 390, "task_id": "seed-20262053-y", "variant": "canonical"}
+{"split": "train", "row": 391, "task_id": "seed-20262001-y", "variant": "canonical"}
+{"split": "train", "row": 392, "task_id": "seed-20262003-x", "variant": "canonical"}
+{"split": "train", "row": 393, "source": "local-pyat", "task_id": "local-20264023-y", "kind": "y"}
+{"split": "train", "row": 394, "task_id": "seed-20262054-y", "variant": "canonical"}
+{"split": "train", "row": 395, "task_id": "seed-20262066-exact_write", "variant": "canonical"}
+{"split": "train", "row": 396, "task_id": "seed-20262060-x", "variant": "read_only"}
+{"split": "train", "row": 397, "task_id": "seed-20262082-x", "variant": "canonical"}
+{"split": "train", "row": 398, "task_id": "seed-20262055-both", "variant": "canonical"}
+{"split": "train", "row": 399, "source": "local-pyat", "task_id": "local-20264054-x", "kind": "read_bpms"}
+{"split": "train", "row": 400, "task_id": "seed-20262109-exact_write", "variant": "canonical"}
+{"split": "train", "row": 401, "task_id": "seed-20262001-x", "variant": "read_only"}
+{"split": "train", "row": 402, "task_id": "seed-20262025-y", "variant": "canonical"}
+{"split": "train", "row": 403, "source": "local-pyat", "task_id": "local-20264022-x", "kind": "compare_planes"}
+{"split": "train", "row": 404, "source": "local-pyat", "task_id": "local-20264052-x", "kind": "compare_planes"}
+{"split": "train", "row": 405, "task_id": "seed-20262082-exact_write", "variant": "canonical"}
+{"split": "train", "row": 406, "task_id": "seed-20262094-x", "variant": "canonical"}
+{"split": "train", "row": 407, "source": "local-pyat", "task_id": "local-20264052-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 408, "task_id": "seed-20262021-x", "variant": "canonical"}
+{"split": "train", "row": 409, "source": "local-pyat", "task_id": "local-20264048-y", "kind": "y"}
+{"split": "train", "row": 410, "source": "local-pyat", "task_id": "local-20264020-y", "kind": "y"}
+{"split": "train", "row": 411, "source": "local-pyat", "task_id": "local-20264010-x", "kind": "compare_planes"}
+{"split": "train", "row": 412, "source": "local-pyat", "task_id": "local-20264029-x", "kind": "compare_planes"}
+{"split": "train", "row": 413, "task_id": "seed-20262040-y", "variant": "canonical"}
+{"split": "train", "row": 414, "source": "local-pyat", "task_id": "local-20264050-x", "kind": "compare_planes"}
+{"split": "train", "row": 415, "source": "local-pyat", "task_id": "local-20264058-x", "kind": "read_bpms"}
+{"split": "train", "row": 416, "source": "local-pyat", "task_id": "local-20264044-y", "kind": "y"}
+{"split": "train", "row": 417, "source": "local-pyat", "task_id": "local-20264006-both", "kind": "both"}
+{"split": "train", "row": 418, "source": "local-pyat", "task_id": "local-20264061-x", "kind": "x"}
+{"split": "train", "row": 419, "task_id": "seed-20262035-both", "variant": "canonical"}
+{"split": "train", "row": 420, "task_id": "seed-20262031-both", "variant": "canonical"}
+{"split": "train", "row": 421, "task_id": "seed-20262014-y", "variant": "canonical"}
+{"split": "train", "row": 422, "source": "local-pyat", "task_id": "local-20264037-x", "kind": "compare_planes"}
+{"split": "train", "row": 423, "task_id": "seed-20262113-x", "variant": "read_only"}
+{"split": "train", "row": 424, "task_id": "seed-20262069-y", "variant": "canonical"}
+{"split": "train", "row": 425, "task_id": "seed-20262057-x", "variant": "read_only"}
+{"split": "train", "row": 426, "source": "local-pyat", "task_id": "local-20264049-x", "kind": "compare_planes"}
+{"split": "train", "row": 427, "source": "local-pyat", "task_id": "local-20264010-x", "kind": "read_bpms"}
+{"split": "train", "row": 428, "source": "local-pyat", "task_id": "local-20264020-x", "kind": "x"}
+{"split": "train", "row": 429, "task_id": "seed-20262044-exact_write", "variant": "canonical"}
+{"split": "train", "row": 430, "task_id": "seed-20262083-y", "variant": "canonical"}
+{"split": "train", "row": 431, "source": "local-pyat", "task_id": "local-20264025-both", "kind": "both"}
+{"split": "train", "row": 432, "source": "local-pyat", "task_id": "local-20264022-x", "kind": "read_bpms"}
+{"split": "train", "row": 433, "task_id": "seed-20262011-x", "variant": "read_only"}
+{"split": "train", "row": 434, "source": "local-pyat", "task_id": "local-20264023-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 435, "task_id": "seed-20262100-x", "variant": "canonical"}
+{"split": "train", "row": 436, "task_id": "seed-20262080-x", "variant": "read_only"}
+{"split": "train", "row": 437, "task_id": "seed-20262075-both", "variant": "canonical"}
+{"split": "train", "row": 438, "task_id": "seed-20262053-x", "variant": "read_only"}
+{"split": "train", "row": 439, "source": "local-pyat", "task_id": "local-20264052-x", "kind": "x"}
+{"split": "train", "row": 440, "task_id": "seed-20262081-x", "variant": "canonical"}
+{"split": "train", "row": 441, "source": "local-pyat", "task_id": "local-20264012-both", "kind": "both"}
+{"split": "train", "row": 442, "source": "local-pyat", "task_id": "local-20264041-x", "kind": "read_bpms"}
+{"split": "train", "row": 443, "task_id": "seed-20262118-both", "variant": "canonical"}
+{"split": "train", "row": 444, "task_id": "seed-20262040-x", "variant": "canonical"}
+{"split": "train", "row": 445, "task_id": "seed-20262029-y", "variant": "canonical"}
+{"split": "train", "row": 446, "source": "local-pyat", "task_id": "local-20264063-x", "kind": "compare_planes"}
+{"split": "train", "row": 447, "task_id": "seed-20262057-both", "variant": "canonical"}
+{"split": "train", "row": 448, "source": "local-pyat", "task_id": "local-20264056-both", "kind": "both"}
+{"split": "train", "row": 449, "task_id": "seed-20262024-both", "variant": "canonical"}
+{"split": "train", "row": 450, "task_id": "seed-20262031-y", "variant": "canonical"}
+{"split": "train", "row": 451, "task_id": "seed-20262039-y", "variant": "canonical"}
+{"split": "train", "row": 452, "source": "local-pyat", "task_id": "local-20264039-both", "kind": "both"}
+{"split": "train", "row": 453, "task_id": "seed-20262099-x", "variant": "canonical"}
+{"split": "train", "row": 454, "source": "local-pyat", "task_id": "local-20264045-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 455, "task_id": "seed-20262061-exact_write", "variant": "canonical"}
+{"split": "train", "row": 456, "task_id": "seed-20262065-x", "variant": "read_only"}
+{"split": "train", "row": 457, "task_id": "seed-20262049-both", "variant": "canonical"}
+{"split": "train", "row": 458, "task_id": "seed-20262014-exact_write", "variant": "canonical"}
+{"split": "train", "row": 459, "source": "local-pyat", "task_id": "local-20264004-x", "kind": "compare_planes"}
+{"split": "train", "row": 460, "task_id": "seed-20262055-exact_write", "variant": "canonical"}
+{"split": "train", "row": 461, "task_id": "seed-20262127-x", "variant": "read_only"}
+{"split": "train", "row": 462, "source": "local-pyat", "task_id": "local-20264031-x", "kind": "read_bpms"}
+{"split": "train", "row": 463, "source": "local-pyat", "task_id": "local-20264042-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 464, "task_id": "seed-20262057-y", "variant": "canonical"}
+{"split": "train", "row": 465, "task_id": "seed-20262016-x", "variant": "read_only"}
+{"split": "train", "row": 466, "source": "local-pyat", "task_id": "local-20264014-x", "kind": "x"}
+{"split": "train", "row": 467, "task_id": "seed-20262101-both", "variant": "canonical"}
+{"split": "train", "row": 468, "task_id": "seed-20262094-y", "variant": "canonical"}
+{"split": "train", "row": 469, "source": "local-pyat", "task_id": "local-20264048-x", "kind": "read_bpms"}
+{"split": "train", "row": 470, "task_id": "seed-20262076-x", "variant": "read_only"}
+{"split": "train", "row": 471, "task_id": "seed-20262038-both", "variant": "canonical"}
+{"split": "train", "row": 472, "task_id": "seed-20262091-exact_write", "variant": "canonical"}
+{"split": "train", "row": 473, "source": "local-pyat", "task_id": "local-20264028-y", "kind": "y"}
+{"split": "train", "row": 474, "source": "local-pyat", "task_id": "local-20264014-y", "kind": "y"}
+{"split": "train", "row": 475, "task_id": "seed-20262000-both", "variant": "canonical"}
+{"split": "train", "row": 476, "source": "local-pyat", "task_id": "local-20264012-x", "kind": "compare_planes"}
+{"split": "train", "row": 477, "task_id": "seed-20262023-both", "variant": "canonical"}
+{"split": "train", "row": 478, "source": "local-pyat", "task_id": "local-20264004-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 479, "source": "local-pyat", "task_id": "local-20264055-x", "kind": "compare_planes"}
+{"split": "train", "row": 480, "task_id": "seed-20262013-both", "variant": "canonical"}
+{"split": "train", "row": 481, "source": "local-pyat", "task_id": "local-20264005-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 482, "source": "local-pyat", "task_id": "local-20264017-y", "kind": "y"}
+{"split": "train", "row": 483, "task_id": "seed-20262045-y", "variant": "canonical"}
+{"split": "train", "row": 484, "source": "local-pyat", "task_id": "local-20264039-x", "kind": "compare_planes"}
+{"split": "train", "row": 485, "task_id": "seed-20262018-x", "variant": "read_only"}
+{"split": "train", "row": 486, "task_id": "seed-20262051-both", "variant": "canonical"}
+{"split": "train", "row": 487, "task_id": "seed-20262023-x", "variant": "read_only"}
+{"split": "train", "row": 488, "task_id": "seed-20262110-x", "variant": "canonical"}
+{"split": "train", "row": 489, "task_id": "seed-20262027-x", "variant": "read_only"}
+{"split": "train", "row": 490, "source": "local-pyat", "task_id": "local-20264054-y", "kind": "y"}
+{"split": "train", "row": 491, "source": "local-pyat", "task_id": "local-20264006-x", "kind": "read_bpms"}
+{"split": "train", "row": 492, "source": "local-pyat", "task_id": "local-20264030-y", "kind": "y"}
+{"split": "train", "row": 493, "source": "local-pyat", "task_id": "local-20264015-x", "kind": "compare_planes"}
+{"split": "train", "row": 494, "source": "local-pyat", "task_id": "local-20264019-x", "kind": "compare_planes"}
+{"split": "train", "row": 495, "source": "local-pyat", "task_id": "local-20264031-x", "kind": "x"}
+{"split": "train", "row": 496, "task_id": "seed-20262099-y", "variant": "canonical"}
+{"split": "train", "row": 497, "source": "local-pyat", "task_id": "local-20264035-both", "kind": "both"}
+{"split": "train", "row": 498, "source": "local-pyat", "task_id": "local-20264016-x", "kind": "x"}
+{"split": "train", "row": 499, "task_id": "seed-20262086-exact_write", "variant": "canonical"}
+{"split": "train", "row": 500, "task_id": "seed-20262028-y", "variant": "canonical"}
+{"split": "train", "row": 501, "source": "local-pyat", "task_id": "local-20264039-y", "kind": "y"}
+{"split": "train", "row": 502, "source": "local-pyat", "task_id": "local-20264038-x", "kind": "read_bpms"}
+{"split": "train", "row": 503, "source": "local-pyat", "task_id": "local-20264017-both", "kind": "both"}
+{"split": "train", "row": 504, "task_id": "seed-20262083-exact_write", "variant": "canonical"}
+{"split": "train", "row": 505, "source": "local-pyat", "task_id": "local-20264026-x", "kind": "compare_planes"}
+{"split": "train", "row": 506, "source": "local-pyat", "task_id": "local-20264030-x", "kind": "compare_planes"}
+{"split": "train", "row": 507, "task_id": "seed-20262059-x", "variant": "canonical"}
+{"split": "train", "row": 508, "source": "local-pyat", "task_id": "local-20264061-both", "kind": "both"}
+{"split": "train", "row": 509, "task_id": "seed-20262027-both", "variant": "canonical"}
+{"split": "train", "row": 510, "source": "local-pyat", "task_id": "local-20264059-both", "kind": "both"}
+{"split": "train", "row": 511, "task_id": "seed-20262069-x", "variant": "canonical"}
+{"split": "train", "row": 512, "task_id": "seed-20262097-both", "variant": "canonical"}
+{"split": "train", "row": 513, "source": "local-pyat", "task_id": "local-20264050-x", "kind": "x"}
+{"split": "train", "row": 514, "task_id": "seed-20262012-both", "variant": "canonical"}
+{"split": "train", "row": 515, "task_id": "seed-20262103-x", "variant": "canonical"}
+{"split": "train", "row": 516, "task_id": "seed-20262105-exact_write", "variant": "canonical"}
+{"split": "train", "row": 517, "task_id": "seed-20262042-both", "variant": "canonical"}
+{"split": "train", "row": 518, "task_id": "seed-20262051-x", "variant": "canonical"}
+{"split": "train", "row": 519, "task_id": "seed-20262106-y", "variant": "canonical"}
+{"split": "train", "row": 520, "task_id": "seed-20262094-both", "variant": "canonical"}
+{"split": "train", "row": 521, "source": "local-pyat", "task_id": "local-20264053-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 522, "task_id": "seed-20262055-y", "variant": "canonical"}
+{"split": "train", "row": 523, "task_id": "seed-20262109-x", "variant": "canonical"}
+{"split": "train", "row": 524, "source": "local-pyat", "task_id": "local-20264054-x", "kind": "x"}
+{"split": "train", "row": 525, "source": "local-pyat", "task_id": "local-20264028-x", "kind": "read_bpms"}
+{"split": "train", "row": 526, "task_id": "seed-20262023-exact_write", "variant": "canonical"}
+{"split": "train", "row": 527, "task_id": "seed-20262064-y", "variant": "canonical"}
+{"split": "train", "row": 528, "task_id": "seed-20262106-x", "variant": "canonical"}
+{"split": "train", "row": 529, "task_id": "seed-20262114-x", "variant": "read_only"}
+{"split": "train", "row": 530, "task_id": "seed-20262023-y", "variant": "canonical"}
+{"split": "train", "row": 531, "source": "local-pyat", "task_id": "local-20264026-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 532, "task_id": "seed-20262072-y", "variant": "canonical"}
+{"split": "train", "row": 533, "task_id": "seed-20262025-exact_write", "variant": "canonical"}
+{"split": "train", "row": 534, "source": "local-pyat", "task_id": "local-20264040-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 535, "source": "local-pyat", "task_id": "local-20264008-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 536, "task_id": "seed-20262041-exact_write", "variant": "canonical"}
+{"split": "train", "row": 537, "source": "local-pyat", "task_id": "local-20264063-x", "kind": "x"}
+{"split": "train", "row": 538, "task_id": "seed-20262093-x", "variant": "read_only"}
+{"split": "train", "row": 539, "source": "local-pyat", "task_id": "local-20264035-y", "kind": "y"}
+{"split": "train", "row": 540, "source": "local-pyat", "task_id": "local-20264058-x", "kind": "compare_planes"}
+{"split": "train", "row": 541, "task_id": "seed-20262072-x", "variant": "read_only"}
+{"split": "train", "row": 542, "task_id": "seed-20262114-both", "variant": "canonical"}
+{"split": "train", "row": 543, "source": "local-pyat", "task_id": "local-20264031-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 544, "task_id": "seed-20262048-x", "variant": "read_only"}
+{"split": "train", "row": 545, "source": "local-pyat", "task_id": "local-20264007-both", "kind": "both"}
+{"split": "train", "row": 546, "task_id": "seed-20262118-exact_write", "variant": "canonical"}
+{"split": "train", "row": 547, "source": "local-pyat", "task_id": "local-20264059-x", "kind": "x"}
+{"split": "train", "row": 548, "source": "local-pyat", "task_id": "local-20264016-both", "kind": "both"}
+{"split": "train", "row": 549, "task_id": "seed-20262102-both", "variant": "canonical"}
+{"split": "train", "row": 550, "source": "local-pyat", "task_id": "local-20264056-y", "kind": "y"}
+{"split": "train", "row": 551, "source": "local-pyat", "task_id": "local-20264027-x", "kind": "compare_planes"}
+{"split": "train", "row": 552, "source": "local-pyat", "task_id": "local-20264052-x", "kind": "read_bpms"}
+{"split": "train", "row": 553, "source": "local-pyat", "task_id": "local-20264040-x", "kind": "compare_planes"}
+{"split": "train", "row": 554, "task_id": "seed-20262053-both", "variant": "canonical"}
+{"split": "train", "row": 555, "source": "local-pyat", "task_id": "local-20264051-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 556, "source": "local-pyat", "task_id": "local-20264001-both", "kind": "both"}
+{"split": "train", "row": 557, "task_id": "seed-20262070-both", "variant": "canonical"}
+{"split": "train", "row": 558, "task_id": "seed-20262070-y", "variant": "canonical"}
+{"split": "train", "row": 559, "source": "local-pyat", "task_id": "local-20264011-x", "kind": "read_bpms"}
+{"split": "train", "row": 560, "task_id": "seed-20262055-x", "variant": "read_only"}
+{"split": "train", "row": 561, "task_id": "seed-20262024-y", "variant": "canonical"}
+{"split": "train", "row": 562, "source": "local-pyat", "task_id": "local-20264047-x", "kind": "read_bpms"}
+{"split": "train", "row": 563, "source": "local-pyat", "task_id": "local-20264027-x", "kind": "read_bpms"}
+{"split": "train", "row": 564, "task_id": "seed-20262037-exact_write", "variant": "canonical"}
+{"split": "train", "row": 565, "task_id": "seed-20262035-x", "variant": "canonical"}
+{"split": "train", "row": 566, "task_id": "seed-20262013-y", "variant": "canonical"}
+{"split": "train", "row": 567, "task_id": "seed-20262059-both", "variant": "canonical"}
+{"split": "train", "row": 568, "task_id": "seed-20262107-x", "variant": "canonical"}
+{"split": "train", "row": 569, "task_id": "seed-20262065-y", "variant": "canonical"}
+{"split": "train", "row": 570, "task_id": "seed-20262112-x", "variant": "read_only"}
+{"split": "train", "row": 571, "task_id": "seed-20262086-x", "variant": "read_only"}
+{"split": "train", "row": 572, "task_id": "seed-20262116-y", "variant": "canonical"}
+{"split": "train", "row": 573, "source": "local-pyat", "task_id": "local-20264019-both", "kind": "both"}
+{"split": "train", "row": 574, "task_id": "seed-20262076-both", "variant": "canonical"}
+{"split": "train", "row": 575, "task_id": "seed-20262127-x", "variant": "canonical"}
+{"split": "train", "row": 576, "source": "local-pyat", "task_id": "local-20264032-x", "kind": "compare_planes"}
+{"split": "train", "row": 577, "source": "local-pyat", "task_id": "local-20264000-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 578, "task_id": "seed-20262103-y", "variant": "canonical"}
+{"split": "train", "row": 579, "task_id": "seed-20262020-y", "variant": "canonical"}
+{"split": "train", "row": 580, "source": "local-pyat", "task_id": "local-20264025-x", "kind": "read_bpms"}
+{"split": "train", "row": 581, "source": "local-pyat", "task_id": "local-20264021-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 582, "task_id": "seed-20262127-both", "variant": "canonical"}
+{"split": "train", "row": 583, "source": "local-pyat", "task_id": "local-20264050-x", "kind": "read_bpms"}
+{"split": "train", "row": 584, "source": "local-pyat", "task_id": "local-20264014-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 585, "source": "local-pyat", "task_id": "local-20264016-x", "kind": "read_bpms"}
+{"split": "train", "row": 586, "task_id": "seed-20262034-x", "variant": "canonical"}
+{"split": "train", "row": 587, "task_id": "seed-20262000-y", "variant": "canonical"}
+{"split": "train", "row": 588, "task_id": "seed-20262021-y", "variant": "canonical"}
+{"split": "train", "row": 589, "source": "local-pyat", "task_id": "local-20264007-x", "kind": "x"}
+{"split": "train", "row": 590, "task_id": "seed-20262096-y", "variant": "canonical"}
+{"split": "train", "row": 591, "task_id": "seed-20262064-x", "variant": "read_only"}
+{"split": "train", "row": 592, "task_id": "seed-20262050-y", "variant": "canonical"}
+{"split": "train", "row": 593, "task_id": "seed-20262054-both", "variant": "canonical"}
+{"split": "train", "row": 594, "source": "local-pyat", "task_id": "local-20264011-x", "kind": "compare_planes"}
+{"split": "train", "row": 595, "task_id": "seed-20262028-x", "variant": "read_only"}
+{"split": "train", "row": 596, "task_id": "seed-20262041-both", "variant": "canonical"}
+{"split": "train", "row": 597, "task_id": "seed-20262088-both", "variant": "canonical"}
+{"split": "train", "row": 598, "task_id": "seed-20262038-x", "variant": "read_only"}
+{"split": "train", "row": 599, "source": "local-pyat", "task_id": "local-20264006-x", "kind": "compare_planes"}
+{"split": "train", "row": 600, "source": "local-pyat", "task_id": "local-20264023-x", "kind": "read_bpms"}
+{"split": "train", "row": 601, "task_id": "seed-20262013-exact_write", "variant": "canonical"}
+{"split": "train", "row": 602, "task_id": "seed-20262127-y", "variant": "canonical"}
+{"split": "train", "row": 603, "task_id": "seed-20262106-exact_write", "variant": "canonical"}
+{"split": "train", "row": 604, "task_id": "seed-20262042-x", "variant": "read_only"}
+{"split": "train", "row": 605, "task_id": "seed-20262075-x", "variant": "read_only"}
+{"split": "train", "row": 606, "source": "local-pyat", "task_id": "local-20264013-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 607, "task_id": "seed-20262119-x", "variant": "canonical"}
+{"split": "train", "row": 608, "task_id": "seed-20262091-both", "variant": "canonical"}
+{"split": "train", "row": 609, "task_id": "seed-20262049-x", "variant": "read_only"}
+{"split": "train", "row": 610, "task_id": "seed-20262051-x", "variant": "read_only"}
+{"split": "train", "row": 611, "task_id": "seed-20262078-y", "variant": "canonical"}
+{"split": "train", "row": 612, "task_id": "seed-20262061-x", "variant": "canonical"}
+{"split": "train", "row": 613, "task_id": "seed-20262016-both", "variant": "canonical"}
+{"split": "train", "row": 614, "task_id": "seed-20262060-x", "variant": "canonical"}
+{"split": "train", "row": 615, "task_id": "seed-20262065-x", "variant": "canonical"}
+{"split": "train", "row": 616, "source": "local-pyat", "task_id": "local-20264053-x", "kind": "read_bpms"}
+{"split": "train", "row": 617, "task_id": "seed-20262114-exact_write", "variant": "canonical"}
+{"split": "train", "row": 618, "task_id": "seed-20262045-both", "variant": "canonical"}
+{"split": "train", "row": 619, "task_id": "seed-20262112-both", "variant": "canonical"}
+{"split": "train", "row": 620, "source": "local-pyat", "task_id": "local-20264046-x", "kind": "x"}
+{"split": "train", "row": 621, "source": "local-pyat", "task_id": "local-20264007-x", "kind": "compare_planes"}
+{"split": "train", "row": 622, "source": "local-pyat", "task_id": "local-20264036-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 623, "task_id": "seed-20262033-exact_write", "variant": "canonical"}
+{"split": "train", "row": 624, "source": "local-pyat", "task_id": "local-20264032-x", "kind": "x"}
+{"split": "train", "row": 625, "source": "local-pyat", "task_id": "local-20264051-x", "kind": "read_bpms"}
+{"split": "train", "row": 626, "source": "local-pyat", "task_id": "local-20264005-x", "kind": "x"}
+{"split": "train", "row": 627, "source": "local-pyat", "task_id": "local-20264015-y", "kind": "y"}
+{"split": "train", "row": 628, "source": "local-pyat", "task_id": "local-20264013-x", "kind": "x"}
+{"split": "train", "row": 629, "task_id": "seed-20262033-x", "variant": "canonical"}
+{"split": "train", "row": 630, "task_id": "seed-20262014-x", "variant": "read_only"}
+{"split": "train", "row": 631, "task_id": "seed-20262073-x", "variant": "read_only"}
+{"split": "train", "row": 632, "source": "local-pyat", "task_id": "local-20264055-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 633, "source": "local-pyat", "task_id": "local-20264048-x", "kind": "compare_planes"}
+{"split": "train", "row": 634, "task_id": "seed-20262099-x", "variant": "read_only"}
+{"split": "train", "row": 635, "source": "local-pyat", "task_id": "local-20264005-x", "kind": "read_bpms"}
+{"split": "train", "row": 636, "task_id": "seed-20262018-y", "variant": "canonical"}
+{"split": "train", "row": 637, "source": "local-pyat", "task_id": "local-20264037-x", "kind": "read_bpms"}
+{"split": "train", "row": 638, "source": "local-pyat", "task_id": "local-20264045-x", "kind": "compare_planes"}
+{"split": "train", "row": 639, "task_id": "seed-20262081-exact_write", "variant": "canonical"}
+{"split": "train", "row": 640, "task_id": "seed-20262104-both", "variant": "canonical"}
+{"split": "train", "row": 641, "task_id": "seed-20262080-y", "variant": "canonical"}
+{"split": "train", "row": 642, "task_id": "seed-20262078-x", "variant": "read_only"}
+{"split": "train", "row": 643, "task_id": "seed-20262047-x", "variant": "read_only"}
+{"split": "train", "row": 644, "source": "local-pyat", "task_id": "local-20264034-y", "kind": "y"}
+{"split": "train", "row": 645, "source": "local-pyat", "task_id": "local-20264057-both", "kind": "both"}
+{"split": "train", "row": 646, "source": "local-pyat", "task_id": "local-20264004-y", "kind": "y"}
+{"split": "train", "row": 647, "source": "local-pyat", "task_id": "local-20264061-x", "kind": "compare_planes"}
+{"split": "train", "row": 648, "task_id": "seed-20262127-exact_write", "variant": "canonical"}
+{"split": "train", "row": 649, "task_id": "seed-20262023-x", "variant": "canonical"}
+{"split": "train", "row": 650, "source": "local-pyat", "task_id": "local-20264009-both", "kind": "both"}
+{"split": "train", "row": 651, "source": "local-pyat", "task_id": "local-20264026-both", "kind": "both"}
+{"split": "train", "row": 652, "source": "local-pyat", "task_id": "local-20264023-x", "kind": "x"}
+{"split": "train", "row": 653, "task_id": "seed-20262049-exact_write", "variant": "canonical"}
+{"split": "train", "row": 654, "source": "local-pyat", "task_id": "local-20264012-x", "kind": "read_bpms"}
+{"split": "train", "row": 655, "source": "local-pyat", "task_id": "local-20264018-both", "kind": "both"}
+{"split": "train", "row": 656, "task_id": "seed-20262057-exact_write", "variant": "canonical"}
+{"split": "train", "row": 657, "source": "local-pyat", "task_id": "local-20264039-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 658, "task_id": "seed-20262094-x", "variant": "read_only"}
+{"split": "train", "row": 659, "source": "local-pyat", "task_id": "local-20264047-x", "kind": "compare_planes"}
+{"split": "train", "row": 660, "task_id": "seed-20262027-x", "variant": "canonical"}
+{"split": "train", "row": 661, "source": "local-pyat", "task_id": "local-20264040-both", "kind": "both"}
+{"split": "train", "row": 662, "task_id": "seed-20262068-x", "variant": "read_only"}
+{"split": "train", "row": 663, "task_id": "seed-20262037-y", "variant": "canonical"}
+{"split": "train", "row": 664, "source": "local-pyat", "task_id": "local-20264043-y", "kind": "y"}
+{"split": "train", "row": 665, "source": "local-pyat", "task_id": "local-20264054-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 666, "task_id": "seed-20262123-both", "variant": "canonical"}
+{"split": "train", "row": 667, "task_id": "seed-20262035-y", "variant": "canonical"}
+{"split": "train", "row": 668, "task_id": "seed-20262071-exact_write", "variant": "canonical"}
+{"split": "train", "row": 669, "source": "local-pyat", "task_id": "local-20264010-y", "kind": "y"}
+{"split": "train", "row": 670, "task_id": "seed-20262080-both", "variant": "canonical"}
+{"split": "train", "row": 671, "source": "local-pyat", "task_id": "local-20264000-x", "kind": "compare_planes"}
+{"split": "train", "row": 672, "source": "local-pyat", "task_id": "local-20264041-x", "kind": "compare_planes"}
+{"split": "train", "row": 673, "source": "local-pyat", "task_id": "local-20264019-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 674, "task_id": "seed-20262048-y", "variant": "canonical"}
+{"split": "train", "row": 675, "task_id": "seed-20262110-both", "variant": "canonical"}
+{"split": "train", "row": 676, "source": "local-pyat", "task_id": "local-20264015-both", "kind": "both"}
+{"split": "train", "row": 677, "source": "local-pyat", "task_id": "local-20264061-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 678, "task_id": "seed-20262096-both", "variant": "canonical"}
+{"split": "train", "row": 679, "source": "local-pyat", "task_id": "local-20264025-x", "kind": "compare_planes"}
+{"split": "train", "row": 680, "task_id": "seed-20262103-both", "variant": "canonical"}
+{"split": "train", "row": 681, "source": "local-pyat", "task_id": "local-20264018-x", "kind": "read_bpms"}
+{"split": "train", "row": 682, "source": "local-pyat", "task_id": "local-20264024-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 683, "task_id": "seed-20262071-y", "variant": "canonical"}
+{"split": "train", "row": 684, "source": "local-pyat", "task_id": "local-20264003-both", "kind": "both"}
+{"split": "train", "row": 685, "task_id": "seed-20262061-x", "variant": "read_only"}
+{"split": "train", "row": 686, "source": "local-pyat", "task_id": "local-20264011-x", "kind": "x"}
+{"split": "train", "row": 687, "source": "local-pyat", "task_id": "local-20264062-both", "kind": "both"}
+{"split": "train", "row": 688, "source": "local-pyat", "task_id": "local-20264035-x", "kind": "x"}
+{"split": "train", "row": 689, "task_id": "seed-20262047-x", "variant": "canonical"}
+{"split": "train", "row": 690, "task_id": "seed-20262080-x", "variant": "canonical"}
+{"split": "train", "row": 691, "source": "local-pyat", "task_id": "local-20264014-both", "kind": "both"}
+{"split": "train", "row": 692, "source": "local-pyat", "task_id": "local-20264045-y", "kind": "y"}
+{"split": "train", "row": 693, "source": "local-pyat", "task_id": "local-20264059-x", "kind": "compare_planes"}
+{"split": "train", "row": 694, "source": "local-pyat", "task_id": "local-20264055-y", "kind": "y"}
+{"split": "train", "row": 695, "task_id": "seed-20262119-x", "variant": "read_only"}
+{"split": "train", "row": 696, "task_id": "seed-20262021-x", "variant": "read_only"}
+{"split": "train", "row": 697, "source": "local-pyat", "task_id": "local-20264030-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 698, "source": "local-pyat", "task_id": "local-20264000-y", "kind": "y"}
+{"split": "train", "row": 699, "source": "local-pyat", "task_id": "local-20264027-both", "kind": "both"}
+{"split": "train", "row": 700, "source": "local-pyat", "task_id": "local-20264028-x", "kind": "x"}
+{"split": "train", "row": 701, "task_id": "seed-20262066-both", "variant": "canonical"}
+{"split": "train", "row": 702, "source": "local-pyat", "task_id": "local-20264019-x", "kind": "x"}
+{"split": "train", "row": 703, "source": "local-pyat", "task_id": "local-20264060-x", "kind": "x"}
+{"split": "train", "row": 704, "task_id": "seed-20262002-both", "variant": "canonical"}
+{"split": "train", "row": 705, "task_id": "seed-20262039-exact_write", "variant": "canonical"}
+{"split": "train", "row": 706, "source": "local-pyat", "task_id": "local-20264032-both", "kind": "both"}
+{"split": "train", "row": 707, "task_id": "seed-20262065-both", "variant": "canonical"}
+{"split": "train", "row": 708, "task_id": "seed-20262079-x", "variant": "canonical"}
+{"split": "train", "row": 709, "source": "local-pyat", "task_id": "local-20264017-x", "kind": "x"}
+{"split": "train", "row": 710, "task_id": "seed-20262079-exact_write", "variant": "canonical"}
+{"split": "train", "row": 711, "task_id": "seed-20262112-exact_write", "variant": "canonical"}
+{"split": "train", "row": 712, "source": "local-pyat", "task_id": "local-20264062-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 713, "task_id": "seed-20262074-x", "variant": "read_only"}
+{"split": "train", "row": 714, "task_id": "seed-20262042-x", "variant": "canonical"}
+{"split": "train", "row": 715, "task_id": "seed-20262002-y", "variant": "canonical"}
+{"split": "train", "row": 716, "task_id": "seed-20262106-x", "variant": "read_only"}
+{"split": "train", "row": 717, "source": "local-pyat", "task_id": "local-20264023-x", "kind": "compare_planes"}
+{"split": "train", "row": 718, "task_id": "seed-20262045-x", "variant": "read_only"}
+{"split": "train", "row": 719, "task_id": "seed-20262012-exact_write", "variant": "canonical"}
+{"split": "train", "row": 720, "source": "local-pyat", "task_id": "local-20264028-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 721, "source": "local-pyat", "task_id": "local-20264057-x", "kind": "x"}
+{"split": "train", "row": 722, "source": "local-pyat", "task_id": "local-20264034-both", "kind": "both"}
+{"split": "train", "row": 723, "task_id": "seed-20262093-both", "variant": "canonical"}
+{"split": "train", "row": 724, "source": "local-pyat", "task_id": "local-20264004-x", "kind": "read_bpms"}
+{"split": "train", "row": 725, "source": "local-pyat", "task_id": "local-20264022-y", "kind": "y"}
+{"split": "train", "row": 726, "task_id": "seed-20262015-x", "variant": "canonical"}
+{"split": "train", "row": 727, "task_id": "seed-20262080-exact_write", "variant": "canonical"}
+{"split": "train", "row": 728, "task_id": "seed-20262012-y", "variant": "canonical"}
+{"split": "train", "row": 729, "task_id": "seed-20262011-x", "variant": "canonical"}
+{"split": "train", "row": 730, "task_id": "seed-20262068-x", "variant": "canonical"}
+{"split": "train", "row": 731, "source": "local-pyat", "task_id": "local-20264049-x", "kind": "x"}
+{"split": "train", "row": 732, "task_id": "seed-20262038-x", "variant": "canonical"}
+{"split": "train", "row": 733, "task_id": "seed-20262042-exact_write", "variant": "canonical"}
+{"split": "train", "row": 734, "source": "local-pyat", "task_id": "local-20264000-x", "kind": "read_bpms"}
+{"split": "train", "row": 735, "task_id": "seed-20262048-x", "variant": "canonical"}
+{"split": "train", "row": 736, "task_id": "seed-20262002-x", "variant": "read_only"}
+{"split": "train", "row": 737, "task_id": "seed-20262079-x", "variant": "read_only"}
+{"split": "train", "row": 738, "task_id": "seed-20262038-exact_write", "variant": "canonical"}
+{"split": "train", "row": 739, "task_id": "seed-20262048-both", "variant": "canonical"}
+{"split": "train", "row": 740, "task_id": "seed-20262070-exact_write", "variant": "canonical"}
+{"split": "train", "row": 741, "task_id": "seed-20262017-y", "variant": "canonical"}
+{"split": "train", "row": 742, "source": "local-pyat", "task_id": "local-20264042-x", "kind": "read_bpms"}
+{"split": "train", "row": 743, "task_id": "seed-20262047-exact_write", "variant": "canonical"}
+{"split": "train", "row": 744, "source": "local-pyat", "task_id": "local-20264003-x", "kind": "read_bpms"}
+{"split": "train", "row": 745, "source": "local-pyat", "task_id": "local-20264012-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 746, "source": "local-pyat", "task_id": "local-20264005-y", "kind": "y"}
+{"split": "train", "row": 747, "task_id": "seed-20262039-both", "variant": "canonical"}
+{"split": "train", "row": 748, "source": "local-pyat", "task_id": "local-20264046-both", "kind": "both"}
+{"split": "train", "row": 749, "source": "local-pyat", "task_id": "local-20264031-y", "kind": "y"}
+{"split": "train", "row": 750, "task_id": "seed-20262098-both", "variant": "canonical"}
+{"split": "train", "row": 751, "task_id": "seed-20262028-x", "variant": "canonical"}
+{"split": "train", "row": 752, "task_id": "seed-20262102-y", "variant": "canonical"}
+{"split": "train", "row": 753, "source": "local-pyat", "task_id": "local-20264052-both", "kind": "both"}
+{"split": "train", "row": 754, "task_id": "seed-20262033-y", "variant": "canonical"}
+{"split": "train", "row": 755, "task_id": "seed-20262061-both", "variant": "canonical"}
+{"split": "train", "row": 756, "source": "local-pyat", "task_id": "local-20264038-x", "kind": "compare_planes"}
+{"split": "train", "row": 757, "task_id": "seed-20262014-x", "variant": "canonical"}
+{"split": "train", "row": 758, "task_id": "seed-20262075-y", "variant": "canonical"}
+{"split": "train", "row": 759, "task_id": "seed-20262040-exact_write", "variant": "canonical"}
+{"split": "train", "row": 760, "source": "local-pyat", "task_id": "local-20264006-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 761, "source": "local-pyat", "task_id": "local-20264016-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 762, "task_id": "seed-20262090-exact_write", "variant": "canonical"}
+{"split": "train", "row": 763, "task_id": "seed-20262064-x", "variant": "canonical"}
+{"split": "train", "row": 764, "task_id": "seed-20262115-both", "variant": "canonical"}
+{"split": "train", "row": 765, "task_id": "seed-20262027-y", "variant": "canonical"}
+{"split": "train", "row": 766, "task_id": "seed-20262122-both", "variant": "canonical"}
+{"split": "train", "row": 767, "task_id": "seed-20262078-exact_write", "variant": "canonical"}
+{"split": "train", "row": 768, "source": "local-pyat", "task_id": "local-20264058-y", "kind": "y"}
+{"split": "train", "row": 769, "task_id": "seed-20262050-x", "variant": "read_only"}
+{"split": "train", "row": 770, "source": "local-pyat", "task_id": "local-20264037-x", "kind": "x"}
+{"split": "train", "row": 771, "task_id": "seed-20262090-x", "variant": "canonical"}
+{"split": "train", "row": 772, "source": "local-pyat", "task_id": "local-20264008-both", "kind": "both"}
+{"split": "train", "row": 773, "task_id": "seed-20262016-x", "variant": "canonical"}
+{"split": "train", "row": 774, "task_id": "seed-20262118-y", "variant": "canonical"}
+{"split": "train", "row": 775, "task_id": "seed-20262104-exact_write", "variant": "canonical"}
+{"split": "train", "row": 776, "source": "local-pyat", "task_id": "local-20264044-x", "kind": "x"}
+{"split": "train", "row": 777, "source": "local-pyat", "task_id": "local-20264030-x", "kind": "x"}
+{"split": "train", "row": 778, "task_id": "seed-20262113-exact_write", "variant": "canonical"}
+{"split": "train", "row": 779, "task_id": "seed-20262050-both", "variant": "canonical"}
+{"split": "train", "row": 780, "task_id": "seed-20262017-x", "variant": "read_only"}
+{"split": "train", "row": 781, "task_id": "seed-20262115-x", "variant": "canonical"}
+{"split": "train", "row": 782, "task_id": "seed-20262051-y", "variant": "canonical"}
+{"split": "train", "row": 783, "task_id": "seed-20262113-y", "variant": "canonical"}
+{"split": "train", "row": 784, "task_id": "seed-20262012-x", "variant": "canonical"}
+{"split": "train", "row": 785, "source": "local-pyat", "task_id": "local-20264060-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 786, "source": "local-pyat", "task_id": "local-20264005-x", "kind": "compare_planes"}
+{"split": "train", "row": 787, "source": "local-pyat", "task_id": "local-20264028-x", "kind": "compare_planes"}
+{"split": "train", "row": 788, "task_id": "seed-20262107-both", "variant": "canonical"}
+{"split": "train", "row": 789, "source": "local-pyat", "task_id": "local-20264050-both", "kind": "both"}
+{"split": "train", "row": 790, "task_id": "seed-20262115-y", "variant": "canonical"}
+{"split": "train", "row": 791, "source": "local-pyat", "task_id": "local-20264063-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 792, "task_id": "seed-20262096-exact_write", "variant": "canonical"}
+{"split": "train", "row": 793, "source": "local-pyat", "task_id": "local-20264061-y", "kind": "y"}
+{"split": "train", "row": 794, "task_id": "seed-20262024-exact_write", "variant": "canonical"}
+{"split": "train", "row": 795, "task_id": "seed-20262098-x", "variant": "read_only"}
+{"split": "train", "row": 796, "task_id": "seed-20262116-both", "variant": "canonical"}
+{"split": "train", "row": 797, "task_id": "seed-20262072-exact_write", "variant": "canonical"}
+{"split": "train", "row": 798, "task_id": "seed-20262004-exact_write", "variant": "canonical"}
+{"split": "train", "row": 799, "source": "local-pyat", "task_id": "local-20264036-x", "kind": "read_bpms"}
+{"split": "train", "row": 800, "source": "local-pyat", "task_id": "local-20264032-x", "kind": "read_bpms"}
+{"split": "train", "row": 801, "source": "local-pyat", "task_id": "local-20264044-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 802, "source": "local-pyat", "task_id": "local-20264036-both", "kind": "both"}
+{"split": "train", "row": 803, "task_id": "seed-20262035-exact_write", "variant": "canonical"}
+{"split": "train", "row": 804, "task_id": "seed-20262101-y", "variant": "canonical"}
+{"split": "train", "row": 805, "source": "local-pyat", "task_id": "local-20264007-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 806, "task_id": "seed-20262068-exact_write", "variant": "canonical"}
+{"split": "train", "row": 807, "task_id": "seed-20262076-y", "variant": "canonical"}
+{"split": "train", "row": 808, "task_id": "seed-20262073-x", "variant": "canonical"}
+{"split": "train", "row": 809, "source": "local-pyat", "task_id": "local-20264004-both", "kind": "both"}
+{"split": "train", "row": 810, "task_id": "seed-20262115-exact_write", "variant": "canonical"}
+{"split": "train", "row": 811, "source": "local-pyat", "task_id": "local-20264021-x", "kind": "compare_planes"}
+{"split": "train", "row": 812, "source": "local-pyat", "task_id": "local-20264062-x", "kind": "x"}
+{"split": "train", "row": 813, "source": "local-pyat", "task_id": "local-20264041-both", "kind": "both"}
+{"split": "train", "row": 814, "source": "local-pyat", "task_id": "local-20264056-x", "kind": "read_bpms"}
+{"split": "train", "row": 815, "task_id": "seed-20262086-x", "variant": "canonical"}
+{"split": "train", "row": 816, "task_id": "seed-20262069-both", "variant": "canonical"}
+{"split": "train", "row": 817, "source": "local-pyat", "task_id": "local-20264016-y", "kind": "y"}
+{"split": "train", "row": 818, "source": "local-pyat", "task_id": "local-20264033-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 819, "task_id": "seed-20262014-both", "variant": "canonical"}
+{"split": "train", "row": 820, "task_id": "seed-20262104-x", "variant": "canonical"}
+{"split": "train", "row": 821, "task_id": "seed-20262124-y", "variant": "canonical"}
+{"split": "train", "row": 822, "source": "local-pyat", "task_id": "local-20264020-x", "kind": "read_bpms"}
+{"split": "train", "row": 823, "task_id": "seed-20262033-both", "variant": "canonical"}
+{"split": "train", "row": 824, "source": "local-pyat", "task_id": "local-20264017-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 825, "source": "local-pyat", "task_id": "local-20264035-x", "kind": "compare_planes"}
+{"split": "train", "row": 826, "task_id": "seed-20262042-y", "variant": "canonical"}
+{"split": "train", "row": 827, "source": "local-pyat", "task_id": "local-20264026-y", "kind": "y"}
+{"split": "train", "row": 828, "source": "local-pyat", "task_id": "local-20264000-x", "kind": "x"}
+{"split": "train", "row": 829, "source": "local-pyat", "task_id": "local-20264055-x", "kind": "x"}
+{"split": "train", "row": 830, "task_id": "seed-20262000-x", "variant": "read_only"}
+{"split": "train", "row": 831, "task_id": "seed-20262028-both", "variant": "canonical"}
+{"split": "train", "row": 832, "source": "local-pyat", "task_id": "local-20264062-x", "kind": "read_bpms"}
+{"split": "train", "row": 833, "source": "local-pyat", "task_id": "local-20264004-x", "kind": "x"}
+{"split": "train", "row": 834, "source": "local-pyat", "task_id": "local-20264036-x", "kind": "compare_planes"}
+{"split": "train", "row": 835, "source": "local-pyat", "task_id": "local-20264031-both", "kind": "both"}
+{"split": "train", "row": 836, "source": "local-pyat", "task_id": "local-20264049-x", "kind": "read_bpms"}
+{"split": "train", "row": 837, "task_id": "seed-20262091-y", "variant": "canonical"}
+{"split": "train", "row": 838, "source": "local-pyat", "task_id": "local-20264038-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 839, "source": "local-pyat", "task_id": "local-20264046-x", "kind": "compare_planes"}
+{"split": "train", "row": 840, "source": "local-pyat", "task_id": "local-20264000-both", "kind": "both"}
+{"split": "train", "row": 841, "task_id": "seed-20262123-y", "variant": "canonical"}
+{"split": "train", "row": 842, "task_id": "seed-20262093-y", "variant": "canonical"}
+{"split": "train", "row": 843, "task_id": "seed-20262029-exact_write", "variant": "canonical"}
+{"split": "train", "row": 844, "task_id": "seed-20262090-y", "variant": "canonical"}
+{"split": "train", "row": 845, "task_id": "seed-20262088-x", "variant": "canonical"}
+{"split": "train", "row": 846, "source": "local-pyat", "task_id": "local-20264060-both", "kind": "both"}
+{"split": "train", "row": 847, "task_id": "seed-20262075-exact_write", "variant": "canonical"}
+{"split": "train", "row": 848, "task_id": "seed-20262043-both", "variant": "canonical"}
+{"split": "train", "row": 849, "source": "local-pyat", "task_id": "local-20264043-x", "kind": "x"}
+{"split": "train", "row": 850, "task_id": "seed-20262071-x", "variant": "read_only"}
+{"split": "train", "row": 851, "source": "local-pyat", "task_id": "local-20264062-x", "kind": "compare_planes"}
+{"split": "train", "row": 852, "task_id": "seed-20262060-exact_write", "variant": "canonical"}
+{"split": "train", "row": 853, "task_id": "seed-20262122-y", "variant": "canonical"}
+{"split": "train", "row": 854, "source": "local-pyat", "task_id": "local-20264021-y", "kind": "y"}
+{"split": "train", "row": 855, "source": "local-pyat", "task_id": "local-20264063-both", "kind": "both"}
+{"split": "train", "row": 856, "task_id": "seed-20262031-x", "variant": "read_only"}
+{"split": "train", "row": 857, "task_id": "seed-20262102-x", "variant": "read_only"}
+{"split": "train", "row": 858, "task_id": "seed-20262097-y", "variant": "canonical"}
+{"split": "train", "row": 859, "source": "local-pyat", "task_id": "local-20264018-exact_write", "kind": "exact_write"}
+{"split": "train", "row": 860, "task_id": "seed-20262109-both", "variant": "canonical"}
+{"split": "train", "row": 861, "source": "local-pyat", "task_id": "local-20264043-both", "kind": "both"}
+{"split": "train", "row": 862, "task_id": "seed-20262034-both", "variant": "canonical"}
+{"split": "train", "row": 863, "task_id": "seed-20262054-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 0, "task_id": "seed-20262046-y", "variant": "canonical"}
+{"split": "validation", "row": 1, "task_id": "seed-20262067-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 2, "source": "local-pyat", "task_id": "local-20265002-exact_write", "kind": "exact_write"}
+{"split": "validation", "row": 3, "task_id": "seed-20262125-x", "variant": "canonical"}
+{"split": "validation", "row": 4, "task_id": "seed-20262126-x", "variant": "canonical"}
+{"split": "validation", "row": 5, "source": "local-pyat", "task_id": "local-20265005-y", "kind": "y"}
+{"split": "validation", "row": 6, "source": "local-pyat", "task_id": "local-20265000-both", "kind": "both"}
+{"split": "validation", "row": 7, "task_id": "seed-20262032-y", "variant": "canonical"}
+{"split": "validation", "row": 8, "task_id": "seed-20262095-x", "variant": "canonical"}
+{"split": "validation", "row": 9, "task_id": "seed-20262008-x", "variant": "canonical"}
+{"split": "validation", "row": 10, "task_id": "seed-20262062-x", "variant": "canonical"}
+{"split": "validation", "row": 11, "task_id": "seed-20262084-x", "variant": "canonical"}
+{"split": "validation", "row": 12, "source": "local-pyat", "task_id": "local-20265005-x", "kind": "x"}
+{"split": "validation", "row": 13, "task_id": "seed-20262126-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 14, "source": "local-pyat", "task_id": "local-20265001-both", "kind": "both"}
+{"split": "validation", "row": 15, "source": "local-pyat", "task_id": "local-20265006-y", "kind": "y"}
+{"split": "validation", "row": 16, "task_id": "seed-20262036-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 17, "task_id": "seed-20262087-y", "variant": "canonical"}
+{"split": "validation", "row": 18, "source": "local-pyat", "task_id": "local-20265002-x", "kind": "x"}
+{"split": "validation", "row": 19, "task_id": "seed-20262022-x", "variant": "read_only"}
+{"split": "validation", "row": 20, "task_id": "seed-20262125-y", "variant": "canonical"}
+{"split": "validation", "row": 21, "task_id": "seed-20262009-y", "variant": "canonical"}
+{"split": "validation", "row": 22, "source": "local-pyat", "task_id": "local-20265001-x", "kind": "read_bpms"}
+{"split": "validation", "row": 23, "source": "local-pyat", "task_id": "local-20265004-exact_write", "kind": "exact_write"}
+{"split": "validation", "row": 24, "task_id": "seed-20262087-x", "variant": "read_only"}
+{"split": "validation", "row": 25, "task_id": "seed-20262022-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 26, "task_id": "seed-20262126-y", "variant": "canonical"}
+{"split": "validation", "row": 27, "source": "local-pyat", "task_id": "local-20265001-exact_write", "kind": "exact_write"}
+{"split": "validation", "row": 28, "task_id": "seed-20262067-y", "variant": "canonical"}
+{"split": "validation", "row": 29, "source": "local-pyat", "task_id": "local-20265004-x", "kind": "read_bpms"}
+{"split": "validation", "row": 30, "task_id": "seed-20262062-y", "variant": "canonical"}
+{"split": "validation", "row": 31, "task_id": "seed-20262084-y", "variant": "canonical"}
+{"split": "validation", "row": 32, "task_id": "seed-20262089-both", "variant": "canonical"}
+{"split": "validation", "row": 33, "task_id": "seed-20262125-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 34, "source": "local-pyat", "task_id": "local-20265004-x", "kind": "x"}
+{"split": "validation", "row": 35, "task_id": "seed-20262126-x", "variant": "read_only"}
+{"split": "validation", "row": 36, "task_id": "seed-20262036-x", "variant": "canonical"}
+{"split": "validation", "row": 37, "source": "local-pyat", "task_id": "local-20265003-y", "kind": "y"}
+{"split": "validation", "row": 38, "task_id": "seed-20262062-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 39, "source": "local-pyat", "task_id": "local-20265007-exact_write", "kind": "exact_write"}
+{"split": "validation", "row": 40, "source": "local-pyat", "task_id": "local-20265003-both", "kind": "both"}
+{"split": "validation", "row": 41, "source": "local-pyat", "task_id": "local-20265007-x", "kind": "read_bpms"}
+{"split": "validation", "row": 42, "task_id": "seed-20262019-x", "variant": "canonical"}
+{"split": "validation", "row": 43, "task_id": "seed-20262087-both", "variant": "canonical"}
+{"split": "validation", "row": 44, "task_id": "seed-20262084-both", "variant": "canonical"}
+{"split": "validation", "row": 45, "task_id": "seed-20262046-both", "variant": "canonical"}
+{"split": "validation", "row": 46, "source": "local-pyat", "task_id": "local-20265007-y", "kind": "y"}
+{"split": "validation", "row": 47, "source": "local-pyat", "task_id": "local-20265001-x", "kind": "compare_planes"}
+{"split": "validation", "row": 48, "source": "local-pyat", "task_id": "local-20265005-x", "kind": "read_bpms"}
+{"split": "validation", "row": 49, "task_id": "seed-20262077-y", "variant": "canonical"}
+{"split": "validation", "row": 50, "task_id": "seed-20262032-both", "variant": "canonical"}
+{"split": "validation", "row": 51, "source": "local-pyat", "task_id": "local-20265006-x", "kind": "x"}
+{"split": "validation", "row": 52, "source": "local-pyat", "task_id": "local-20265003-x", "kind": "compare_planes"}
+{"split": "validation", "row": 53, "task_id": "seed-20262032-x", "variant": "read_only"}
+{"split": "validation", "row": 54, "task_id": "seed-20262067-x", "variant": "canonical"}
+{"split": "validation", "row": 55, "source": "local-pyat", "task_id": "local-20265003-x", "kind": "x"}
+{"split": "validation", "row": 56, "task_id": "seed-20262062-x", "variant": "read_only"}
+{"split": "validation", "row": 57, "source": "local-pyat", "task_id": "local-20265000-exact_write", "kind": "exact_write"}
+{"split": "validation", "row": 58, "source": "local-pyat", "task_id": "local-20265007-x", "kind": "x"}
+{"split": "validation", "row": 59, "task_id": "seed-20262126-both", "variant": "canonical"}
+{"split": "validation", "row": 60, "source": "local-pyat", "task_id": "local-20265005-both", "kind": "both"}
+{"split": "validation", "row": 61, "task_id": "seed-20262036-x", "variant": "read_only"}
+{"split": "validation", "row": 62, "task_id": "seed-20262008-both", "variant": "canonical"}
+{"split": "validation", "row": 63, "source": "local-pyat", "task_id": "local-20265005-exact_write", "kind": "exact_write"}
+{"split": "validation", "row": 64, "task_id": "seed-20262019-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 65, "source": "local-pyat", "task_id": "local-20265002-x", "kind": "compare_planes"}
+{"split": "validation", "row": 66, "source": "local-pyat", "task_id": "local-20265004-y", "kind": "y"}
+{"split": "validation", "row": 67, "task_id": "seed-20262008-y", "variant": "canonical"}
+{"split": "validation", "row": 68, "task_id": "seed-20262008-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 69, "source": "local-pyat", "task_id": "local-20265006-x", "kind": "compare_planes"}
+{"split": "validation", "row": 70, "task_id": "seed-20262009-x", "variant": "canonical"}
+{"split": "validation", "row": 71, "source": "local-pyat", "task_id": "local-20265004-both", "kind": "both"}
+{"split": "validation", "row": 72, "task_id": "seed-20262067-both", "variant": "canonical"}
+{"split": "validation", "row": 73, "task_id": "seed-20262095-y", "variant": "canonical"}
+{"split": "validation", "row": 74, "task_id": "seed-20262077-both", "variant": "canonical"}
+{"split": "validation", "row": 75, "task_id": "seed-20262125-both", "variant": "canonical"}
+{"split": "validation", "row": 76, "source": "local-pyat", "task_id": "local-20265007-x", "kind": "compare_planes"}
+{"split": "validation", "row": 77, "source": "local-pyat", "task_id": "local-20265000-x", "kind": "read_bpms"}
+{"split": "validation", "row": 78, "task_id": "seed-20262022-y", "variant": "canonical"}
+{"split": "validation", "row": 79, "task_id": "seed-20262087-x", "variant": "canonical"}
+{"split": "validation", "row": 80, "task_id": "seed-20262084-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 81, "task_id": "seed-20262089-y", "variant": "canonical"}
+{"split": "validation", "row": 82, "source": "local-pyat", "task_id": "local-20265003-x", "kind": "read_bpms"}
+{"split": "validation", "row": 83, "source": "local-pyat", "task_id": "local-20265002-x", "kind": "read_bpms"}
+{"split": "validation", "row": 84, "source": "local-pyat", "task_id": "local-20265002-both", "kind": "both"}
+{"split": "validation", "row": 85, "task_id": "seed-20262095-both", "variant": "canonical"}
+{"split": "validation", "row": 86, "source": "local-pyat", "task_id": "local-20265002-y", "kind": "y"}
+{"split": "validation", "row": 87, "task_id": "seed-20262095-x", "variant": "read_only"}
+{"split": "validation", "row": 88, "task_id": "seed-20262019-x", "variant": "read_only"}
+{"split": "validation", "row": 89, "task_id": "seed-20262077-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 90, "task_id": "seed-20262009-both", "variant": "canonical"}
+{"split": "validation", "row": 91, "source": "local-pyat", "task_id": "local-20265000-y", "kind": "y"}
+{"split": "validation", "row": 92, "source": "local-pyat", "task_id": "local-20265003-exact_write", "kind": "exact_write"}
+{"split": "validation", "row": 93, "task_id": "seed-20262022-both", "variant": "canonical"}
+{"split": "validation", "row": 94, "source": "local-pyat", "task_id": "local-20265006-both", "kind": "both"}
+{"split": "validation", "row": 95, "task_id": "seed-20262019-both", "variant": "canonical"}
+{"split": "validation", "row": 96, "task_id": "seed-20262032-x", "variant": "canonical"}
+{"split": "validation", "row": 97, "source": "local-pyat", "task_id": "local-20265004-x", "kind": "compare_planes"}
+{"split": "validation", "row": 98, "task_id": "seed-20262046-x", "variant": "read_only"}
+{"split": "validation", "row": 99, "task_id": "seed-20262077-x", "variant": "read_only"}
+{"split": "validation", "row": 100, "source": "local-pyat", "task_id": "local-20265005-x", "kind": "compare_planes"}
+{"split": "validation", "row": 101, "task_id": "seed-20262032-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 102, "task_id": "seed-20262084-x", "variant": "read_only"}
+{"split": "validation", "row": 103, "source": "local-pyat", "task_id": "local-20265007-both", "kind": "both"}
+{"split": "validation", "row": 104, "task_id": "seed-20262009-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 105, "task_id": "seed-20262089-x", "variant": "read_only"}
+{"split": "validation", "row": 106, "task_id": "seed-20262067-x", "variant": "read_only"}
+{"split": "validation", "row": 107, "task_id": "seed-20262087-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 108, "task_id": "seed-20262019-y", "variant": "canonical"}
+{"split": "validation", "row": 109, "source": "local-pyat", "task_id": "local-20265006-x", "kind": "read_bpms"}
+{"split": "validation", "row": 110, "task_id": "seed-20262077-x", "variant": "canonical"}
+{"split": "validation", "row": 111, "source": "local-pyat", "task_id": "local-20265006-exact_write", "kind": "exact_write"}
+{"split": "validation", "row": 112, "task_id": "seed-20262036-y", "variant": "canonical"}
+{"split": "validation", "row": 113, "source": "local-pyat", "task_id": "local-20265001-x", "kind": "x"}
+{"split": "validation", "row": 114, "task_id": "seed-20262046-x", "variant": "canonical"}
+{"split": "validation", "row": 115, "task_id": "seed-20262008-x", "variant": "read_only"}
+{"split": "validation", "row": 116, "source": "local-pyat", "task_id": "local-20265000-x", "kind": "compare_planes"}
+{"split": "validation", "row": 117, "task_id": "seed-20262036-both", "variant": "canonical"}
+{"split": "validation", "row": 118, "task_id": "seed-20262095-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 119, "task_id": "seed-20262046-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 120, "source": "local-pyat", "task_id": "local-20265001-y", "kind": "y"}
+{"split": "validation", "row": 121, "source": "local-pyat", "task_id": "local-20265000-x", "kind": "x"}
+{"split": "validation", "row": 122, "task_id": "seed-20262125-x", "variant": "read_only"}
+{"split": "validation", "row": 123, "task_id": "seed-20262089-x", "variant": "canonical"}
+{"split": "validation", "row": 124, "task_id": "seed-20262062-both", "variant": "canonical"}
+{"split": "validation", "row": 125, "task_id": "seed-20262089-exact_write", "variant": "canonical"}
+{"split": "validation", "row": 126, "task_id": "seed-20262022-x", "variant": "canonical"}
+{"split": "validation", "row": 127, "task_id": "seed-20262009-x", "variant": "read_only"}
+{"split": "test", "row": 0, "task_id": "seed-20262056-y", "variant": "canonical"}
+{"split": "test", "row": 1, "task_id": "seed-20262063-exact_write", "variant": "canonical"}
+{"split": "test", "row": 2, "source": "local-pyat", "task_id": "local-20266002-exact_write", "kind": "exact_write"}
+{"split": "test", "row": 3, "task_id": "seed-20262120-x", "variant": "canonical"}
+{"split": "test", "row": 4, "task_id": "seed-20262121-x", "variant": "canonical"}
+{"split": "test", "row": 5, "source": "local-pyat", "task_id": "local-20266005-y", "kind": "y"}
+{"split": "test", "row": 6, "source": "local-pyat", "task_id": "local-20266000-both", "kind": "both"}
+{"split": "test", "row": 7, "task_id": "seed-20262030-y", "variant": "canonical"}
+{"split": "test", "row": 8, "task_id": "seed-20262117-x", "variant": "canonical"}
+{"split": "test", "row": 9, "task_id": "seed-20262005-x", "variant": "canonical"}
+{"split": "test", "row": 10, "task_id": "seed-20262058-x", "variant": "canonical"}
+{"split": "test", "row": 11, "task_id": "seed-20262092-x", "variant": "canonical"}
+{"split": "test", "row": 12, "source": "local-pyat", "task_id": "local-20266005-x", "kind": "x"}
+{"split": "test", "row": 13, "task_id": "seed-20262121-exact_write", "variant": "canonical"}
+{"split": "test", "row": 14, "source": "local-pyat", "task_id": "local-20266001-both", "kind": "both"}
+{"split": "test", "row": 15, "source": "local-pyat", "task_id": "local-20266006-y", "kind": "y"}
+{"split": "test", "row": 16, "task_id": "seed-20262052-exact_write", "variant": "canonical"}
+{"split": "test", "row": 17, "task_id": "seed-20262108-y", "variant": "canonical"}
+{"split": "test", "row": 18, "source": "local-pyat", "task_id": "local-20266002-x", "kind": "x"}
+{"split": "test", "row": 19, "task_id": "seed-20262026-x", "variant": "read_only"}
+{"split": "test", "row": 20, "task_id": "seed-20262120-y", "variant": "canonical"}
+{"split": "test", "row": 21, "task_id": "seed-20262006-y", "variant": "canonical"}
+{"split": "test", "row": 22, "source": "local-pyat", "task_id": "local-20266001-x", "kind": "read_bpms"}
+{"split": "test", "row": 23, "source": "local-pyat", "task_id": "local-20266004-exact_write", "kind": "exact_write"}
+{"split": "test", "row": 24, "task_id": "seed-20262108-x", "variant": "read_only"}
+{"split": "test", "row": 25, "task_id": "seed-20262026-exact_write", "variant": "canonical"}
+{"split": "test", "row": 26, "task_id": "seed-20262121-y", "variant": "canonical"}
+{"split": "test", "row": 27, "source": "local-pyat", "task_id": "local-20266001-exact_write", "kind": "exact_write"}
+{"split": "test", "row": 28, "task_id": "seed-20262063-y", "variant": "canonical"}
+{"split": "test", "row": 29, "source": "local-pyat", "task_id": "local-20266004-x", "kind": "read_bpms"}
+{"split": "test", "row": 30, "task_id": "seed-20262058-y", "variant": "canonical"}
+{"split": "test", "row": 31, "task_id": "seed-20262092-y", "variant": "canonical"}
+{"split": "test", "row": 32, "task_id": "seed-20262111-both", "variant": "canonical"}
+{"split": "test", "row": 33, "task_id": "seed-20262120-exact_write", "variant": "canonical"}
+{"split": "test", "row": 34, "source": "local-pyat", "task_id": "local-20266004-x", "kind": "x"}
+{"split": "test", "row": 35, "task_id": "seed-20262121-x", "variant": "read_only"}
+{"split": "test", "row": 36, "task_id": "seed-20262052-x", "variant": "canonical"}
+{"split": "test", "row": 37, "source": "local-pyat", "task_id": "local-20266003-y", "kind": "y"}
+{"split": "test", "row": 38, "task_id": "seed-20262058-exact_write", "variant": "canonical"}
+{"split": "test", "row": 39, "source": "local-pyat", "task_id": "local-20266007-exact_write", "kind": "exact_write"}
+{"split": "test", "row": 40, "source": "local-pyat", "task_id": "local-20266003-both", "kind": "both"}
+{"split": "test", "row": 41, "source": "local-pyat", "task_id": "local-20266007-x", "kind": "read_bpms"}
+{"split": "test", "row": 42, "task_id": "seed-20262007-x", "variant": "canonical"}
+{"split": "test", "row": 43, "task_id": "seed-20262108-both", "variant": "canonical"}
+{"split": "test", "row": 44, "task_id": "seed-20262092-both", "variant": "canonical"}
+{"split": "test", "row": 45, "task_id": "seed-20262056-both", "variant": "canonical"}
+{"split": "test", "row": 46, "source": "local-pyat", "task_id": "local-20266007-y", "kind": "y"}
+{"split": "test", "row": 47, "source": "local-pyat", "task_id": "local-20266001-x", "kind": "compare_planes"}
+{"split": "test", "row": 48, "source": "local-pyat", "task_id": "local-20266005-x", "kind": "read_bpms"}
+{"split": "test", "row": 49, "task_id": "seed-20262085-y", "variant": "canonical"}
+{"split": "test", "row": 50, "task_id": "seed-20262030-both", "variant": "canonical"}
+{"split": "test", "row": 51, "source": "local-pyat", "task_id": "local-20266006-x", "kind": "x"}
+{"split": "test", "row": 52, "source": "local-pyat", "task_id": "local-20266003-x", "kind": "compare_planes"}
+{"split": "test", "row": 53, "task_id": "seed-20262030-x", "variant": "read_only"}
+{"split": "test", "row": 54, "task_id": "seed-20262063-x", "variant": "canonical"}
+{"split": "test", "row": 55, "source": "local-pyat", "task_id": "local-20266003-x", "kind": "x"}
+{"split": "test", "row": 56, "task_id": "seed-20262058-x", "variant": "read_only"}
+{"split": "test", "row": 57, "source": "local-pyat", "task_id": "local-20266000-exact_write", "kind": "exact_write"}
+{"split": "test", "row": 58, "source": "local-pyat", "task_id": "local-20266007-x", "kind": "x"}
+{"split": "test", "row": 59, "task_id": "seed-20262121-both", "variant": "canonical"}
+{"split": "test", "row": 60, "source": "local-pyat", "task_id": "local-20266005-both", "kind": "both"}
+{"split": "test", "row": 61, "task_id": "seed-20262052-x", "variant": "read_only"}
+{"split": "test", "row": 62, "task_id": "seed-20262005-both", "variant": "canonical"}
+{"split": "test", "row": 63, "source": "local-pyat", "task_id": "local-20266005-exact_write", "kind": "exact_write"}
+{"split": "test", "row": 64, "task_id": "seed-20262007-exact_write", "variant": "canonical"}
+{"split": "test", "row": 65, "source": "local-pyat", "task_id": "local-20266002-x", "kind": "compare_planes"}
+{"split": "test", "row": 66, "source": "local-pyat", "task_id": "local-20266004-y", "kind": "y"}
+{"split": "test", "row": 67, "task_id": "seed-20262005-y", "variant": "canonical"}
+{"split": "test", "row": 68, "task_id": "seed-20262005-exact_write", "variant": "canonical"}
+{"split": "test", "row": 69, "source": "local-pyat", "task_id": "local-20266006-x", "kind": "compare_planes"}
+{"split": "test", "row": 70, "task_id": "seed-20262006-x", "variant": "canonical"}
+{"split": "test", "row": 71, "source": "local-pyat", "task_id": "local-20266004-both", "kind": "both"}
+{"split": "test", "row": 72, "task_id": "seed-20262063-both", "variant": "canonical"}
+{"split": "test", "row": 73, "task_id": "seed-20262117-y", "variant": "canonical"}
+{"split": "test", "row": 74, "task_id": "seed-20262085-both", "variant": "canonical"}
+{"split": "test", "row": 75, "task_id": "seed-20262120-both", "variant": "canonical"}
+{"split": "test", "row": 76, "source": "local-pyat", "task_id": "local-20266007-x", "kind": "compare_planes"}
+{"split": "test", "row": 77, "source": "local-pyat", "task_id": "local-20266000-x", "kind": "read_bpms"}
+{"split": "test", "row": 78, "task_id": "seed-20262026-y", "variant": "canonical"}
+{"split": "test", "row": 79, "task_id": "seed-20262108-x", "variant": "canonical"}
+{"split": "test", "row": 80, "task_id": "seed-20262092-exact_write", "variant": "canonical"}
+{"split": "test", "row": 81, "task_id": "seed-20262111-y", "variant": "canonical"}
+{"split": "test", "row": 82, "source": "local-pyat", "task_id": "local-20266003-x", "kind": "read_bpms"}
+{"split": "test", "row": 83, "source": "local-pyat", "task_id": "local-20266002-x", "kind": "read_bpms"}
+{"split": "test", "row": 84, "source": "local-pyat", "task_id": "local-20266002-both", "kind": "both"}
+{"split": "test", "row": 85, "task_id": "seed-20262117-both", "variant": "canonical"}
+{"split": "test", "row": 86, "source": "local-pyat", "task_id": "local-20266002-y", "kind": "y"}
+{"split": "test", "row": 87, "task_id": "seed-20262117-x", "variant": "read_only"}
+{"split": "test", "row": 88, "task_id": "seed-20262007-x", "variant": "read_only"}
+{"split": "test", "row": 89, "task_id": "seed-20262085-exact_write", "variant": "canonical"}
+{"split": "test", "row": 90, "task_id": "seed-20262006-both", "variant": "canonical"}
+{"split": "test", "row": 91, "source": "local-pyat", "task_id": "local-20266000-y", "kind": "y"}
+{"split": "test", "row": 92, "source": "local-pyat", "task_id": "local-20266003-exact_write", "kind": "exact_write"}
+{"split": "test", "row": 93, "task_id": "seed-20262026-both", "variant": "canonical"}
+{"split": "test", "row": 94, "source": "local-pyat", "task_id": "local-20266006-both", "kind": "both"}
+{"split": "test", "row": 95, "task_id": "seed-20262007-both", "variant": "canonical"}
+{"split": "test", "row": 96, "task_id": "seed-20262030-x", "variant": "canonical"}
+{"split": "test", "row": 97, "source": "local-pyat", "task_id": "local-20266004-x", "kind": "compare_planes"}
+{"split": "test", "row": 98, "task_id": "seed-20262056-x", "variant": "read_only"}
+{"split": "test", "row": 99, "task_id": "seed-20262085-x", "variant": "read_only"}
+{"split": "test", "row": 100, "source": "local-pyat", "task_id": "local-20266005-x", "kind": "compare_planes"}
+{"split": "test", "row": 101, "task_id": "seed-20262030-exact_write", "variant": "canonical"}
+{"split": "test", "row": 102, "task_id": "seed-20262092-x", "variant": "read_only"}
+{"split": "test", "row": 103, "source": "local-pyat", "task_id": "local-20266007-both", "kind": "both"}
+{"split": "test", "row": 104, "task_id": "seed-20262006-exact_write", "variant": "canonical"}
+{"split": "test", "row": 105, "task_id": "seed-20262111-x", "variant": "read_only"}
+{"split": "test", "row": 106, "task_id": "seed-20262063-x", "variant": "read_only"}
+{"split": "test", "row": 107, "task_id": "seed-20262108-exact_write", "variant": "canonical"}
+{"split": "test", "row": 108, "task_id": "seed-20262007-y", "variant": "canonical"}
+{"split": "test", "row": 109, "source": "local-pyat", "task_id": "local-20266006-x", "kind": "read_bpms"}
+{"split": "test", "row": 110, "task_id": "seed-20262085-x", "variant": "canonical"}
+{"split": "test", "row": 111, "source": "local-pyat", "task_id": "local-20266006-exact_write", "kind": "exact_write"}
+{"split": "test", "row": 112, "task_id": "seed-20262052-y", "variant": "canonical"}
+{"split": "test", "row": 113, "source": "local-pyat", "task_id": "local-20266001-x", "kind": "x"}
+{"split": "test", "row": 114, "task_id": "seed-20262056-x", "variant": "canonical"}
+{"split": "test", "row": 115, "task_id": "seed-20262005-x", "variant": "read_only"}
+{"split": "test", "row": 116, "source": "local-pyat", "task_id": "local-20266000-x", "kind": "compare_planes"}
+{"split": "test", "row": 117, "task_id": "seed-20262052-both", "variant": "canonical"}
+{"split": "test", "row": 118, "task_id": "seed-20262117-exact_write", "variant": "canonical"}
+{"split": "test", "row": 119, "task_id": "seed-20262056-exact_write", "variant": "canonical"}
+{"split": "test", "row": 120, "source": "local-pyat", "task_id": "local-20266001-y", "kind": "y"}
+{"split": "test", "row": 121, "source": "local-pyat", "task_id": "local-20266000-x", "kind": "x"}
+{"split": "test", "row": 122, "task_id": "seed-20262120-x", "variant": "read_only"}
+{"split": "test", "row": 123, "task_id": "seed-20262111-x", "variant": "canonical"}
+{"split": "test", "row": 124, "task_id": "seed-20262058-both", "variant": "canonical"}
+{"split": "test", "row": 125, "task_id": "seed-20262111-exact_write", "variant": "canonical"}
+{"split": "test", "row": 126, "task_id": "seed-20262026-x", "variant": "canonical"}
+{"split": "test", "row": 127, "task_id": "seed-20262006-x", "variant": "read_only"}

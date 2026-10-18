@@ -26,6 +26,10 @@ The canonical export, `v002/sft-canonical/`, contains 640 conversations: one mea
 
 The v002 paraphraser resumes from validated `progress.jsonl` rows. If its script changes during a run, review the change and pass `--resume-after-edit`; it preserves the prior script hash in `run.json` and labels any deterministic exact-write fallback in the final annotation file and manifest. A completed rerun with identical settings is idempotent. The completed correction paraphrases are structurally valid but have limited lexical variety: 24 distinct X prompts, 27 Y prompts, and 16 both-plane prompts across 128 tasks of each type. Evaluate generalization on unseen operator wording before concluding this language pass improves the model.
 
+## v003: mixed-backend training pass
+
+`v003/` is the next versioned SFT export. It retains the 640 canonical Osprey v002 conversations and adds 480 local-PyAT conversations built from 320 newly measured actions and read/compare tasks on fresh seeds. This directly covers the local error-kick disturbance used by the held-out PyAT evaluator while keeping the earlier served-plant examples. No new GPT calls were made. The 864/128/128 train/validation/test split, source-action file, per-row index, checksums, and generation procedure are documented in [v003/README.md](v003/README.md). The 56-case evaluation seeds are disjoint, and a bounded response-teacher feasibility check improved the requested orbit in all 28 correction cases.
+
 ```sh
 PYTHONPATH=src .venv/bin/python scripts/export_control_conversations.py --output datasets/v002/sft-canonical
 /Users/zackstone/.venv-vllm-metal/bin/python scripts/validate_control_conversations.py datasets/v002/sft-canonical

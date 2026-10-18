@@ -74,7 +74,7 @@ For the end-to-end check, note the starting values at `/state`, then ask the cha
 
 The chat also accepts explicit goals such as “Center the horizontal orbit,” “Correct the vertical beam,” or “Reduce the beam orbit.” It reads the requested plane's BPMs and corrector setpoints first, then asks the model for one batch of absolute kicks. The harness accepts only distinct correctors in the requested plane and finite values within ±0.35 mrad. It reads the written correctors' readbacks and the same BPMs after the attempt, reporting measured RMS before and after. A worsening proposal is still measured and reported; the model does not get an invented improvement. Vague requests such as “Move the beam” still ask for a specific setpoint and kick. Exact setpoint commands retain their verified read/write/read flow, and read-only prompts cannot write. The 230M base model may not yet choose good corrections; this interface enables evaluation and later fine-tuning.
 
-An [eight-case local PyAT baseline](evals/pyat-v001/README.md) checks held-out operator wording and measured write outcomes without changing the shared Osprey deployment.
+An [eight-case local PyAT baseline](evals/pyat-v001/README.md) and a [56-case expanded evaluation](evals/pyat-v002/README.md) check held-out operator wording and measured write outcomes without changing the shared Osprey deployment.
 
 ## Frontend fixture and QA
 
@@ -94,7 +94,9 @@ The `ara/` research artifact, `build/`, `var/`, virtual environments, frontend d
 
 ## Generate and validate Xopt traces
 
-The data lane records read → write → read attempts against the served PyAT accelerator through EPICS, using the same 24-PV contract as the chat and viewer. `datasets/v001/` contains 64 episodes and 4,096 Xopt attempts. The v002 pass fits a response-matrix teacher from v001 train data and measures fresh correction and exact-write tasks on the served ring, with separate Liquid-format conversation exports. Physical traces remain separate from language annotations and model training. [Dataset documentation](datasets/README.md) describes the schemas, provenance, and commands.
+The data lane records read → write → read attempts against the served PyAT accelerator through EPICS, using the same 24-PV contract as the chat and viewer. `datasets/v001/` contains 64 episodes and 4,096 Xopt attempts. The v002 pass fits a response-matrix teacher from v001 train data and measures fresh correction and exact-write tasks on the served ring, with separate Liquid-format conversation exports. The v003 pass retains canonical served-plant examples and adds measured local-PyAT examples for the evaluator's error-kick disturbance. Physical traces remain separate from language annotations and model training. [Dataset documentation](datasets/README.md) describes the schemas, provenance, and commands; [training passes](training/v002/README.md) retain model-specific configurations and results.
+
+Public releases use one [versioned dataset repository](https://huggingface.co/datasets/zack-r-s/hackring-pyat-control) and one [versioned LFM model repository](https://huggingface.co/zack-r-s/hackring-LFM2.5-230M). Dataset `v002` pairs with model `v001`; dataset `v003` pairs with model `v002`. The 56-case local PyAT evaluation found that the second model improved BPM reporting but reduced successful orbit corrections, so the models remain experimental.
 
 The first collection used an isolated Osprey deployment at `/private/tmp/hackring-data-v001-monitor`. At that time the checked-in deck had `Marker` BPMs, so staging converted only those four zero-length elements to `Monitor` and verified the test orbit was unchanged. The merged main deck now uses `Monitor` directly; staging accepts it without changing the checked-in lattice or facility files. The recorded v001 manifest retains the historical conversion provenance.
 
@@ -103,8 +105,8 @@ To stage a new isolated deployment, use a fresh `--deployment` path. It requires
 ```sh
 PYTHONPATH=src .venv/bin/python scripts/prepare_dataset_va.py --deployment /private/tmp/hackring-data-next --build
 DOCKER_HOST=unix://$HOME/.rd/docker.sock .venv/bin/osprey up --repo /private/tmp/hackring-data-next --dev -d
-PYTHONPATH=src .venv/bin/python scripts/generate_dataset.py --deployment /private/tmp/hackring-data-next --output datasets/v002
-PYTHONPATH=src .venv/bin/python scripts/validate_dataset.py datasets/v002
+PYTHONPATH=src .venv/bin/python scripts/generate_dataset.py --deployment /private/tmp/hackring-data-next --output datasets/v004
+PYTHONPATH=src .venv/bin/python scripts/validate_dataset.py datasets/v004
 ```
 
 The generator refuses to overwrite an output version. The full default pass is 64 episodes × 64 sequential Xopt evaluations with bounded ±0.35 mrad correctors. The driver sets hidden seeded disturbances, reads all public PVs, applies EPICS writes, and records the settled public PVs and objective after each attempt. Run `PYTHONPATH=src .venv/bin/python scripts/validate_dataset.py datasets/v001` to verify the checked-in first pass. The annotation script writes a separate version under `datasets/v001/annotations/`; it does not edit the raw traces. No fine-tuning is performed here.

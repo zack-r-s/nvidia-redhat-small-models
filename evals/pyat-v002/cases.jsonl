@@ -1,0 +1,56 @@
+{"id": "read-bpms", "seed": 20263000, "kind": "read_bpms", "prompt": "What are the X and Y positions at each of the four BPMs right now?"}
+{"id": "compare-planes", "seed": 20263001, "kind": "compare_planes", "prompt": "Which transverse plane is farther from center? Use the BPM readings."}
+{"id": "exact-horizontal", "seed": 20263002, "kind": "exact_write", "prompt": "Dial RING:MAG:H02:KICK:SP to +0.075 mrad and check RING:DIAG:BPM01:POSITION:X.", "channel": "RING:MAG:H02:KICK:SP", "value_mrad": 0.075, "follow_up": "RING:DIAG:BPM01:POSITION:X"}
+{"id": "exact-vertical", "seed": 20263003, "kind": "exact_write", "prompt": "Put RING:MAG:V03:KICK:SP at -0.060 mrad, then tell me RING:DIAG:BPM01:POSITION:Y.", "channel": "RING:MAG:V03:KICK:SP", "value_mrad": -0.06, "follow_up": "RING:DIAG:BPM01:POSITION:Y"}
+{"id": "center-x", "seed": 20263004, "kind": "correct", "plane": "x", "prompt": "Bring the horizontal beam toward zero and give me the measured residual orbit."}
+{"id": "center-y", "seed": 20263005, "kind": "correct", "plane": "y", "prompt": "The vertical orbit needs centering. Adjust that plane and report the BPM result."}
+{"id": "center-both-a", "seed": 20263006, "kind": "correct", "plane": "both", "prompt": "Steer both transverse planes toward the axis and show the measured outcome."}
+{"id": "center-both-b", "seed": 20263007, "kind": "correct", "plane": "both", "prompt": "Bring the full beam orbit back near center, then tell me how much remains."}
+{"id": "new-00-read_bpms", "seed": 20267000, "kind": "read_bpms", "prompt": "Report X and Y positions for BPM01, BPM02, BPM03, and BPM04."}
+{"id": "new-01-compare_planes", "seed": 20267001, "kind": "compare_planes", "prompt": "From the four BPMs, is horizontal or vertical RMS larger?"}
+{"id": "new-02-exact", "seed": 20267002, "kind": "exact_write", "channel": "RING:MAG:H01:KICK:SP", "value_mrad": 0.035, "follow_up": "RING:DIAG:BPM02:POSITION:X", "prompt": "Set RING:MAG:H01:KICK:SP to +0.035 mrad, then read RING:DIAG:BPM02:POSITION:X."}
+{"id": "new-03-x", "seed": 20267003, "kind": "correct", "plane": "x", "prompt": "Steer the horizontal beam nearer the axis and measure the residual X orbit."}
+{"id": "new-04-y", "seed": 20267004, "kind": "correct", "plane": "y", "prompt": "Steer the vertical beam nearer the axis and measure the residual Y orbit."}
+{"id": "new-05-both", "seed": 20267005, "kind": "correct", "plane": "both", "prompt": "Reduce the measured orbit in X and Y, then report both residuals."}
+{"id": "new-06-read_bpms", "seed": 20267006, "kind": "read_bpms", "prompt": "Please read every BPM position in millimeters."}
+{"id": "new-07-compare_planes", "seed": 20267007, "kind": "compare_planes", "prompt": "Which transverse orbit has the greater measured RMS?"}
+{"id": "new-08-exact", "seed": 20267008, "kind": "exact_write", "channel": "RING:MAG:V02:KICK:SP", "value_mrad": 0.047, "follow_up": "RING:DIAG:BPM02:POSITION:Y", "prompt": "Set RING:MAG:V02:KICK:SP to +0.047 mrad, then read RING:DIAG:BPM02:POSITION:Y."}
+{"id": "new-09-x", "seed": 20267009, "kind": "correct", "plane": "x", "prompt": "Reduce the X-plane BPM RMS and show the resulting readings."}
+{"id": "new-10-y", "seed": 20267010, "kind": "correct", "plane": "y", "prompt": "Reduce the Y-plane BPM RMS and show the resulting readings."}
+{"id": "new-11-both", "seed": 20267011, "kind": "correct", "plane": "both", "prompt": "Use the correctors to center both transverse planes and check the BPMs."}
+{"id": "new-12-read_bpms", "seed": 20267012, "kind": "read_bpms", "prompt": "Report X and Y positions for BPM01, BPM02, BPM03, and BPM04."}
+{"id": "new-13-compare_planes", "seed": 20267013, "kind": "compare_planes", "prompt": "From the four BPMs, is horizontal or vertical RMS larger?"}
+{"id": "new-14-exact", "seed": 20267014, "kind": "exact_write", "channel": "RING:MAG:H03:KICK:SP", "value_mrad": 0.059, "follow_up": "RING:DIAG:BPM02:POSITION:X", "prompt": "Set RING:MAG:H03:KICK:SP to +0.059 mrad, then read RING:DIAG:BPM02:POSITION:X."}
+{"id": "new-15-x", "seed": 20267015, "kind": "correct", "plane": "x", "prompt": "Steer the horizontal beam nearer the axis and measure the residual X orbit."}
+{"id": "new-16-y", "seed": 20267016, "kind": "correct", "plane": "y", "prompt": "Steer the vertical beam nearer the axis and measure the residual Y orbit."}
+{"id": "new-17-both", "seed": 20267017, "kind": "correct", "plane": "both", "prompt": "Reduce the measured orbit in X and Y, then report both residuals."}
+{"id": "new-18-read_bpms", "seed": 20267018, "kind": "read_bpms", "prompt": "Please read every BPM position in millimeters."}
+{"id": "new-19-compare_planes", "seed": 20267019, "kind": "compare_planes", "prompt": "Which transverse orbit has the greater measured RMS?"}
+{"id": "new-20-exact", "seed": 20267020, "kind": "exact_write", "channel": "RING:MAG:V04:KICK:SP", "value_mrad": 0.071, "follow_up": "RING:DIAG:BPM02:POSITION:Y", "prompt": "Set RING:MAG:V04:KICK:SP to +0.071 mrad, then read RING:DIAG:BPM02:POSITION:Y."}
+{"id": "new-21-x", "seed": 20267021, "kind": "correct", "plane": "x", "prompt": "Reduce the X-plane BPM RMS and show the resulting readings."}
+{"id": "new-22-y", "seed": 20267022, "kind": "correct", "plane": "y", "prompt": "Reduce the Y-plane BPM RMS and show the resulting readings."}
+{"id": "new-23-both", "seed": 20267023, "kind": "correct", "plane": "both", "prompt": "Use the correctors to center both transverse planes and check the BPMs."}
+{"id": "new-24-read_bpms", "seed": 20267024, "kind": "read_bpms", "prompt": "Report X and Y positions for BPM01, BPM02, BPM03, and BPM04."}
+{"id": "new-25-compare_planes", "seed": 20267025, "kind": "compare_planes", "prompt": "From the four BPMs, is horizontal or vertical RMS larger?"}
+{"id": "new-26-exact", "seed": 20267026, "kind": "exact_write", "channel": "RING:MAG:H01:KICK:SP", "value_mrad": 0.083, "follow_up": "RING:DIAG:BPM02:POSITION:X", "prompt": "Set RING:MAG:H01:KICK:SP to +0.083 mrad, then read RING:DIAG:BPM02:POSITION:X."}
+{"id": "new-27-x", "seed": 20267027, "kind": "correct", "plane": "x", "prompt": "Steer the horizontal beam nearer the axis and measure the residual X orbit."}
+{"id": "new-28-y", "seed": 20267028, "kind": "correct", "plane": "y", "prompt": "Steer the vertical beam nearer the axis and measure the residual Y orbit."}
+{"id": "new-29-both", "seed": 20267029, "kind": "correct", "plane": "both", "prompt": "Reduce the measured orbit in X and Y, then report both residuals."}
+{"id": "new-30-read_bpms", "seed": 20267030, "kind": "read_bpms", "prompt": "Please read every BPM position in millimeters."}
+{"id": "new-31-compare_planes", "seed": 20267031, "kind": "compare_planes", "prompt": "Which transverse orbit has the greater measured RMS?"}
+{"id": "new-32-exact", "seed": 20267032, "kind": "exact_write", "channel": "RING:MAG:V02:KICK:SP", "value_mrad": 0.095, "follow_up": "RING:DIAG:BPM02:POSITION:Y", "prompt": "Set RING:MAG:V02:KICK:SP to +0.095 mrad, then read RING:DIAG:BPM02:POSITION:Y."}
+{"id": "new-33-x", "seed": 20267033, "kind": "correct", "plane": "x", "prompt": "Reduce the X-plane BPM RMS and show the resulting readings."}
+{"id": "new-34-y", "seed": 20267034, "kind": "correct", "plane": "y", "prompt": "Reduce the Y-plane BPM RMS and show the resulting readings."}
+{"id": "new-35-both", "seed": 20267035, "kind": "correct", "plane": "both", "prompt": "Use the correctors to center both transverse planes and check the BPMs."}
+{"id": "new-36-read_bpms", "seed": 20267036, "kind": "read_bpms", "prompt": "Report X and Y positions for BPM01, BPM02, BPM03, and BPM04."}
+{"id": "new-37-compare_planes", "seed": 20267037, "kind": "compare_planes", "prompt": "From the four BPMs, is horizontal or vertical RMS larger?"}
+{"id": "new-38-exact", "seed": 20267038, "kind": "exact_write", "channel": "RING:MAG:H03:KICK:SP", "value_mrad": 0.107, "follow_up": "RING:DIAG:BPM02:POSITION:X", "prompt": "Set RING:MAG:H03:KICK:SP to +0.107 mrad, then read RING:DIAG:BPM02:POSITION:X."}
+{"id": "new-39-x", "seed": 20267039, "kind": "correct", "plane": "x", "prompt": "Steer the horizontal beam nearer the axis and measure the residual X orbit."}
+{"id": "new-40-y", "seed": 20267040, "kind": "correct", "plane": "y", "prompt": "Steer the vertical beam nearer the axis and measure the residual Y orbit."}
+{"id": "new-41-both", "seed": 20267041, "kind": "correct", "plane": "both", "prompt": "Reduce the measured orbit in X and Y, then report both residuals."}
+{"id": "new-42-read_bpms", "seed": 20267042, "kind": "read_bpms", "prompt": "Please read every BPM position in millimeters."}
+{"id": "new-43-compare_planes", "seed": 20267043, "kind": "compare_planes", "prompt": "Which transverse orbit has the greater measured RMS?"}
+{"id": "new-44-exact", "seed": 20267044, "kind": "exact_write", "channel": "RING:MAG:V04:KICK:SP", "value_mrad": 0.119, "follow_up": "RING:DIAG:BPM02:POSITION:Y", "prompt": "Set RING:MAG:V04:KICK:SP to +0.119 mrad, then read RING:DIAG:BPM02:POSITION:Y."}
+{"id": "new-45-x", "seed": 20267045, "kind": "correct", "plane": "x", "prompt": "Reduce the X-plane BPM RMS and show the resulting readings."}
+{"id": "new-46-y", "seed": 20267046, "kind": "correct", "plane": "y", "prompt": "Reduce the Y-plane BPM RMS and show the resulting readings."}
+{"id": "new-47-both", "seed": 20267047, "kind": "correct", "plane": "both", "prompt": "Use the correctors to center both transverse planes and check the BPMs."}
