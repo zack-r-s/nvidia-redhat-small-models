@@ -176,3 +176,20 @@ def test_live_v004_skill_changes_the_viewers_fixture(controls, monkeypatch):
     assert [event["tool"] for event in events if event["kind"] == "tool"] == [
         "orbit_correct", "channel_read", "channel_write", "channel_read"
     ]
+
+
+def test_live_natural_alias_write_reads_actual_bpm_afterward(controls):
+    """A named corrector and BPM alias use the same bounded fixture PV sequence."""
+    import hackring.chat_bridge as bridge
+
+    prompt = ("Set the first horizontal corrector to an absolute kick of +0.05 mrad, "
+              "then report the horizontal beam position at the first BPM")
+    before = api.machine.read()["pvs"]
+    reply, events = run(bridge.live_turn(prompt, bridge.Session(), controls))
+    after = api.machine.read()["pvs"]
+    assert after["RING:MAG:H01:KICK:SP"] == pytest.approx(0.05)
+    assert after["RING:DIAG:BPM01:POSITION:X"] != before["RING:DIAG:BPM01:POSITION:X"]
+    assert "RING:DIAG:BPM01:POSITION:X" in reply and "dev fixture reported confirmed" in reply
+    assert [event["tool"] for event in events if event["kind"] == "tool"] == [
+        "alias_map", "channel_read", "channel_write", "channel_read"
+    ]

@@ -108,6 +108,33 @@ def test_misspelled_beam_report_expands_partial_model_read(capsys, monkeypatch):
     assert "(no reply)" not in output
 
 
+def test_all_sensor_data_reads_only_known_bpms(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpms = small_agent.CONTRACT["bpm"]
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert json["tool_choice"] == "required"
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [{"id": "read", "function": {
+                    "name": "channel_read", "arguments": '{"channels":["RING","DIAG","BPM"]}'}}]}}]})
+
+    class FakeMCP:
+        async def call_tool(self, name, args):
+            assert name == "channel_read" and args == {"channels": bpms}
+            data = {"status": "success", "summary": {"readings": {
+                pv: {"value": 0.1 if pv.endswith(":X") else -0.2} for pv in bpms}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))])
+
+    asyncio.run(small_agent.turn("report all sensor data", [], FakeMCP(), FakeHTTP(),
+        [{"type": "function", "function": {"name": "channel_read"}}],
+        {"channel_read": {"properties": {"channels": {"type": "array"}}}},
+        SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8)))
+    output = capsys.readouterr().out
+    assert "BPM04: X=+0.1000, Y=-0.2000" in output
+    assert "unknown PV" not in output
+
+
 def test_known_setpoint_uses_contract_units_but_rejects_wrong_unit():
     assert small_agent.requested_write("Set RING:MAG:H01:KICK:SP to 0.2") == (
         "RING:MAG:H01:KICK:SP", 0.2,
@@ -115,6 +142,15 @@ def test_known_setpoint_uses_contract_units_but_rejects_wrong_unit():
     response = small_agent.move_clarification("Set RING:MAG:H01:KICK:SP to 0.2 mm")
     assert response.startswith("No write was made.")
     assert "mrad" in response
+
+
+def test_natural_corrector_alias_requires_absolute_mrad_and_resolves_bpm():
+    prompt = ("Set the first horizontal corrector to an absolute kick of +0.05 mrad, "
+              "then report the horizontal beam position at the first BPM")
+    assert small_agent.requested_write(prompt) == ("RING:MAG:H01:KICK:SP", 0.05)
+    assert small_agent.natural_bpm_read(prompt) == "RING:DIAG:BPM01:POSITION:X"
+    assert small_agent.requested_write("Set the first horizontal corrector by 0.05 mrad") is None
+    assert small_agent.requested_write("Set the first horizontal corrector to 0.05 mm") is None
 
 
 def test_exact_write_cannot_claim_an_unexecuted_write(capsys, monkeypatch):

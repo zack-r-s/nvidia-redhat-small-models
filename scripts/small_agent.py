@@ -48,6 +48,20 @@ TOOLS = {"channel_read", "channel_write", "channel_limits"}
 ACTION = re.compile(r"\b(read|set|write|kick|get|measure|report|show)\b", re.IGNORECASE)
 BEAM_POSITION = re.compile(r"\b(beam position|orbit|bpm)\b", re.IGNORECASE)
 BEAM_READ = re.compile(r"\b(read|report|show|measure|get|check)\b.*\b(beam|orbit|bpms?)\b", re.IGNORECASE)
+SENSOR_READ = re.compile(r"\b(read|report|show|get|check)\b.*\b(?:all\s+)?(?:sensor|diagnostic)\s+(?:data|readings|values)\b", re.IGNORECASE)
+ORDINAL = {"first": 1, "1st": 1, "second": 2, "2nd": 2, "third": 3, "3rd": 3, "fourth": 4, "4th": 4}
+ORDINAL_PATTERN = r"first|1st|second|2nd|third|3rd|fourth|4th"
+NATURAL_WRITE = re.compile(
+    rf"\b(?:set|write)\s+(?:the\s+)?(?P<index>{ORDINAL_PATTERN})\s+"
+    r"(?P<plane>horizontal|vertical)\s+corrector(?:\s+(?:kick|setpoint))?\s+to\s+"
+    r"(?:an?\s+)?(?:absolute\s+)?(?:kick\s+of\s+)?"
+    r"(?P<value>[+-]?(?:\d+(?:\.\d*)?|\.\d+))\s*mrad\b", re.IGNORECASE,
+)
+NATURAL_BPM_READ = re.compile(
+    rf"\b(?P<plane>horizontal|vertical|x|y)\s+(?:beam\s+)?position\s+"
+    rf"(?:measured\s+)?(?:at|from)\s+(?:the\s+)?(?P<index>{ORDINAL_PATTERN})\s+"
+    r"(?:BPM|beam[- ]position monitor)\b", re.IGNORECASE,
+)
 MOVE_BEAM = re.compile(r"\b(move|shift|steer|disturb|perturb)\b.*\b(beam|orbit)\b|\b(beam|orbit)\b.*\b(move|shift|steer|disturb|perturb)\b", re.IGNORECASE)
 GOAL_VERB = re.compile(r"\b(correct|center(?:ing|ed)?|centre(?:ing|ed)?|reduce|minimi[sz]e|flatten|restore|bring)\b", re.IGNORECASE)
 NEGATION = re.compile(r"\b(do not|don't|never|without)\b", re.IGNORECASE)
@@ -100,7 +114,26 @@ def wants_tool(prompt: str) -> bool:
 
 def beam_read_request(prompt: str) -> bool:
     """Recognize beam read intent even when 'position' is omitted or misspelled."""
-    return bool(BEAM_POSITION.search(prompt) or BEAM_READ.search(prompt))
+    return bool(BEAM_POSITION.search(prompt) or BEAM_READ.search(prompt) or SENSOR_READ.search(prompt))
+
+
+def natural_bpm_read(prompt: str) -> str | None:
+    """Resolve one explicit ordinal BPM and plane to the fixed PV contract."""
+    match = NATURAL_BPM_READ.search(prompt)
+    if not match:
+        return None
+    number = ORDINAL[match["index"].lower()]
+    axis = "X" if match["plane"].lower() in ("horizontal", "x") else "Y"
+    channel = f"RING:DIAG:BPM{number:02d}:POSITION:{axis}"
+    return channel if channel in CONTRACT["bpm"] else None
+
+
+def referenced_channels(prompt: str) -> list[str]:
+    """Preserve literal PV references and one recognized natural BPM read target."""
+    channels = [pv for pv in [*CONTRACT["bpm"], *CONTRACT["corrector_setpoints"],
+                              *READBACKS.values()] if pv in prompt]
+    alias = natural_bpm_read(prompt)
+    return list(dict.fromkeys([*channels, *([alias] if alias else [])]))
 
 
 def goal_request(prompt: str) -> str | None:
@@ -137,7 +170,7 @@ def move_clarification(prompt: str) -> str | None:
 
 
 def requested_write(prompt: str) -> tuple[str, float] | None:
-    """Only explicit setpoint-and-kick requests authorize a model-issued write."""
+    """Only explicit absolute setpoint-and-kick requests authorize a harness write."""
     if not re.search(r"\b(set|write|change|adjust)\b", prompt, re.IGNORECASE):
         return None
     if re.search(r"\b(do not|don't|never|without)\b", prompt, re.IGNORECASE):
@@ -152,6 +185,13 @@ def requested_write(prompt: str) -> tuple[str, float] | None:
         )
         if match:
             return channel, float(match.group(1))
+    match = NATURAL_WRITE.search(prompt)
+    if match:
+        number = ORDINAL[match["index"].lower()]
+        plane = "H" if match["plane"].lower() == "horizontal" else "V"
+        channel = f"RING:MAG:{plane}{number:02d}:KICK:SP"
+        if channel in CONTRACT["corrector_setpoints"]:
+            return channel, float(match["value"])
     return None
 
 
@@ -242,8 +282,7 @@ def verified_report(prompt: str, readings: dict, write_request: tuple[str, float
             observed = write_result.get("observed_value")
             lines.append(f"{channel}: Osprey reported {outcome} for {requested_value:g} mrad"
                          + (f"; observed setpoint {observed} mrad." if observed is not None else "."))
-    named = [pv for pv in [*CONTRACT["bpm"], *CONTRACT["corrector_setpoints"], *READBACKS.values()]
-             if pv in prompt]
+    named = referenced_channels(prompt)
     for pv in named:
         if write_request and pv == write_request[0]:
             continue  # a pre-write setpoint read is not the final setpoint
@@ -487,8 +526,10 @@ async def skill_goal_turn(prompt, expected_plane, history, mcp, http, args) -> N
 
 
 async def exact_write_turn(prompt, request, history, mcp, args) -> None:
-    """Execute an explicit numeric PV request through measured, bounded controls tools."""
+    """Execute an explicit numeric PV or fixed alias request through bounded controls tools."""
     channel, value = request
+    if channel not in prompt:
+        dim(f"  [alias_map · harness] {json.dumps({'corrector': channel, 'read': natural_bpm_read(prompt)})}")
     if not math.isfinite(value) or abs(value) > KICK_LIMIT:
         answer = f"No write was made to {channel}: {value:g} mrad exceeds the ±{KICK_LIMIT:g} mrad limit."
         print(answer)
@@ -511,8 +552,7 @@ async def exact_write_turn(prompt, request, history, mcp, args) -> None:
                         if entry.get("channel") == channel), None)
         if payload.get("status") != "success" or outcome is None:
             raise ValueError(payload.get("message", "write was not confirmed"))
-        requested = [pv for pv in [*CONTRACT["bpm"], *CONTRACT["corrector_setpoints"],
-                                   *READBACKS.values()] if pv in prompt and pv != channel]
+        requested = [pv for pv in referenced_channels(prompt) if pv != channel]
         follow_up = list(dict.fromkeys([READBACKS[channel], *requested]))
         post = await mcp.call_tool("channel_read", {"channels": follow_up})
         readings.update(readings_from("\n".join(getattr(part, "text", "") for part in post.content)))
