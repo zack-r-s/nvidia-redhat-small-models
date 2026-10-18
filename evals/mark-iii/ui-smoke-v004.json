@@ -1,0 +1,11 @@
+{
+  "agent_panel": "Agent & goal\n\nRequest: Set RING:MAG:H01:KICK:SP to 0.1 mrad\n\nWrite status: \nconfirmed\n\nMeasured goal: met\n\nX RMS: 0.4184 \u2192 0.6259 mm\n\nY RMS: 0.2751 \u2192 0.2751 mm\n\nRING:MAG:H01:KICK:SP: confirmed \u00b7 readback 0.1000 mrad",
+  "created_utc": "2026-10-18T04:23:19.418563+00:00",
+  "evaluation_series": "mark-iii",
+  "model_mode": "live",
+  "passed": true,
+  "reset_mrad": 0.0,
+  "schema": "hackring.ui_smoke/1",
+  "setpoint": "RING:MAG:H01:KICK:SP",
+  "written_mrad": 0.1
+}

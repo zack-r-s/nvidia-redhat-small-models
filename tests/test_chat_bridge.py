@@ -104,6 +104,28 @@ def test_rejected_write_evidence_keeps_goal_unmet(controls):
     assert evidence["after"] == evidence["before"]
 
 
+def test_explicit_write_harness_reads_writes_and_reads_back(controls, monkeypatch):
+    agent = load_small_agent()
+    monkeypatch.setattr(agent, "dim", print)
+    prompt = f"Set {SETPOINTS[0]} to 0.1 mrad, then read {BPMS[0]}."
+    assert agent.requested_write(prompt) == (SETPOINTS[0], 0.1)
+    history = []
+    run(agent.turn(prompt, history, controls, None, [], {}, SimpleNamespace(history=8)))
+    assert api.machine.read()["pvs"][SETPOINTS[0]] == pytest.approx(0.1)
+    assert BPMS[0] in history[-1]["content"] and "confirmed" in history[-1]["content"]
+
+
+def test_trailing_period_limit_request_is_recognized_and_blocked(controls):
+    agent = load_small_agent()
+    prompt = f"Set {SETPOINTS[0]} to 0.5 mrad."
+    assert agent.requested_write(prompt) == (SETPOINTS[0], 0.5)
+    before = api.machine.read()["pvs"]
+    history = []
+    run(agent.turn(prompt, history, controls, None, [], {}, SimpleNamespace(history=8)))
+    assert api.machine.read()["pvs"] == before
+    assert "exceeds" in history[-1]["content"]
+
+
 def test_live_replies_never_credit_osprey(controls, monkeypatch):
     """The agent's wording says "Osprey"; the bridge must not pass that off as the real thing."""
     import hackring.chat_bridge as bridge

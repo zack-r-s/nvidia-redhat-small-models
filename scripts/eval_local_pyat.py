@@ -125,25 +125,29 @@ def trim(text: str) -> str:
 
 
 class CpuLfm:
-    def __init__(self, name: str, threads: int):
+    def __init__(self, name: str, threads: int, device: str = "cpu"):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         torch.set_num_threads(threads)
+        if device == "mps" and not torch.backends.mps.is_available():
+            raise RuntimeError("MPS is unavailable on this host")
         self.torch = torch
+        self.device = device
         self.tokenizer = AutoTokenizer.from_pretrained(name, local_files_only=True)
         self.model = AutoModelForCausalLM.from_pretrained(
-            name, local_files_only=True, dtype=torch.float32).eval()
+            name, local_files_only=True, dtype=torch.bfloat16 if device == "mps" else torch.float32,
+        ).to(device).eval()
 
     def generate(self, messages: list[dict], *, prefix: str = "", max_new_tokens: int = 192) -> str:
         prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) + prefix
-        tokens = self.tokenizer(prompt, return_tensors="pt")["input_ids"]
+        tokens = self.tokenizer(prompt, return_tensors="pt")["input_ids"].to(self.device)
         if tokens.shape[-1] + max_new_tokens > 4096:
             raise ValueError("model context exceeds 4096 tokens")
         with self.torch.inference_mode():
             output = self.model.generate(tokens, max_new_tokens=max_new_tokens, do_sample=False,
                                          pad_token_id=self.tokenizer.eos_token_id)
-        return prefix + self.tokenizer.decode(output[0, tokens.shape[-1]:], skip_special_tokens=False)
+        return prefix + self.tokenizer.decode(output[0, tokens.shape[-1]:].cpu(), skip_special_tokens=False)
 
 
 def score_read(case: dict, text: str, pvs: dict[str, float]) -> bool:
@@ -219,7 +223,7 @@ def run(args: argparse.Namespace) -> dict:
     output = args.output.resolve()
     if output.exists():
         raise FileExistsError(f"evaluation output already exists: {output}")
-    model = CpuLfm(args.model, args.threads)
+    model = CpuLfm(args.model, args.threads, args.device)
     traces = []
     for case in cases:
         trace = evaluate_case(case, model, args.disturbance_mrad)
@@ -230,7 +234,8 @@ def run(args: argparse.Namespace) -> dict:
     passed = Counter(trace["kind"] for trace in traces if trace["passed"])
     report = {"schema": "hackring.pyat_eval/1", "evaluation_series": args.series,
               "created_utc": datetime.now(timezone.utc).isoformat(),
-              "model": args.model, "inference": "Transformers CPU greedy, verified harness pre-read; write tool name forced",
+              "model": args.model,
+              "inference": f"Transformers {args.device.upper()} greedy ({'bfloat16' if args.device == 'mps' else 'float32'}), verified harness pre-read; write tool name forced",
               "plant": "LocalMachine on checked-in PyAT ring; seeded ERR kicks, not Osprey calibration offsets",
               "disturbance_mrad": args.disturbance_mrad, "cases_sha256": digest(cases_path),
               "evaluator_sha256": digest(Path(__file__)),
@@ -258,6 +263,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=ROOT / "evals/mark-ii/pyat-v001/base-230m")
     parser.add_argument("--disturbance-mrad", type=float, default=0.08)
     parser.add_argument("--threads", type=int, default=4)
+    parser.add_argument("--device", choices=("cpu", "mps"), default="cpu")
     parser.add_argument("--series", choices=("mark-ii", "mark-iii"), default="mark-ii")
     parser.add_argument("--limit", type=int, help="Run the first N cases into a separate output directory")
     args = parser.parse_args()

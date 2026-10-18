@@ -140,7 +140,7 @@ def requested_write(prompt: str) -> tuple[str, float] | None:
         match = re.search(
             re.escape(channel)
             + r"[^\n]*?\bto\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))"
-            + r"(?:\s*mrad)?(?![\d.])(?=\s*(?:[,.;]|$|\bthen\b|\band\b))",
+            + r"(?!(?:\d|\.\d))(?:\s*mrad)?(?=\s*(?:[,.;]|$|\bthen\b|\band\b))",
             prompt,
             re.IGNORECASE,
         )
@@ -471,14 +471,56 @@ async def skill_goal_turn(prompt, expected_plane, history, mcp, http, args) -> N
     del history[: max(0, len(history) - max(1, args.history // 2) * 2)]
 
 
+async def exact_write_turn(prompt, request, history, mcp, args) -> None:
+    """Execute an explicit numeric PV request through measured, bounded controls tools."""
+    channel, value = request
+    if not math.isfinite(value) or abs(value) > KICK_LIMIT:
+        answer = f"No write was made to {channel}: {value:g} mrad exceeds the ±{KICK_LIMIT:g} mrad limit."
+        print(answer)
+        history.extend([{"role": "user", "content": prompt}, {"role": "assistant", "content": answer}])
+        return
+    readings = {}
+    outcome = None
+    attempted = False
+    try:
+        pre = await mcp.call_tool("channel_read", {"channels": [channel]})
+        readings = readings_from("\n".join(getattr(part, "text", "") for part in pre.content))
+        if channel not in readings:
+            raise ValueError("pre-write setpoint read failed")
+        dim(f"  [channel_read · pre-write] {channel}={readings[channel]['value']} mrad")
+        attempted = True
+        written = await mcp.call_tool("channel_write", {"operations": [{"channel": channel, "value": value}], "confirm": True})
+        payload = json.loads("\n".join(getattr(part, "text", "") for part in written.content))
+        dim(f"  [channel_write · harness] {json.dumps({'channel': channel, 'value': value})}")
+        outcome = next((entry for entry in payload.get("summary", {}).get("results", [])
+                        if entry.get("channel") == channel), None)
+        if payload.get("status") != "success" or outcome is None:
+            raise ValueError(payload.get("message", "write was not confirmed"))
+        requested = [pv for pv in [*CONTRACT["bpm"], *CONTRACT["corrector_setpoints"],
+                                   *READBACKS.values()] if pv in prompt and pv != channel]
+        follow_up = list(dict.fromkeys([READBACKS[channel], *requested]))
+        post = await mcp.call_tool("channel_read", {"channels": follow_up})
+        readings.update(readings_from("\n".join(getattr(part, "text", "") for part in post.content)))
+        dim(f"  [channel_read · post-write] {len(readings) - 1}/{len(follow_up)} measured PVs")
+    except Exception as exc:
+        dim(f"  [channel_write · harness rejected] {exc}")
+    answer = verified_report(prompt, readings, request, outcome, attempted)
+    print(answer)
+    history.extend([{"role": "user", "content": prompt}, {"role": "assistant", "content": answer}])
+    del history[: max(0, len(history) - max(1, args.history // 2) * 2)]
+
+
 async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     plane = goal_request(prompt)
     if plane:
         await skill_goal_turn(prompt, plane, history, mcp, http, args)
         return
+    write_request = requested_write(prompt)
+    if write_request:
+        await exact_write_turn(prompt, write_request, history, mcp, args)
+        return
     messages = [{"role": "system", "content": SYSTEM}, *history, {"role": "user", "content": prompt}]
     force = wants_tool(prompt)
-    write_request = requested_write(prompt)
     available_tools = tools if write_request else [tool for tool in tools if tool["function"]["name"] != "channel_write"]
     general_beam_request = bool(BEAM_POSITION.search(prompt)) and not any(pv in prompt for pv in KNOWN_READS)
     channel_request = bool(write_request or BEAM_POSITION.search(prompt) or any(pv in prompt for pv in KNOWN_READS))

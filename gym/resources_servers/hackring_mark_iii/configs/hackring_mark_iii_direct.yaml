@@ -1,0 +1,23 @@
+hackring_mark_iii_resources_server:
+  resources_servers:
+    hackring_mark_iii:
+      entrypoint: app.py
+      domain: agent
+      verified: false
+      description: Seed-disjoint local PyAT orbit correction with one tool attempt
+hackring_mark_iii_direct_agent:
+  responses_api_agents:
+    simple_agent:
+      entrypoint: app.py
+      resources_server:
+        type: resources_servers
+        name: hackring_mark_iii_resources_server
+      model_server:
+        type: responses_api_models
+        name: policy_model
+      max_steps: 1
+      datasets:
+      - name: validation
+        type: validation
+        jsonl_fpath: resources_servers/hackring_mark_iii/data/direct.jsonl
+        license: Apache 2.0

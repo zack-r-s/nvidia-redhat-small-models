@@ -1,0 +1,57 @@
+{
+  "v001": {
+    "attempts": 4096,
+    "by_split": {
+      "test": 448,
+      "train": 3264,
+      "validation": 384
+    },
+    "episodes": 64,
+    "episodes_with_final_improvement": 64,
+    "manifest_sha256": "11e192f17b7ad9f3d10ec51f0be0ada831c9f26aa39b421c2f94075423ee61b8"
+  },
+  "v002_raw": {
+    "actions": 512,
+    "by_split": {
+      "test": 64,
+      "train": 384,
+      "validation": 64
+    },
+    "manifest_sha256": "1f622436ed9b6939dbee5be3b85f65e016b52200720275df54bedd8d574d4e75",
+    "max_response_error_mm": 4.8183679268731794e-14,
+    "non_improving_corrections": []
+  },
+  "v002_sft": {
+    "by_split": {
+      "test": 144,
+      "train": 864,
+      "validation": 144
+    },
+    "conversations": 1152,
+    "largest_input_tokens": 2436,
+    "manifest_sha256": "e3adf50cb00c40fb9ea2a84409c45ff38daadbda014bf0a3040bcc65cfb711c5",
+    "model": "LiquidAI/LFM2.5-230M"
+  },
+  "v003": {
+    "by_split": {
+      "test": 128,
+      "train": 864,
+      "validation": 128
+    },
+    "conversations": 1120,
+    "largest_input_tokens": 2435,
+    "manifest_sha256": "dcfa860ed7f77c189dad0a00a48487bf016cfcf958fab753ca4c40067252106b",
+    "model": "LiquidAI/LFM2.5-230M"
+  },
+  "v004": {
+    "by_split": {
+      "test": 72,
+      "train": 432,
+      "validation": 72
+    },
+    "conversations": 576,
+    "largest_input_tokens": 678,
+    "manifest_sha256": "261efa03661f4dc29d29f6a16cb3c55b07f99857d39335ce1dfbc0eef15bd51d",
+    "model": "LiquidAI/LFM2.5-230M"
+  }
+}

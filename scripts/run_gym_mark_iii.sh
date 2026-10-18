@@ -15,6 +15,7 @@ MPLCONFIGDIR=${MPLCONFIGDIR:-$ROOT/var/mpl-cache}
 export MPLCONFIGDIR
 PYTHONPATH="$ROOT/src:$ROOT/scripts" "$PY" scripts/prepare_gym_mark_iii.py
 MODEL=${VLLM_MODEL_NAME:?Set VLLM_MODEL_NAME to the served ID}
+AGENT="hackring_mark_iii_${TRACK}_agent"
 BASE=${VLLM_BASE_URL:-http://127.0.0.1:8000/v1}
 curl -fsS --max-time 5 "$BASE/models" |
   "$PY" -c 'import json,sys; assert any(m.get("id")==sys.argv[1] for m in json.load(sys.stdin)["data"])' "$MODEL"
@@ -40,9 +41,9 @@ path.write_text(json.dumps(data,indent=2)+'\n')
 PY
 cd gym
 "$GYM" eval run \
-  --resources-server hackring_mark_iii \
+  --config "resources_servers/hackring_mark_iii/configs/hackring_mark_iii_$TRACK.yaml" \
   --model-type vllm_model \
-  --agent hackring_mark_iii_simple_agent \
+  --agent "$AGENT" \
   --input "resources_servers/hackring_mark_iii/data/$TRACK.jsonl" \
   --output "$RUN/rollouts.jsonl" \
   --split validation \
@@ -50,4 +51,17 @@ cd gym
   --temperature 0.2 --max-output-tokens 512 \
   "$@" \
   ++policy_model.responses_api_models.vllm_model.uses_reasoning_parser=false
+"$PY" - "$RUN" "$TRACK" <<'PY'
+import json,sys
+from pathlib import Path
+run,track=Path(sys.argv[1]),sys.argv[2]
+path=run/'preprocessed_datasets/validation.jsonl'
+rows=[json.loads(line) for line in path.open()]
+expected='channel_write' if track=='direct' else 'orbit_correct'
+assert len(rows)==28, f'Expected 28 prepared tasks, found {len(rows)}'
+for row in rows:
+    names=[tool['name'] for tool in row['responses_create_params']['tools']]
+    assert names==[expected], f'Gym loaded {names} for {track}, expected {expected}'
+print(f'Verified Gym prepared 28 {track} tasks with {expected}')
+PY
 echo "Saved Mark III $TRACK run to $RUN"

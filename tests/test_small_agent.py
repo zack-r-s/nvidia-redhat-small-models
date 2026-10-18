@@ -51,19 +51,13 @@ def test_known_setpoint_uses_contract_units_but_rejects_wrong_unit():
     assert "mrad" in response
 
 
-def test_model_final_cannot_claim_an_unexecuted_write(capsys):
+def test_exact_write_cannot_claim_an_unexecuted_write(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
     prompt = "Set RING:MAG:H01:KICK:SP to 0.2, then read RING:DIAG:BPM01:POSITION:X"
-
-    class FakeResponse:
-        is_error = False
-
-        def json(self):
-            return {"choices": [{"message": {"role": "assistant", "content": "Set to 0.2 mm."}}]}
 
     class FakeHTTP:
         async def post(self, path, json):
-            assert {tool["function"]["name"] for tool in json["tools"]} == {"channel_read", "channel_write"}
-            return FakeResponse()
+            raise AssertionError("explicit numeric writes use the measured harness path")
 
     class FakeMCP:
         async def call_tool(self, name, args):
@@ -76,7 +70,6 @@ def test_model_final_cannot_claim_an_unexecuted_write(capsys):
         SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8),
     ))
     output = capsys.readouterr().out
-    assert "0.2 mm" not in output
     assert "No write was made" in output
     assert "no verified reading returned" in output
 
@@ -135,9 +128,9 @@ def test_model_write_uses_verified_read_write_read_sequence(capsys, monkeypatch)
         SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=2, history=8),
     ))
     assert [(name, args.get("channels", [None])[0]) for name, args in mcp.calls] == [
-        ("channel_read", setpoint), ("channel_write", None),
-        ("channel_read", readback), ("channel_read", bpm),
+        ("channel_read", setpoint), ("channel_write", None), ("channel_read", readback),
     ]
+    assert mcp.calls[-1][1]["channels"] == [readback, bpm]
     output = capsys.readouterr().out
     assert "confirmed for 0.2 mrad" in output
     assert f"{bpm}: 0.1 mm" in output
@@ -194,10 +187,8 @@ def test_write_alone_triggers_requested_post_write_read(capsys, monkeypatch):
          "channel_write": {"properties": {"operations": {"type": "array"}}}},
         SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=3, history=8),
     ))
-    assert [name for name, _ in mcp.calls] == [
-        "channel_read", "channel_write", "channel_read", "channel_read",
-    ]
-    assert mcp.calls[-1][1] == {"channels": [bpm]}
+    assert [name for name, _ in mcp.calls] == ["channel_read", "channel_write", "channel_read"]
+    assert mcp.calls[-1][1] == {"channels": [readback, bpm]}
     assert f"{bpm}: 0.7669 mm" in capsys.readouterr().out
     assert [entry["role"] for entry in history] == ["user", "assistant"]
 

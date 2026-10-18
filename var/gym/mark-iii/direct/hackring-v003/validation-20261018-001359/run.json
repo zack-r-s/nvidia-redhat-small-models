@@ -1,0 +1,30 @@
+{
+  "served_model_name": "hackring-v003",
+  "model_source": "zack-r-s/hackring-LFM2.5-230M",
+  "model_revision": "8ad5bc1668d56de4c0dce657fee44d1f1466b7cc",
+  "model_revision_source": "VLLM_MODEL_REVISION",
+  "max_model_len": 4096,
+  "base_url": "http://127.0.0.1:8012/v1",
+  "vllm_version": "0.31.0",
+  "vllm_backend": "vllm-metal",
+  "vllm_command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/zackstone/.venv-vllm-metal/bin/vllm serve zack-r-s/hackring-LFM2.5-230M --revision 8ad5bc1668d56de4c0dce657fee44d1f1466b7cc --served-model-name hackring-v003 --host 127.0.0.1 --port 8012 --enable-auto-tool-choice --tool-call-parser lfm2 --max-model-len 4096 --gpu-memory-utilization 0.4",
+  "nemo_gym_version": "0.4.0",
+  "eval_host": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M4 Pro"
+  },
+  "evaluation_series": "mark-iii",
+  "evaluation_interface": "channel_write",
+  "split": "validation",
+  "repo_commit": "98150c0",
+  "extra_args": [
+    "--num-repeats",
+    "4"
+  ],
+  "started_utc": "2026-10-18T04:14:01.202393+00:00",
+  "track": "direct",
+  "task_sha256": "a919d01d03accf67fa8c22406deb3df9b0a468efadcd464dea5b5ccc46e739f8",
+  "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "objective": "requested-plane BPM RMS-squared fractional reduction; one tool attempt"
+}
