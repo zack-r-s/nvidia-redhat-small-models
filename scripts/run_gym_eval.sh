@@ -16,8 +16,11 @@ to providers.yml's default); values already set in the shell take precedence. Th
 Task rows are regenerated from datasets/v001/splits/ft75-eval25/split.json each run.
 Sampling defaults match the small agent (temperature 0.2, 512 output tokens); extra
 options pass through and override them, e.g. --limit 2 --num-repeats 4.
-Each run writes var/gym/<model>/<split>-<timestamp>/: run.json, rollouts.jsonl,
+Each run writes var/gym/<model>/<split>-<timestamp>/: run.json (model source and revision,
+vLLM version and backend, NeMo Gym version, host), rollouts.jsonl,
 rollouts_materialized_inputs.jsonl, and rollouts_aggregate_metrics.json.
+Requires NeMo Gym 0.4.0 (`gym` on PATH) and the project venv with the gym extra.
+Set VLLM_MODEL_REVISION if the revision cannot be read from a local vLLM process.
 EOF
 }
 
@@ -29,7 +32,16 @@ if [[ ${1:-} == --split ]]; then
   shift 2
 fi
 [[ $SPLIT =~ ^(validation|train|example)$ ]] || { usage >&2; exit 2; }
-command -v gym >/dev/null 2>&1 || { echo 'run_gym_eval: install NeMo Gym so `gym` is on PATH.' >&2; exit 1; }
+GYM_VERSION=0.4.0
+command -v gym >/dev/null 2>&1 ||
+  { echo "run_gym_eval: install NeMo Gym $GYM_VERSION so \`gym\` is on PATH (pip install nemo-gym==$GYM_VERSION)." >&2; exit 1; }
+# The wrapper relies on 0.4.0 behavior: --split, server lookup from the working directory, ++ overrides.
+found_gym=$(gym --version 2>/dev/null | sed -n '1s/^NeMo Gym v//p')
+if [[ $found_gym != "$GYM_VERSION" && -z ${NEMO_GYM_ALLOW_UNTESTED:-} ]]; then
+  echo "run_gym_eval: found NeMo Gym ${found_gym:-unknown}; this workflow is tested with $GYM_VERSION." >&2
+  echo "Install nemo-gym==$GYM_VERSION, or set NEMO_GYM_ALLOW_UNTESTED=1 to try anyway." >&2
+  exit 1
+fi
 
 # Variables already set in the shell win over .env, as in small_agent.py, so another endpoint
 # can be evaluated without editing .env: VLLM_BASE_URL=... VLLM_MODEL_NAME=... scripts/run_gym_eval.sh
@@ -62,17 +74,7 @@ PYTHONPATH="$ROOT/src:$ROOT/scripts" "$PY" "$ROOT/scripts/prepare_gym_data.py" \
 RUN_DIR="$ROOT/var/gym/$(printf '%s' "$MODEL" | tr -c 'A-Za-z0-9._-' '_')/$SPLIT-$(date +%Y%m%d-%H%M%S)"
 OUT="$RUN_DIR/rollouts.jsonl"
 mkdir -p "$RUN_DIR"
-"$PY" - "$(curl -fsS --max-time 5 "$BASE_URL/models")" "$MODEL" "$BASE_URL" "$SPLIT" \
-  "$(git -C "$ROOT" rev-parse --short HEAD)" "$@" >"$RUN_DIR/run.json" <<'PY'
-import json, sys
-from datetime import datetime, timezone
-listing, model, base_url, split, commit, *extra = sys.argv[1:]
-served = next(m for m in json.loads(listing)["data"] if m.get("id") == model)
-print(json.dumps({"served_model_name": model, "model_source": served.get("root"),
-                  "max_model_len": served.get("max_model_len"), "base_url": base_url, "split": split,
-                  "repo_commit": commit, "extra_args": extra,
-                  "started_utc": datetime.now(timezone.utc).isoformat()}, indent=2))
-PY
+"$PY" "$ROOT/scripts/gym_run_metadata.py" write "$RUN_DIR" "$MODEL" "$BASE_URL" "$SPLIT" "$@"
 echo "Model: $MODEL @ $BASE_URL"
 echo "Run folder: $RUN_DIR"
 # NeMo Gym 0.4.0 finds out-of-tree servers relative to the working directory.

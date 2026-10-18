@@ -76,7 +76,7 @@ The chat also accepts explicit goals such as “Center the horizontal orbit,” 
 
 ## NeMo Gym evaluation
 
-`gym/resources_servers/hackring_orbit/` is a NeMo Gym resources server that evaluates one-shot orbit correction on the last 25% of v001 episodes (`scripts/split_dataset.py` defines the split). Each task replays an episode offline in PyAT and presents the small agent's goal turn; the reward is the measured fractional orbit-cost reduction. With [NeMo Gym](https://github.com/NVIDIA-NeMo/Gym) installed and the model served by the bootstrap, run `scripts/run_gym_eval.sh`. The [server README](gym/resources_servers/hackring_orbit/README.md) describes the tasks, reward, and data regeneration.
+`gym/resources_servers/hackring_orbit/` is a NeMo Gym resources server that evaluates one-shot orbit correction on the last 25% of v001 episodes (`scripts/split_dataset.py` defines the split). Each task replays an episode offline in PyAT and presents the small agent's goal turn; the reward is the measured fractional orbit-cost reduction. Install the project with `-e '.[dev,gym]'` and [NeMo Gym](https://github.com/NVIDIA-NeMo/Gym) 0.4.0, serve a model with vLLM (the bootstrap or a direct `vllm serve`), and run `scripts/run_gym_eval.sh`; Osprey and Docker are not needed for the evaluation. The [server README](gym/resources_servers/hackring_orbit/README.md) describes the tasks, reward, and data regeneration.
 
 ## Frontend fixture and QA
 

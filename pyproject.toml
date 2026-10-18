@@ -16,6 +16,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["caproto>=1.1", "pytest>=8"]
+# Generating hackring_orbit Gym tasks imports scripts/small_agent.py.
+gym = ["mcp>=1.0", "python-dotenv>=1.0"]
 
 [build-system]
 requires = ["hatchling"]
