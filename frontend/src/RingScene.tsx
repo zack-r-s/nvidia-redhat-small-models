@@ -15,12 +15,17 @@ export const WINDOWS_MM = [0.5, 1, 2, 5];
 export const magnificationFor = (windowMm: number, circumference_m: number) => TUBE_R / (windowMm * 1e-3 * (RADIUS / (circumference_m / (2 * Math.PI))));
 
 function Controls() {
-  const { camera, gl } = useThree();
+  const { camera, gl, size } = useThree();
   useEffect(() => {
+    // Narrow (portrait) canvases have a smaller horizontal field of view: back the camera off so the ring fits.
+    const aspect = size.width / Math.max(1, size.height);
+    const k = aspect < 1.3 ? 1.3 / aspect : 1;
+    camera.position.set(0, 5.6 * k, 6.4 * k);
+    camera.lookAt(0, 0, 0);
     const controls = new OrbitControls(camera, gl.domElement);
     controls.enableDamping = false;
     return () => controls.dispose();
-  }, [camera, gl]);
+  }, [camera, gl, size.width, size.height]);
   return null;
 }
 
@@ -77,7 +82,7 @@ function Scene({ state, selected, onSelect, dim, windowMm }: { state: MachineSta
 
 export default function RingScene(props: { state: MachineState; selected: string | null; onSelect: (d: Device | null) => void; dim: boolean; windowMm: number }) {
   return (
-    <Canvas camera={{ position: [0, 8, 8], fov: 42 }} onPointerMissed={() => props.onSelect(null)}>
+    <Canvas camera={{ position: [0, 5.6, 6.4], fov: 42 }} onPointerMissed={() => props.onSelect(null)}>
       <Controls />
       <Scene {...props} />
     </Canvas>
