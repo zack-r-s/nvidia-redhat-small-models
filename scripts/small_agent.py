@@ -386,29 +386,38 @@ async def goal_turn(prompt, plane, history, mcp, http, tools, schemas, args) -> 
 
 async def skill_goal_turn(prompt, expected_plane, history, mcp, http, args) -> None:
     """Let LFM route a goal; use measured Osprey PVs and a bounded deterministic solve."""
-    response = await http.post("/chat/completions", json={
-        "model": args.model,
-        "messages": [{"role": "system", "content": SKILL_SYSTEM}, *history,
-                     {"role": "user", "content": prompt}],
-        "tools": [SKILL_TOOL], "tool_choice": "required",
-        "temperature": args.temperature, "max_tokens": args.max_tokens,
-    })
-    if response.is_error:
-        raise httpx.HTTPStatusError(f"{response.status_code} from vLLM: {response.text}",
-                                    request=response.request, response=response)
-    calls = response.json()["choices"][0]["message"].get("tool_calls") or []
     try:
-        if len(calls) != 1 or calls[0]["function"]["name"] != "orbit_correct":
-            raise ValueError("model did not select one orbit_correct skill")
-        choice = json.loads(calls[0]["function"]["arguments"] or "{}")
-        plane, effort = choice.get("plane"), choice.get("effort")
-        if plane != expected_plane:
-            raise ValueError(f"model selected {plane!r}, but the request names {expected_plane!r}")
-        if effort not in ("gentle", "balanced", "aggressive"):
-            raise ValueError("model selected an unknown effort level")
-        intended_effort = requested_effort(prompt)
-        if effort != intended_effort and intended_effort != "balanced":
-            raise ValueError(f"model selected {effort!r} effort, but the request calls for {intended_effort!r}")
+        for attempt in range(2):
+            messages = [{"role": "system", "content": SKILL_SYSTEM}, *history,
+                        {"role": "user", "content": prompt}]
+            if attempt:
+                messages.append({"role": "user", "content":
+                                 f"The requested correction is for plane {expected_plane!r}. "
+                                 "Select that plane in orbit_correct."})
+            response = await http.post("/chat/completions", json={
+                "model": args.model, "messages": messages,
+                "tools": [SKILL_TOOL], "tool_choice": "required",
+                "temperature": args.temperature, "max_tokens": args.max_tokens,
+            })
+            if response.is_error:
+                raise httpx.HTTPStatusError(f"{response.status_code} from vLLM: {response.text}",
+                                            request=response.request, response=response)
+            calls = response.json()["choices"][0]["message"].get("tool_calls") or []
+            if len(calls) != 1 or calls[0]["function"]["name"] != "orbit_correct":
+                raise ValueError("model did not select one orbit_correct skill")
+            choice = json.loads(calls[0]["function"]["arguments"] or "{}")
+            plane, effort = choice.get("plane"), choice.get("effort")
+            if plane != expected_plane:
+                if attempt == 0:
+                    dim(f"  [model_choice · retry] selected {plane!r}; request names {expected_plane!r}; no write")
+                    continue
+                raise ValueError(f"model selected {plane!r}, but the request names {expected_plane!r}")
+            if effort not in ("gentle", "balanced", "aggressive"):
+                raise ValueError("model selected an unknown effort level")
+            intended_effort = requested_effort(prompt)
+            if effort != intended_effort and intended_effort != "balanced":
+                raise ValueError(f"model selected {effort!r} effort, but the request calls for {intended_effort!r}")
+            break
     except (ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
         print(f"No write was made: {exc}.")
         return
@@ -664,6 +673,19 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     else:
         answer = (verified_report(prompt, observed_readings, write_request, write_result, write_attempted)
                   if channel_request else f"(stopped after {args.max_steps} steps)")
+    if general_beam_request and not all(pv in observed_readings for pv in CONTRACT["bpm"]):
+        # The small model can choose a non-read tool even when a read is required.
+        # The fallback reads the actual BPM PVs; it never supplies synthetic values.
+        try:
+            result = await mcp.call_tool("channel_read", {"channels": CONTRACT["bpm"]})
+            read_text = "\n".join(getattr(part, "text", "") for part in result.content)
+            comparison = bool(re.search(r"\b(which|larger|compare|comparison)\b.*\b(plane|rms)\b|\b(plane|rms)\b.*\b(larger|compare)\b", prompt, re.I))
+            measured = beam_plane_report(read_text) if comparison else beam_position_report(read_text)
+            dim(f"  [channel_read · fallback] {json.dumps({'channels': CONTRACT['bpm']})}")
+            if measured:
+                answer = measured
+        except Exception as exc:
+            dim(f"  [channel_read · fallback failed] {exc}")
     print(answer)
     # Keep concise, verified turns. Raw MCP envelopes can be thousands of
     # tokens and exhaust the 230M model's 4096-token context in a few turns.

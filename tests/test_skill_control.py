@@ -34,15 +34,18 @@ def test_skill_turn_uses_measured_pvs_and_rejects_wrong_plane(capsys, monkeypatc
     monkeypatch.setattr(small_agent, "dim", print)
     class FakeHTTP:
         def __init__(self, plane, effort="balanced"):
-            self.plane = plane
+            self.planes = plane if isinstance(plane, list) else [plane]
             self.effort = effort
+            self.calls = 0
 
         async def post(self, path, json):
             assert path == "/chat/completions"
             assert [tool["function"]["name"] for tool in json["tools"]] == ["orbit_correct"]
+            plane = self.planes[min(self.calls, len(self.planes) - 1)]
+            self.calls += 1
             return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
                 "tool_calls": [{"function": {"name": "orbit_correct", "arguments":
-                                           __import__("json").dumps({"plane": self.plane, "effort": self.effort})}}]}}]})
+                                           __import__("json").dumps({"plane": plane, "effort": self.effort})}}]}}]})
 
     class FakeMCP:
         def __init__(self):
@@ -79,6 +82,14 @@ def test_skill_turn_uses_measured_pvs_and_rejects_wrong_plane(capsys, monkeypatc
     assert accepted.writes == 1
     assert rms(after, "x") < rms(before, "x")
     assert "(measured)" in capsys.readouterr().out
+
+    retried = FakeMCP()
+    model = FakeHTTP(["y", "x"])
+    asyncio.run(small_agent.skill_goal_turn("Center the horizontal orbit", "x", [], retried,
+                                            model, args))
+    assert model.calls == 2
+    assert retried.writes == 1
+    assert "model_choice · retry" in capsys.readouterr().out
 
     normalized = FakeMCP()
     asyncio.run(small_agent.skill_goal_turn("Center the horizontal orbit", "x", [], normalized,
