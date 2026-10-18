@@ -47,6 +47,7 @@ KNOWN_READS = set(CHANNELS) | set(READBACKS.values())
 TOOLS = {"channel_read", "channel_write", "channel_limits"}
 ACTION = re.compile(r"\b(read|set|write|kick|get|measure|report|show)\b", re.IGNORECASE)
 BEAM_POSITION = re.compile(r"\b(beam position|orbit|bpm)\b", re.IGNORECASE)
+BEAM_READ = re.compile(r"\b(read|report|show|measure|get|check)\b.*\b(beam|orbit|bpms?)\b", re.IGNORECASE)
 MOVE_BEAM = re.compile(r"\b(move|shift|steer|disturb|perturb)\b.*\b(beam|orbit)\b|\b(beam|orbit)\b.*\b(move|shift|steer|disturb|perturb)\b", re.IGNORECASE)
 GOAL_VERB = re.compile(r"\b(correct|center(?:ing|ed)?|centre(?:ing|ed)?|reduce|minimi[sz]e|flatten|restore|bring)\b", re.IGNORECASE)
 NEGATION = re.compile(r"\b(do not|don't|never|without)\b", re.IGNORECASE)
@@ -94,7 +95,12 @@ def server_params() -> StdioServerParameters:
 
 def wants_tool(prompt: str) -> bool:
     """Force a tool call only for prompts that name a channel or ask for a read/write."""
-    return any(name in prompt for name in KNOWN_READS) or bool(ACTION.search(prompt) or BEAM_POSITION.search(prompt))
+    return any(name in prompt for name in KNOWN_READS) or bool(ACTION.search(prompt) or beam_read_request(prompt))
+
+
+def beam_read_request(prompt: str) -> bool:
+    """Recognize beam read intent even when 'position' is omitted or misspelled."""
+    return bool(BEAM_POSITION.search(prompt) or BEAM_READ.search(prompt))
 
 
 def goal_request(prompt: str) -> str | None:
@@ -531,8 +537,8 @@ async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     messages = [{"role": "system", "content": SYSTEM}, *history, {"role": "user", "content": prompt}]
     force = wants_tool(prompt)
     available_tools = tools if write_request else [tool for tool in tools if tool["function"]["name"] != "channel_write"]
-    general_beam_request = bool(BEAM_POSITION.search(prompt)) and not any(pv in prompt for pv in KNOWN_READS)
-    channel_request = bool(write_request or BEAM_POSITION.search(prompt) or any(pv in prompt for pv in KNOWN_READS))
+    general_beam_request = beam_read_request(prompt) and not any(pv in prompt for pv in KNOWN_READS)
+    channel_request = bool(write_request or beam_read_request(prompt) or any(pv in prompt for pv in KNOWN_READS))
     observed_readings: dict = {}
     post_write_observed: set[str] = set()
     write_result: dict | None = None

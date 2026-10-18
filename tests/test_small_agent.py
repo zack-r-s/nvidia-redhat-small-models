@@ -63,18 +63,49 @@ def test_beam_report_falls_back_to_measured_read_when_model_returns_no_tool(caps
                 pv: {"value": 0.1 if pv.endswith(":X") else -0.2} for pv in bpms}}}
             return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))])
 
-    mcp = FakeMCP()
-    history = []
-    asyncio.run(small_agent.turn("report beam position", history, mcp, FakeHTTP(),
+    for prompt in ("report beam position", "report beam postion"):
+        mcp = FakeMCP()
+        history = []
+        asyncio.run(small_agent.turn(prompt, history, mcp, FakeHTTP(),
+            [{"type": "function", "function": {"name": "channel_read"}}],
+            {"channel_read": {}},
+            SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8)))
+        output = capsys.readouterr().out
+        assert "channel_read · fallback" in output
+        assert "BPM01: X=+0.1000, Y=-0.2000" in output
+        assert "The beam is centered" not in output
+        assert len(mcp.calls) == 1
+        assert "Measured beam position" in history[-1]["content"]
+
+
+def test_misspelled_beam_report_expands_partial_model_read(capsys, monkeypatch):
+    monkeypatch.setattr(small_agent, "dim", print)
+    bpms = small_agent.CONTRACT["bpm"]
+    prompt = "report beam postion"
+    assert small_agent.beam_read_request(prompt)
+
+    class FakeHTTP:
+        async def post(self, path, json):
+            assert json["tool_choice"] == "required"
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "role": "assistant", "tool_calls": [{"id": "read", "function": {
+                    "name": "channel_read", "arguments": '{"channels":["RING:DIAG:BPM01:POSITION:X"]}'}}]}}]})
+
+    class FakeMCP:
+        async def call_tool(self, name, args):
+            assert name == "channel_read" and args == {"channels": bpms}
+            data = {"status": "success", "summary": {"readings": {
+                pv: {"value": 0.1 if pv.endswith(":X") else -0.2} for pv in bpms}}}
+            return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(data))])
+
+    asyncio.run(small_agent.turn(prompt, [], FakeMCP(), FakeHTTP(),
         [{"type": "function", "function": {"name": "channel_read"}}],
-        {"channel_read": {}},
+        {"channel_read": {"properties": {"channels": {"type": "array"}}}},
         SimpleNamespace(model="test", temperature=0, max_tokens=32, max_steps=1, history=8)))
     output = capsys.readouterr().out
-    assert "channel_read · fallback" in output
     assert "BPM01: X=+0.1000, Y=-0.2000" in output
-    assert "The beam is centered" not in output
-    assert len(mcp.calls) == 1
-    assert "Measured beam position" in history[-1]["content"]
+    assert "BPM04: X=+0.1000, Y=-0.2000" in output
+    assert "(no reply)" not in output
 
 
 def test_known_setpoint_uses_contract_units_but_rejects_wrong_unit():
