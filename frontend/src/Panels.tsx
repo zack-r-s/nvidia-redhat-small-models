@@ -1,5 +1,5 @@
 import { Callout, Card, HTMLTable, Tag, Button, ProgressBar } from "@blueprintjs/core";
-import type { Feed, MachineState } from "./types";
+import type { Feed, MachineState, TurnEvidence } from "./types";
 import { KICK_LIMIT_MRAD, bpmPv, correctorPv } from "./types";
 
 const fmt = (v: number | undefined, d = 4) => (v === undefined || !Number.isFinite(v) ? "—" : v.toFixed(d));
@@ -96,6 +96,26 @@ export function Unavailable({ title, need }: { title: string; need: string }) {
     <Card className="panel unavailable" data-testid={`unavailable-${title}`}>
       <h4>{title}</h4>
       <Callout icon="disable" compact>Unavailable. {need}</Callout>
+    </Card>
+  );
+}
+
+export function AgentGoal({ turn }: { turn: TurnEvidence | null }) {
+  if (!turn) return <Unavailable title="Agent & goal" need="Send a chat request to see its measured outcome." />;
+  const goal = turn.intent === "orbit_correction"
+    ? `Reduce ${turn.plane === "both" ? "X and Y" : turn.plane?.toUpperCase()} BPM RMS`
+    : turn.requested_write
+      ? `Set ${turn.requested_write.channel} to ${turn.requested_write.value_mrad} mrad`
+      : "Read or discuss the machine";
+  return (
+    <Card className="panel" data-testid="agent-goal">
+      <h4>Agent & goal</h4>
+      <p>Request: <b>{goal}</b></p>
+      <p>Write status: <Tag intent={turn.action_status === "confirmed" ? "success" : turn.action_status === "rejected" ? "danger" : "none"}>{turn.action_status}</Tag></p>
+      {turn.goal_met !== null && <p>Measured goal: <b>{turn.goal_met ? "met" : "not met"}</b></p>}
+      <p>X RMS: {fmt(turn.before.x_rms_mm)} → {fmt(turn.after.x_rms_mm)} mm</p>
+      <p>Y RMS: {fmt(turn.before.y_rms_mm)} → {fmt(turn.after.y_rms_mm)} mm</p>
+      {turn.writes.map((write, index) => <div key={index} className="muted">{write.channel}: {write.outcome}{write.observed_value !== undefined ? ` · readback ${fmt(write.observed_value)} mrad` : ""}</div>)}
     </Card>
   );
 }

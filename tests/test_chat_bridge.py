@@ -78,6 +78,32 @@ def test_scripted_goal_measures_before_and_after(controls):
     assert [e["tool"] for e in events] == ["channel_read", "channel_write", "channel_read"]
 
 
+def test_turn_evidence_uses_measured_state_and_confirmed_write(controls):
+    from hackring.chat_bridge import turn_evidence
+
+    before = api.machine.read()
+    prompt = "correct the beam orbit"
+    run(scripted_turn(prompt, controls))
+    evidence = turn_evidence(prompt, controls, before, api.machine.read())
+    assert evidence["intent"] == "orbit_correction" and evidence["plane"] == "both"
+    assert evidence["action_status"] == "confirmed" and evidence["writes"]
+    assert evidence["before"] == before["summary"]
+    assert evidence["after"] == api.machine.read()["summary"]
+    assert evidence["goal_met"] == all(evidence["after"][f"{axis}_rms_mm"] < evidence["before"][f"{axis}_rms_mm"] for axis in ("x", "y"))
+
+
+def test_rejected_write_evidence_keeps_goal_unmet(controls):
+    from hackring.chat_bridge import turn_evidence
+
+    before = api.machine.read()
+    prompt = f"set {SETPOINTS[0]} to 0.9"
+    run(scripted_turn(prompt, controls))
+    evidence = turn_evidence(prompt, controls, before, api.machine.read())
+    assert evidence["intent"] == "exact_write"
+    assert evidence["action_status"] == "rejected" and evidence["goal_met"] is False
+    assert evidence["after"] == evidence["before"]
+
+
 def test_live_replies_never_credit_osprey(controls, monkeypatch):
     """The agent's wording says "Osprey"; the bridge must not pass that off as the real thing."""
     import hackring.chat_bridge as bridge

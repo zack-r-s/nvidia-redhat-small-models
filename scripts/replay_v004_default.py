@@ -56,6 +56,7 @@ if __name__ == "__main__":
     parser.add_argument("--baseline", type=Path, default=ROOT / "evals/mark-ii/pyat-v004/base-230m/traces.jsonl")
     parser.add_argument("--candidate", type=Path, default=ROOT / "evals/mark-ii/pyat-v004/liquid-v004/traces.jsonl")
     parser.add_argument("--output", type=Path, default=ROOT / "evals/mark-ii/pyat-v004/default-replay.json")
+    parser.add_argument("--series", choices=("mark-ii", "mark-iii"), default="mark-ii")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(args.output)
@@ -65,7 +66,7 @@ if __name__ == "__main__":
     for label, path in (("base_230m", args.baseline), ("liquid_v004", args.candidate)):
         traces = [json.loads(line) for line in path.read_text().splitlines()]
         results[label] = {"source_traces_sha256": digest(path), **replay(cases, traces)}
-    report = {"schema": "hackring.skill_default_replay/1", "evaluation_series": "mark-ii",
+    report = {"schema": "hackring.skill_default_replay/1", "evaluation_series": args.series,
               "method": "same frozen model proposals; balanced-default effort normalized before deterministic PyAT solve; no model reinference",
               "cases_sha256": digest(args.cases),
               "response_teacher_sha256": digest(ROOT / "datasets/v002/response_teacher.json"),

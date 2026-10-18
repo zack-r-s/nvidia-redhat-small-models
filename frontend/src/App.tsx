@@ -2,15 +2,15 @@ import { Button, Card, HTMLSelect, Popover, Switch, Tab, Tabs, Tag } from "@blue
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { BeamSpots, RmsHistory } from "./BeamView";
 import Chat from "./Chat";
-import { Correctors, Readings, StatusBar, Unavailable } from "./Panels";
+import { AgentGoal, Correctors, Readings, StatusBar } from "./Panels";
 import RingScene, { WINDOWS_MM, magnificationFor } from "./RingScene";
-import type { Device } from "./types";
+import type { Device, TurnEvidence } from "./types";
 import { bpmPv, correctorPv } from "./types";
 import { useFeed } from "./useFeed";
 import { useHistory } from "./useHistory";
 
 // Dev-only write harness; the dynamic import is dropped from production builds.
-const driverEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get("driver") === "1";
+const driverEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get("driver") === "1" && !new URLSearchParams(window.location.search).has("replay");
 const TestDriver = driverEnabled ? lazy(() => import("./TestDriver")) : null;
 
 type SideTab = "beam" | "readings" | "correctors" | "agent";
@@ -21,6 +21,7 @@ export default function App() {
   const [selected, setSelected] = useState<Device | null>(null);
   const [tab, setTab] = useState<SideTab>("beam");
   const [driverOpen, setDriverOpen] = useState(false);
+  const [turn, setTurn] = useState<TurnEvidence | null>(null);
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => { const t = window.setInterval(() => setNow(Date.now()), 250); return () => window.clearInterval(t); }, []);
   const { state } = feed;
@@ -50,11 +51,11 @@ export default function App() {
   return (
     <div className={`app-shell bp6-dark ${dim ? "is-dim" : ""}`}>
       <header className="topbar">
-        <div className="brand"><span className="eyebrow">OSPREY / PYAT</span><strong>FODO ring monitor</strong></div>
+        <div className="brand"><span className="eyebrow">{state?.backend === "osprey-epics" ? "OSPREY / PYAT" : "PYAT SHARED FIXTURE"}</span><strong>FODO ring monitor</strong></div>
         <StatusBar feed={feed} now={now} />
         <div className="topbar-actions">
           {TestDriver && (
-            <Popover isOpen={driverOpen} onInteraction={setDriverOpen} placement="bottom-end" content={<div className="driver-pop"><Suspense fallback={null}><TestDriver /></Suspense></div>}>
+            <Popover isOpen={driverOpen} onInteraction={setDriverOpen} placement="bottom-end" content={<div className="driver-pop"><Suspense fallback={null}><TestDriver onMachineChange={() => setTurn(null)} /></Suspense></div>}>
               <Button small icon="wrench" intent="warning" minimal data-testid="driver-toggle">Test driver</Button>
             </Popover>
           )}
@@ -90,14 +91,10 @@ export default function App() {
               {pane("beam", state ? <div className="beam-stack"><BeamSpots history={shown} onClear={() => setClearedAt(Date.now())} /><RmsHistory history={shown} /></div> : empty)}
               {pane("readings", state ? <Readings state={state} expert={expert} /> : empty)}
               {pane("correctors", state ? <Correctors state={state} expert={expert} /> : empty)}
-              {pane("agent", <div className="stack">
-                <Unavailable title="Agent intent" need="No agent-event contract yet." />
-                <Unavailable title="Osprey action status" need="No action/approval events yet." />
-                <Unavailable title="Target & goal" need="No target contract, so success is not computed." />
-              </div>)}
+              {pane("agent", <AgentGoal turn={feed.status === "replay" ? null : turn} />)}
             </div>
           </Card>
-          <Card className="panel chat-panel" data-testid="chat-panel"><Chat /></Card>
+          <Card className="panel chat-panel" data-testid="chat-panel"><Chat onTurn={setTurn} onReset={() => setTurn(null)} disabled={feed.status === "replay"} /></Card>
         </aside>
       </main>
     </div>

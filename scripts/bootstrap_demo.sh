@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
-# Recreate this checkout's Osprey deployment and start the shared live demo.
+# Fixture-first demo; --osprey retains the separate served-accelerator workflow.
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+if [[ " $* " != *" --osprey "* ]]; then
+  exec "$ROOT/scripts/bootstrap_fixture.sh" "$@"
+fi
+legacy_args=()
+for argument in "$@"; do
+  [[ $argument == --osprey ]] || legacy_args+=("$argument")
+done
+set -- "${legacy_args[@]}"
 cd "$ROOT"
 PIN=d639869
 OSPREY_SRC="$ROOT/var/bootstrap/osprey-src"
@@ -17,7 +25,7 @@ need() { command -v "$1" >/dev/null 2>&1 || die "Missing $1. Install it and reru
 
 usage() {
   cat <<'EOF'
-Usage: scripts/bootstrap_demo.sh [--check] [--keep-old-demo] [--dev-chat]
+Usage: scripts/bootstrap_demo.sh --osprey [--check] [--keep-old-demo] [--dev-chat]
                                  [--model MODEL] [--revision REVISION]
                                  [--served-name NAME] [--tool-parser PARSER]
 

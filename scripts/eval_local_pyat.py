@@ -228,7 +228,7 @@ def run(args: argparse.Namespace) -> dict:
               + (f" ({trace['error']})" if trace.get("error") else ""), flush=True)
     counts = Counter(case["kind"] for case in cases)
     passed = Counter(trace["kind"] for trace in traces if trace["passed"])
-    report = {"schema": "hackring.pyat_eval/1", "evaluation_series": "mark-ii",
+    report = {"schema": "hackring.pyat_eval/1", "evaluation_series": args.series,
               "created_utc": datetime.now(timezone.utc).isoformat(),
               "model": args.model, "inference": "Transformers CPU greedy, verified harness pre-read; write tool name forced",
               "plant": "LocalMachine on checked-in PyAT ring; seeded ERR kicks, not Osprey calibration offsets",
@@ -258,6 +258,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=ROOT / "evals/mark-ii/pyat-v001/base-230m")
     parser.add_argument("--disturbance-mrad", type=float, default=0.08)
     parser.add_argument("--threads", type=int, default=4)
+    parser.add_argument("--series", choices=("mark-ii", "mark-iii"), default="mark-ii")
     parser.add_argument("--limit", type=int, help="Run the first N cases into a separate output directory")
     args = parser.parse_args()
     if args.threads < 1 or (args.limit is not None and args.limit < 1):

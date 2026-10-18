@@ -82,6 +82,7 @@ class FixtureControls:
 
     def __init__(self, client: httpx.AsyncClient) -> None:
         self.client = client
+        self.writes: list[dict] = []
 
     def tools(self) -> list[_Tool]:
         return [_Tool(name, DESCRIPTIONS[name], SCHEMAS[name]) for name in SCHEMAS]
@@ -131,10 +132,12 @@ class FixtureControls:
                     outcome = "confirmed" if observed is not None and math.isclose(observed, value, abs_tol=1e-9) else "mismatch"
                     results.append({"channel": pv, "outcome": outcome, "observed_value": observed})
         if results and all(entry["outcome"] in ("refused", "failed") for entry in results):
+            self.writes.extend(results)
             return _result({"status": "error", "message": "no value reached any channel: " + "; ".join(f"{e['channel']}: {e.get('refusal_reason', e['outcome'])}" for e in results)})
         outcomes: dict[str, int] = {}
         for entry in results:
             outcomes[entry["outcome"]] = outcomes.get(entry["outcome"], 0) + 1
+        self.writes.extend(results)
         return _result({"status": "success", "summary": {"outcomes": outcomes, "results": results}})
 
 
@@ -287,6 +290,39 @@ class ClearRequest(BaseModel):
     session_id: str = "default"
 
 
+class ResetRequest(BaseModel):
+    seed: int = 7
+    disturbance_mrad: float = 0.08
+    session_id: str = "default"
+
+
+def turn_evidence(message: str, controls: FixtureControls, before: dict, after: dict) -> dict:
+    """Summarize only the operator request, actual tool outcomes, and measured API snapshots."""
+    agent = load_small_agent()
+    plane = agent.goal_request(message)
+    requested = agent.requested_write(message)
+    intent = "orbit_correction" if plane else "exact_write" if requested else "read_or_other"
+    writes = controls.writes
+    outcomes = {entry.get("outcome") for entry in writes}
+    status = ("none" if not writes else "confirmed" if outcomes == {"confirmed"}
+              else "rejected" if outcomes <= {"refused", "failed"} else "partial")
+    start, end = before["summary"], after["summary"]
+    if plane:
+        axes = ("x", "y") if plane == "both" else (plane,)
+        met = status == "confirmed" and all(end[f"{axis}_rms_mm"] < start[f"{axis}_rms_mm"] for axis in axes)
+    elif requested:
+        channel, value = requested
+        met = status == "confirmed" and math.isclose(after["pvs"][channel], value, abs_tol=1e-9)
+    else:
+        met = None
+    return {
+        "intent": intent, "plane": plane,
+        "requested_write": {"channel": requested[0], "value_mrad": requested[1]} if requested else None,
+        "action_status": status, "writes": writes,
+        "before": start, "after": end, "goal_met": met,
+    }
+
+
 async def _model_ready() -> bool:
     try:
         async with httpx.AsyncClient(timeout=2) as http:
@@ -337,15 +373,29 @@ async def chat(request: ChatRequest) -> dict:
     async with _lock:
         async with httpx.AsyncClient(base_url=API_URL, timeout=30) as http:
             controls = FixtureControls(http)
+            before = (await http.get("/state")).json()
             if mode == "live":
                 reply, events = await live_turn(message, session, controls)
             else:
                 reply, events = await scripted_turn(message, controls)
                 session.history.extend([{"role": "user", "content": message}, {"role": "assistant", "content": reply}])
-    return {"reply": reply, "events": events, "mode": mode, "model": model_name() if mode == "live" else None, "elapsed_s": round(time.monotonic() - started, 2)}
+            after = (await http.get("/state")).json()
+            evidence = turn_evidence(message, controls, before, after)
+    return {"reply": reply, "events": events, "turn": evidence, "mode": mode, "model": model_name() if mode == "live" else None, "elapsed_s": round(time.monotonic() - started, 2)}
 
 
 @app.post("/chat/clear")
 async def clear(request: ClearRequest) -> dict:
-    _sessions.pop(request.session_id, None)
+    async with _lock:
+        _sessions.pop(request.session_id, None)
     return {"cleared": True}
+
+
+@app.post("/chat/reset")
+async def reset(request: ResetRequest) -> dict:
+    async with _lock:
+        async with httpx.AsyncClient(base_url=API_URL, timeout=30) as http:
+            response = await http.post("/scenario", json={"seed": request.seed, "disturbance_mrad": request.disturbance_mrad})
+            response.raise_for_status()
+        _sessions.pop(request.session_id, None)
+    return {"reset": True, "seed": request.seed, "state": response.json()}

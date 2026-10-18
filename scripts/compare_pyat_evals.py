@@ -47,7 +47,9 @@ def compare(base: Path, candidate: Path, output: Path) -> dict:
     b_report, b = load(candidate)
     if a_report["cases_sha256"] != b_report["cases_sha256"] or set(a) != set(b):
         raise ValueError("evaluations do not use identical frozen cases")
-    result = {"schema": "hackring.pyat_eval_comparison/1", "evaluation_series": "mark-ii",
+    if a_report["evaluation_series"] != b_report["evaluation_series"]:
+        raise ValueError("evaluations belong to different series")
+    result = {"schema": "hackring.pyat_eval_comparison/1", "evaluation_series": a_report["evaluation_series"],
               "cases_sha256": a_report["cases_sha256"],
               "baseline": {"model": a_report["model"], "report_sha256": sha(base / "report.json"), **summary(a)},
               "candidate": {"model": b_report["model"], "report_sha256": sha(candidate / "report.json"), **summary(b)},

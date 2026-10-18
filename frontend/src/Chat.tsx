@@ -1,5 +1,6 @@
 import { Button, Callout, Tag, TextArea } from "@blueprintjs/core";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { TurnEvidence } from "./types";
 
 const CHAT_URL = import.meta.env.VITE_CHAT_URL || "http://127.0.0.1:8002";
 
@@ -12,7 +13,7 @@ type Health = { mode: "live" | "scripted"; backend: string; fixture: { ok: boole
  * mode, and tool traces are shown apart from the reply text so intent, tool activity and answers stay distinct.
  * The viewer never writes to the machine; any machine change here happens inside the bridge's agent turn.
  */
-export default function Chat() {
+export default function Chat({ onTurn, onReset, disabled = false }: { onTurn?: (turn: TurnEvidence) => void; onReset?: () => void; disabled?: boolean }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
@@ -40,7 +41,7 @@ export default function Chat() {
 
   const send = useCallback(async () => {
     const text = draft.trim();
-    if (!text || busy) return;
+    if (!text || busy || disabled) return;
     setDraft("");
     setBusy(true);
     setMessages((m) => [...m, { id: ++idRef.current, role: "user", text }]);
@@ -49,14 +50,28 @@ export default function Chat() {
       if (!response.ok) throw new Error(`Chat bridge returned ${response.status}`);
       const data = await response.json();
       setMessages((m) => [...m, { id: ++idRef.current, role: "agent", text: data.reply, events: data.events, mode: data.mode, elapsed_s: data.elapsed_s, error: Boolean(data.error) }]);
+      if (data.turn) onTurn?.(data.turn as TurnEvidence);
     } catch (cause) {
       setMessages((m) => [...m, { id: ++idRef.current, role: "agent", error: true, text: cause instanceof Error ? cause.message : "Chat bridge unavailable" }]);
     } finally { setBusy(false); }
-  }, [draft, busy]);
+  }, [draft, busy, disabled, onTurn]);
 
   const clear = async () => {
     setMessages([]);
+    onReset?.();
     try { await fetch(`${CHAT_URL}/chat/clear`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }); } catch { /* bridge offline: local clear only */ }
+  };
+
+  const reset = async () => {
+    setBusy(true);
+    try {
+      const response = await fetch(`${CHAT_URL}/chat/reset`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ seed: 7, disturbance_mrad: 0.08 }) });
+      if (!response.ok) throw new Error(`Fixture reset failed: ${response.status}`);
+      setMessages([]);
+      onReset?.();
+    } catch (cause) {
+      setMessages((m) => [...m, { id: ++idRef.current, role: "agent", error: true, text: cause instanceof Error ? cause.message : "Fixture reset failed" }]);
+    } finally { setBusy(false); }
   };
 
   return (
@@ -65,9 +80,11 @@ export default function Chat() {
         {offline || !health
           ? <Tag intent="danger" minimal data-testid="chat-status">Chat bridge offline</Tag>
           : <Tag intent={health.mode === "live" ? "success" : "warning"} minimal data-testid="chat-status">{health.mode === "live" ? "Live model" : "Scripted (no model)"} · dev fixture</Tag>}
-        <Button minimal small icon="eraser" onClick={() => void clear()} disabled={messages.length === 0}>Clear</Button>
+        <Button minimal small icon="eraser" onClick={() => void clear()} disabled={messages.length === 0 || disabled}>Clear</Button>
+        <Button minimal small icon="reset" onClick={() => void reset()} disabled={busy || offline || disabled} data-testid="fixture-reset">Reset beam</Button>
       </div>
       {offline && <Callout intent="danger" compact icon="disable">Start the bridge with <code>scripts/dev_up.sh</code>. Nothing here is sent anywhere else.</Callout>}
+      {disabled && <Callout intent="primary" compact icon="pause">Replay is showing recorded frames. Return to the live fixture to chat.</Callout>}
       <div className="chat-log" data-testid="chat-log">
         {messages.length === 0 && <div className="muted chat-empty">Ask about the beam, e.g. “report the beam position” or “set RING:MAG:H01:KICK:SP to 0.1”. Replies come from the local dev fixture, not Osprey.</div>}
         {messages.map((m) => (
@@ -90,10 +107,10 @@ export default function Chat() {
         <div ref={endRef} />
       </div>
       <div className="chat-input">
-        <TextArea fill rows={2} value={draft} placeholder="Message the agent (Enter to send, Shift+Enter for a new line)" data-testid="chat-input"
+        <TextArea fill rows={2} value={draft} disabled={disabled} placeholder="Message the agent (Enter to send, Shift+Enter for a new line)" data-testid="chat-input"
           onChange={(e) => setDraft(e.currentTarget.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send(); } }} />
-        <Button intent="primary" icon="send-message" loading={busy} disabled={!draft.trim() || offline} onClick={() => void send()} data-testid="chat-send">Send</Button>
+        <Button intent="primary" icon="send-message" loading={busy} disabled={!draft.trim() || offline || disabled} onClick={() => void send()} data-testid="chat-send">Send</Button>
       </div>
     </div>
   );

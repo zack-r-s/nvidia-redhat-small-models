@@ -1,0 +1,9 @@
+# Mark III evaluation protocol
+
+Mark III evaluates the PR #8 shared local PyAT fixture after the demo wiring and Gym interface correction. Mark I and Mark II remain historical. The v001–v004 manifests are revalidated in [`dataset-validation.json`](dataset-validation.json); no training data or weights are changed.
+
+The frozen correction source is `evals/mark-i/pyat-v002/cases.jsonl` (28 correction cases, unique seeds outside the training splits). [`prepare_gym_mark_iii.py`](../../scripts/prepare_gym_mark_iii.py) checks two committed Gym task files against those cases and the checked-in deck. The direct task provides the harness's pre-write PV read and offers `channel_write`; the skill task offers `orbit_correct(plane, effort)` and lets the bounded solver read the plant. Every Gym session gets a fresh `LocalMachine.reset(seed, 0.08)` and permits one tool attempt. An extra or rejected attempt earns zero reward.
+
+Gym reward is clipped fractional reduction of requested-plane BPM RMS squared. The separate `goal_success` field requires a single confirmed attempt and a lower measured RMS in **each** requested plane. For an unspecified effort, the skill path uses the deployed balanced-default normalization; raw plane-and-effort selection remains a separate metric. Direct-write and skill results are distinct comparisons. Gym samples at temperature 0.2 with four repeats; local PyAT evaluation uses greedy CPU inference and the same frozen cases. Differences in inference backend, scoring, and tool interface must stay visible in comparisons.
+
+The intended model matrix is base 230M, base 1.2B, v002, and v003 on direct writes; base 230M, base 1.2B, and v004 on skill selection. The local mixed-task report also covers BPM reporting and exact writes. The UI smoke check exercises read, write, correction, rejection, and reset on the shared fixture.

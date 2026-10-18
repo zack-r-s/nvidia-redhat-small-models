@@ -8,6 +8,17 @@ export type MachineState = {
   lattice: { circumference_m: number | null; devices: Device[] };
 };
 
+export type TurnEvidence = {
+  intent: "orbit_correction" | "exact_write" | "read_or_other";
+  plane: "x" | "y" | "both" | null;
+  requested_write: { channel: string; value_mrad: number } | null;
+  action_status: "none" | "confirmed" | "rejected" | "partial";
+  writes: { channel: string; outcome: string; observed_value?: number; refusal_reason?: string }[];
+  before: { x_rms_mm: number; y_rms_mm: number };
+  after: { x_rms_mm: number; y_rms_mm: number };
+  goal_met: boolean | null;
+};
+
 export type FeedMode = "live" | "replay";
 /** live: fresh /state; stale: last good snapshot is old; disconnected: no snapshot at all or fetch failing. */
 export type FeedStatus = "live" | "stale" | "disconnected" | "replay";
