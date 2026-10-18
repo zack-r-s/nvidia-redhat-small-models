@@ -1,6 +1,8 @@
 # v004 local PyAT skill evaluation
 
-This pass reuses the correction subset of the 56-case frozen `evals/pyat-v002/cases.jsonl` benchmark. The 28 correction cases have seeds and operator wording outside the v004 train, validation, and test splits. Each model generates an unforced `orbit_correct(plane, effort)` call. A call passes only if it chooses the requested plane and effort (balanced when unspecified), the checked-in response-matrix solver produces bounded PV setpoints, and a fresh local PyAT read after the write shows a lower RMS in every requested plane. Wrong or incomplete calls make no write.
+**Historical pre-reconciliation result.** Its strict, balanced-default replay, and test-split scores remain separate measurements. Rerun the base and v004 checkpoints in separately named `mark-ii` outputs under the reconciled PR #8 code before comparing them with new Gym runs; preserve these traces and hashes.
+
+This pass reuses the correction subset of the 56-case frozen `evals/mark-i/pyat-v002/cases.jsonl` benchmark. The 28 correction cases have seeds and operator wording outside the v004 train, validation, and test splits. Each model generates an unforced `orbit_correct(plane, effort)` call. A call passes only if it chooses the requested plane and effort (balanced when unspecified), the checked-in response-matrix solver produces bounded PV setpoints, and a fresh local PyAT read after the write shows a lower RMS in every requested plane. Wrong or incomplete calls make no write.
 
 The base model and v004 checkpoint are evaluated with the same tool schema, solver, cases, and greedy CPU inference. The measured score is for the **model-plus-skill** system. It does not measure a model-only numerical controller or the deployed Osprey/EPICS path. `base-230m/` and `liquid-v004/` contain per-case traces and reports. The v004 seed-distinct test split can be checked separately with `--cases datasets/v004/sources.jsonl --split test`.
 

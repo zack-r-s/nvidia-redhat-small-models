@@ -120,6 +120,8 @@ def main() -> None:
     if sys.argv[1] == "write":
         model, base_url, split, *extra = sys.argv[3:]
         record = software(model, base_url) | {
+            "evaluation_series": "mark-ii",
+            "evaluation_interface": "channel_write",
             "split": split,
             "repo_commit": run("git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"),
             "extra_args": extra,

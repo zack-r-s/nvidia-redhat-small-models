@@ -16,7 +16,7 @@ to providers.yml's default); values already set in the shell take precedence. Th
 Task rows are regenerated from datasets/v001/splits/ft75-eval25/split.json each run.
 Sampling defaults match the small agent (temperature 0.2, 512 output tokens); extra
 options pass through and override them, e.g. --limit 2 --num-repeats 4.
-Each run writes var/gym/<model>/<split>-<timestamp>/: run.json (model source and revision,
+Each new run writes var/gym/mark-ii/<model>/<split>-<timestamp>/: run.json (model source and revision,
 vLLM version and backend, NeMo Gym version, host), rollouts.jsonl,
 rollouts_materialized_inputs.jsonl, and rollouts_aggregate_metrics.json.
 Requires NeMo Gym 0.4.0 (`gym` on PATH) and the project venv with the gym extra.
@@ -46,7 +46,7 @@ fi
 # Variables already set in the shell win over .env, as in small_agent.py, so another endpoint
 # can be evaluated without editing .env: VLLM_BASE_URL=... VLLM_MODEL_NAME=... scripts/run_gym_eval.sh
 preset=()
-for name in VLLM_BASE_URL VLLM_API_KEY VLLM_MODEL_NAME; do
+for name in VLLM_BASE_URL VLLM_API_KEY VLLM_MODEL_NAME VLLM_MODEL_REVISION; do
   [[ -n ${!name+set} ]] && preset+=("$name=${!name}")
 done
 if [[ -f "$ROOT/.env" ]]; then
@@ -70,8 +70,8 @@ curl -fsS --max-time 5 "$BASE_URL/models" |
 PYTHONPATH="$ROOT/src:$ROOT/scripts" "$PY" "$ROOT/scripts/prepare_gym_data.py" \
   "$ROOT/datasets/v001/splits/ft75-eval25/split.json"
 
-# One folder per served model name, one subfolder per run: var/gym/<model>/<split>-<timestamp>/.
-RUN_DIR="$ROOT/var/gym/$(printf '%s' "$MODEL" | tr -c 'A-Za-z0-9._-' '_')/$SPLIT-$(date +%Y%m%d-%H%M%S)"
+# Keep post-reconciliation runs distinct from the committed original Gym runs.
+RUN_DIR="$ROOT/var/gym/mark-ii/$(printf '%s' "$MODEL" | tr -c 'A-Za-z0-9._-' '_')/$SPLIT-$(date +%Y%m%d-%H%M%S)"
 OUT="$RUN_DIR/rollouts.jsonl"
 mkdir -p "$RUN_DIR"
 "$PY" "$ROOT/scripts/gym_run_metadata.py" write "$RUN_DIR" "$MODEL" "$BASE_URL" "$SPLIT" "$@"

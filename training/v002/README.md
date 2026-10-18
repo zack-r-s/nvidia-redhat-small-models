@@ -2,7 +2,7 @@
 
 The published checkpoint is [model v003](https://huggingface.co/zack-r-s/hackring-LFM2.5-230M/tree/v003), matching its [dataset v003](https://huggingface.co/datasets/zack-r-s/hackring-pyat-control/tree/v003) input. `training/v002` is the chronological local run directory; see the [release chart](../README.md).
 
-This pass starts from the original `LiquidAI/LFM2.5-230M` instruction checkpoint and trains on `datasets/v003/train.jsonl`, not on the v001 fine-tune. The 864-row train split mixes canonical Osprey v002 conversations with new measured local-PyAT conversations. The 128-row validation and 128-row test splits use disjoint seeds. The fixed expanded PyAT evaluation at `evals/pyat-v002/cases.jsonl` was frozen before this training run and includes the original eight cases plus 48 new ones.
+This pass starts from the original `LiquidAI/LFM2.5-230M` instruction checkpoint and trains on `datasets/v003/train.jsonl`, not on the v001 fine-tune. The 864-row train split mixes canonical Osprey v002 conversations with new measured local-PyAT conversations. The 128-row validation and 128-row test splits use disjoint seeds. The fixed expanded PyAT evaluation at `evals/mark-i/pyat-v002/cases.jsonl` was frozen before this training run and includes the original eight cases plus 48 new ones.
 
 The configuration in `job.yaml` uses the pinned Liquid Finetune checkout at commit `d9cc23dae5a16498ab7dc11958b80ca803e0440a`, two epochs, rank-8 default LoRA, assistant-only loss, max length 3072, and 216 planned optimizer steps. On Apple Metal, use the repository wrapper and an installed Liquid environment:
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from types import SimpleNamespace
 
 import httpx
 import pytest
@@ -91,3 +92,39 @@ def test_live_replies_never_credit_osprey(controls, monkeypatch):
     reply, events = run(bridge.live_turn("Set RING:MAG:H01:KICK:SP to 0.1", bridge.Session(), controls))
     assert "Osprey" not in reply and "dev fixture reported confirmed" in reply
     assert events[0]["tool"] == "channel_write"
+
+
+def test_live_v004_skill_changes_the_viewers_fixture(controls, monkeypatch):
+    """The real agent turn must route through the skill and write the shared fixture API."""
+    import hackring.chat_bridge as bridge
+
+    monkeypatch.setenv("VLLM_MODEL_NAME", "candidate-v004")
+
+    class ModelHTTP:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            pass
+
+        async def post(self, path, json):
+            assert path == "/chat/completions"
+            assert json["model"] == "candidate-v004"
+            assert json["tools"][0]["function"]["name"] == "orbit_correct"
+            return SimpleNamespace(is_error=False, json=lambda: {"choices": [{"message": {
+                "tool_calls": [{"function": {"name": "orbit_correct",
+                                              "arguments": '{"plane":"both","effort":"balanced"}'}}]
+            }}]})
+
+    monkeypatch.setattr(bridge.httpx, "AsyncClient", ModelHTTP)
+    before = api.machine.read()["pvs"]
+    reply, events = run(bridge.live_turn("Correct the beam orbit.", bridge.Session(), controls))
+    after = api.machine.read()["pvs"]
+    assert after != before
+    assert "X RMS:" in reply and "Y RMS:" in reply and "Osprey" not in reply
+    assert [event["tool"] for event in events if event["kind"] == "tool"] == [
+        "orbit_correct", "channel_read", "channel_write", "channel_read"
+    ]

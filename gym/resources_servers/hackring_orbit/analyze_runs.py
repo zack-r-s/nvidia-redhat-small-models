@@ -9,7 +9,7 @@ reduction; the server clips them to [-1, 1].
 
 Run with this server's venv from the repo root:
   gym/resources_servers/hackring_orbit/.venv/bin/python gym/resources_servers/hackring_orbit/analyze_runs.py \
-      var/gym/<model>/<run> [var/gym/<model>/<run> ...]
+      var/gym/mark-i/<model>/<run> [var/gym/mark-i/<model>/<run> ...]
 """
 
 from __future__ import annotations
@@ -121,7 +121,7 @@ def references(ring: Ring, tasks: list[dict]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("runs", nargs="*", type=Path, help="Run folders under var/gym/<model>/")
+    parser.add_argument("runs", nargs="*", type=Path, help="Run folders under var/gym/mark-i/<model>/")
     args = parser.parse_args()
     ring = Ring(REPO / "data/facility/decks/RING.json")
     tasks = [json.loads(line) for line in TASKS.open()]

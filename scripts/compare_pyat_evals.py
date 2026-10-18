@@ -47,19 +47,21 @@ def compare(base: Path, candidate: Path, output: Path) -> dict:
     b_report, b = load(candidate)
     if a_report["cases_sha256"] != b_report["cases_sha256"] or set(a) != set(b):
         raise ValueError("evaluations do not use identical frozen cases")
-    result = {"schema": "hackring.pyat_eval_comparison/1", "cases_sha256": a_report["cases_sha256"],
+    result = {"schema": "hackring.pyat_eval_comparison/1", "evaluation_series": "mark-ii",
+              "cases_sha256": a_report["cases_sha256"],
               "baseline": {"model": a_report["model"], "report_sha256": sha(base / "report.json"), **summary(a)},
               "candidate": {"model": b_report["model"], "report_sha256": sha(candidate / "report.json"), **summary(b)},
               "paired": {key: {"baseline_passed": a[key]["passed"], "candidate_passed": b[key]["passed"]}
                          for key in a}}
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     return result
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--baseline", type=Path, default=ROOT / "evals/pyat-v002/liquid-v001")
-    parser.add_argument("--candidate", type=Path, default=ROOT / "evals/pyat-v002/liquid-v002")
-    parser.add_argument("--output", type=Path, default=ROOT / "evals/pyat-v002/comparison.json")
+    parser.add_argument("--baseline", type=Path, default=ROOT / "evals/mark-ii/pyat-v002/liquid-v001")
+    parser.add_argument("--candidate", type=Path, default=ROOT / "evals/mark-ii/pyat-v002/liquid-v002")
+    parser.add_argument("--output", type=Path, default=ROOT / "evals/mark-ii/pyat-v002/comparison.json")
     args = parser.parse_args()
     print(json.dumps(compare(args.baseline, args.candidate, args.output), indent=2))

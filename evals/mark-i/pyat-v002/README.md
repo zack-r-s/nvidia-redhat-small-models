@@ -1,5 +1,7 @@
 # Expanded frozen local-PyAT evaluation
 
+**Historical pre-reconciliation result.** Rerun both checkpoints in separately named `mark-ii` outputs under the reconciled PR #8 code before making a new cross-version comparison; preserve these traces and hashes.
+
 The 56 cases comprise the eight v001 cases plus 48 newly frozen cases on seeds `20267000`–`20267047`. They cover BPM reports, plane comparisons, exact writes, and X, Y, and two-plane orbit corrections. All seeds are disjoint from v002/v003 training and validation data. The case file was frozen before the v002 fine-tune started.
 
 The evaluator uses the checked-in lattice with seeded error kicks, a verified pre-read, literal/bounded write validation, measured after-state, and greedy Transformers CPU inference. The write tool name is forced for write tasks. Results therefore compare model behavior under this local harness, not full Osprey agent behavior. Model-specific reports and traces live in sibling directories; each run uses the same `cases.jsonl` checksum.

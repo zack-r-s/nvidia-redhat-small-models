@@ -228,7 +228,8 @@ def run(args: argparse.Namespace) -> dict:
               + (f" ({trace['error']})" if trace.get("error") else ""), flush=True)
     counts = Counter(case["kind"] for case in cases)
     passed = Counter(trace["kind"] for trace in traces if trace["passed"])
-    report = {"schema": "hackring.pyat_eval/1", "created_utc": datetime.now(timezone.utc).isoformat(),
+    report = {"schema": "hackring.pyat_eval/1", "evaluation_series": "mark-ii",
+              "created_utc": datetime.now(timezone.utc).isoformat(),
               "model": args.model, "inference": "Transformers CPU greedy, verified harness pre-read; write tool name forced",
               "plant": "LocalMachine on checked-in PyAT ring; seeded ERR kicks, not Osprey calibration offsets",
               "disturbance_mrad": args.disturbance_mrad, "cases_sha256": digest(cases_path),
@@ -253,8 +254,8 @@ def run(args: argparse.Namespace) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", default="LiquidAI/LFM2.5-230M")
-    parser.add_argument("--cases", type=Path, default=ROOT / "evals/pyat-v001/cases.jsonl")
-    parser.add_argument("--output", type=Path, default=ROOT / "evals/pyat-v001/base-230m")
+    parser.add_argument("--cases", type=Path, default=ROOT / "evals/mark-i/pyat-v001/cases.jsonl")
+    parser.add_argument("--output", type=Path, default=ROOT / "evals/mark-ii/pyat-v001/base-230m")
     parser.add_argument("--disturbance-mrad", type=float, default=0.08)
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--limit", type=int, help="Run the first N cases into a separate output directory")

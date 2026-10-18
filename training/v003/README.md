@@ -11,7 +11,7 @@ HF_DATASETS_CACHE=/private/tmp/hackring-hf-datasets-v004 \
   --job training/v003/job.yaml --backend mps --output-root training/v003/output
 ```
 
-`output/` is ignored by Git. The frozen local PyAT correction evaluation uses `scripts/eval_v004_skill.py` and the correction subset of `evals/pyat-v002/cases.jsonl`. It checks an unforced skill call, the selected plane, bounded solver output, and measured post-write BPM RMS. This tests the model-plus-skill architecture; it is not a fair claim that the model alone learned inverse optics. Read/report and exact-write regressions are outside this skill-specific evaluation.
+`output/` is ignored by Git. The frozen local PyAT correction evaluation uses `scripts/eval_v004_skill.py` and the correction subset of `evals/mark-i/pyat-v002/cases.jsonl`. It checks an unforced skill call, the selected plane, bounded solver output, and measured post-write BPM RMS. This tests the model-plus-skill architecture; it is not a fair claim that the model alone learned inverse optics. Read/report and exact-write regressions are outside this skill-specific evaluation.
 
 The completed MPS run took 224.7 seconds for 108 optimizer steps; validation loss was 0.0381 after epoch 1 and 0.0315 after epoch 2. [`results.json`](results.json) records the input, job, adapter, and merged-model hashes. A first local candidate exposed a wording/effort correlation, so the v004 dataset was regenerated with independent wording and balanced-default examples before this release run. The earlier local candidate is not the published v004 checkpoint.
 

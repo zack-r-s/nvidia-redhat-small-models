@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "evals/pyat-v002/cases.jsonl"
+OUTPUT = ROOT / "evals/mark-i/pyat-v002/cases.jsonl"
 
 PROMPTS = {
     "read_bpms": ["Report X and Y positions for BPM01, BPM02, BPM03, and BPM04.",
@@ -25,7 +25,7 @@ PROMPTS = {
 def build() -> None:
     if OUTPUT.exists():
         raise FileExistsError(OUTPUT)
-    prior = [json.loads(line) for line in (ROOT / "evals/pyat-v001/cases.jsonl").read_text().splitlines()]
+    prior = [json.loads(line) for line in (ROOT / "evals/mark-i/pyat-v001/cases.jsonl").read_text().splitlines()]
     cases = list(prior)
     modes = ("read_bpms", "compare_planes", "exact_write", "x", "y", "both")
     for i in range(48):

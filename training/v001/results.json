@@ -35,7 +35,7 @@
     "base_passed": 1,
     "trained_passed": 2,
     "total": 8,
-    "trained_report": "evals/pyat-v001/liquid-v001/report.json",
+    "trained_report": "evals/mark-i/pyat-v001/liquid-v001/report.json",
     "trained_report_sha256": "99f3f8910019487a41a5d56045b299e493b71e8c7f27d35256e42c948f9ee780",
     "finding": "Both exact writes passed; read and comparison failed; all four accepted orbit corrections increased measured target RMS."
   },

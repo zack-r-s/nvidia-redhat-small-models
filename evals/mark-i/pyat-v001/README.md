@@ -1,5 +1,7 @@
 # PyAT baseline evaluation v001
 
+**Historical pre-reconciliation result.** Rerun this checkpoint in a separately named `mark-ii` output under the reconciled PR #8 code before using it in a new cross-version comparison; preserve these traces and hashes.
+
 Eight fixed operator requests use seeds `20263000`–`20263007`, outside v002's `20262000`–`20262127` training-data seeds. Each case resets a fresh `LocalMachine` instance built from the checked-in PyAT ring. The local disturbance is a seeded kick on the deck's error elements; it is different from the served Osprey calibration-offset disturbance used for v002 data. Neither the lattice nor the Osprey configuration is changed.
 
 The evaluator gives the model a measured pre-read in the same read/tool-result format as the training conversations. For write cases it forces the `channel_write` tool name, as the live goal harness does, while the model chooses operations. It accepts only literal, bounded, correctly targeted setpoints. Rejected proposals never reach PyAT. After an accepted write, it reads the plant again and gives the model the observed result. Inference here uses cached `LiquidAI/LFM2.5-230M` through Transformers on CPU with greedy decoding. This is a small model/plant check, not the full Osprey MCP or vLLM UI path.

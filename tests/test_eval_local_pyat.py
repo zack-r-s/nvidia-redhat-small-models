@@ -65,7 +65,7 @@ def test_heldout_correction_cases_are_reachable_with_bounded_teacher():
     from eval_local_pyat import rms
 
     matrix = np.asarray(json.loads((ROOT / "datasets/v002/response_teacher.json").read_text())["matrix_mm_per_mrad"])
-    cases = [json.loads(line) for line in (ROOT / "evals/pyat-v001/cases.jsonl").read_text().splitlines()]
+    cases = [json.loads(line) for line in (ROOT / "evals/mark-i/pyat-v001/cases.jsonl").read_text().splitlines()]
     for case in cases:
         if case["kind"] != "correct":
             continue

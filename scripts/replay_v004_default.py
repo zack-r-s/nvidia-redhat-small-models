@@ -52,10 +52,10 @@ def replay(cases: list[dict], traces: list[dict]) -> dict:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--cases", type=Path, default=ROOT / "evals/pyat-v002/cases.jsonl")
-    parser.add_argument("--baseline", type=Path, default=ROOT / "evals/pyat-v004/base-230m/traces.jsonl")
-    parser.add_argument("--candidate", type=Path, default=ROOT / "evals/pyat-v004/liquid-v004/traces.jsonl")
-    parser.add_argument("--output", type=Path, default=ROOT / "evals/pyat-v004/default-replay.json")
+    parser.add_argument("--cases", type=Path, default=ROOT / "evals/mark-i/pyat-v002/cases.jsonl")
+    parser.add_argument("--baseline", type=Path, default=ROOT / "evals/mark-ii/pyat-v004/base-230m/traces.jsonl")
+    parser.add_argument("--candidate", type=Path, default=ROOT / "evals/mark-ii/pyat-v004/liquid-v004/traces.jsonl")
+    parser.add_argument("--output", type=Path, default=ROOT / "evals/mark-ii/pyat-v004/default-replay.json")
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(args.output)
@@ -65,11 +65,12 @@ if __name__ == "__main__":
     for label, path in (("base_230m", args.baseline), ("liquid_v004", args.candidate)):
         traces = [json.loads(line) for line in path.read_text().splitlines()]
         results[label] = {"source_traces_sha256": digest(path), **replay(cases, traces)}
-    report = {"schema": "hackring.skill_default_replay/1",
+    report = {"schema": "hackring.skill_default_replay/1", "evaluation_series": "mark-ii",
               "method": "same frozen model proposals; balanced-default effort normalized before deterministic PyAT solve; no model reinference",
               "cases_sha256": digest(args.cases),
               "response_teacher_sha256": digest(ROOT / "datasets/v002/response_teacher.json"),
               "replay_script_sha256": digest(Path(__file__)), **results}
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     print(json.dumps({label: {k: results[label][k] for k in ("passed", "total", "normalized", "raw_intent_correct")}
                       for label in results}, indent=2))

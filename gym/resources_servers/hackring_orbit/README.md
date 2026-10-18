@@ -1,5 +1,7 @@
 # hackring_orbit
 
+**Evaluation series:** The committed runs under `var/gym/mark-i/` are historical pre-reconciliation results. After PR #8 integrates the other lanes, rerun every checkpoint/dataset pairing as **Mark II**; `scripts/run_gym_eval.sh` now writes `var/gym/mark-ii/<model>/<split>-<timestamp>/` folders with `evaluation_series` and `evaluation_interface` in `run.json`. Preserve the original runs. The current server tests numerical `channel_write` calls, so its recorded v004 run is an interface-mismatch diagnostic, not a v004 controller score. A separate `orbit_correct` Gym task and fresh Mark II run are required for v004. These Gym runs score the v001 cost across both planes and corrector magnitude, while the original local PyAT v004 report tests requested-plane RMS; compare only runs with a clearly stated common objective. The episode-order Gym evaluation split includes 11 v001 `train`-labelled episodes used to fit the v002 response matrix, so disclose that calibration overlap or use a newly disjoint teacher/split for a strict holdout claim.
+
 NeMo Gym resources server for orbit correction on the hackring FODO ring. Each task is one recorded episode from `datasets/v001`. The model gets the deployed small agent's goal turn: the goal system prompt, `Correct the beam orbit.`, the harness's pre-write `channel_read` of all eight BPMs and eight corrector setpoints, and one `channel_write` tool (Osprey's schema, snapshotted in `osprey_tools.json`) with `tool_choice: required`. The agent's `max_steps: 1` allows one write batch, as in `scripts/small_agent.py`.
 
 The server replays the episode offline in PyAT. It applies the episode's hidden corrector calibration offsets to the checked-in deck, so each kick is setpoint + offset; the tests reproduce v001's recorded `orbit_cost` before and after sampled attempts. Offsets go to the server only; the model sees public PVs. A write batch is accepted or rejected whole, using the small agent's rules: distinct correctors in the allowed list, finite values within ±0.35 mrad, numeric strings accepted.
@@ -51,7 +53,7 @@ VLLM_BASE_URL=http://127.0.0.1:8012/v1 VLLM_MODEL_NAME=LFM2.5-230M-hackring-v001
 scripts/run_gym_eval.sh --limit 2                             # smoke test
 ```
 
-The wrapper checks that the endpoint serves the named model, regenerates task rows from `split.json`, and runs `gym eval run` from `gym/`, where NeMo Gym 0.4.0 finds out-of-tree servers. Sampling defaults match the deployed agent (temperature 0.2, 512 output tokens); extra options pass through and override them. Each run writes `var/gym/<served model name>/<split>-<timestamp>/`, which is committed:
+The wrapper checks that the endpoint serves the named model, regenerates task rows from `split.json`, and runs `gym eval run` from `gym/`, where NeMo Gym 0.4.0 finds out-of-tree servers. Sampling defaults match the deployed agent (temperature 0.2, 512 output tokens); extra options pass through and override them. Each run writes `var/gym/mark-ii/<served model name>/<split>-<timestamp>/`, which is committed:
 
 - `run.json`: served name, model source, model revision and how it was determined, vLLM version, backend, and server command, NeMo Gym version, evaluation host, split, repo commit, and extra arguments. For a local server, the revision and backend are read from the listening vLLM process; otherwise set `VLLM_MODEL_REVISION`. `scripts/gym_run_metadata.py backfill <run>` adds these fields to an older run while its server is still running.
 - `rollouts.jsonl`, `rollouts_aggregate_metrics.json`, `rollouts_materialized_inputs.jsonl`, `rollouts_failures.jsonl`, and Gym's `preprocessed_datasets/`.
@@ -60,20 +62,20 @@ Runs are not bit-for-bit reproducible. Sampling at temperature 0.2 has no fixed 
 
 ## Baselines
 
-Committed runs are under `var/gym/<model>/<run>/` (16 validation tasks × 4 repeats = 64 rollouts, temperature 0.2, 512 output tokens; a rollout without a complete tool call has no write):
+Committed runs are under `var/gym/mark-i/<model>/<run>/` (16 validation tasks × 4 repeats = 64 rollouts, temperature 0.2, 512 output tokens; a rollout without a complete tool call has no write):
 
 | Model | mean reward | accepted / rejected writes | rollouts |
 |---|---|---|---|
-| LFM2.5-230M | 0.000 | 0 / 51 | `var/gym/LFM2.5-230M/validation-20261017-181953` |
-| LFM2.5-1.2B-Instruct | 0.000 | 0 / 54 | `var/gym/LFM2.5-1.2B-Instruct/validation-20261017-183220` |
-| LFM2.5-230M-hackring-v001 (v002 SFT) | −0.041 | 67 / 0 | `var/gym/LFM2.5-230M-hackring-v001/validation-20261017-191459` |
+| LFM2.5-230M | 0.000 | 0 / 51 | `var/gym/mark-i/LFM2.5-230M/validation-20261017-181953` |
+| LFM2.5-1.2B-Instruct | 0.000 | 0 / 54 | `var/gym/mark-i/LFM2.5-1.2B-Instruct/validation-20261017-183220` |
+| LFM2.5-230M-hackring-v001 (v002 SFT) | −0.041 | 67 / 0 | `var/gym/mark-i/LFM2.5-230M-hackring-v001/validation-20261017-191459` |
 
 The two base models copy the pre-write read into `channel_write`: every written BPM value matched the reading for 230M (352/352) and most for 1.2B (388/418), and every corrector value was its current 0.0, so even applying only the corrector operations changes nothing. The v002 fine-tune writes only correctors and every batch is accepted, but its kick directions are uncorrelated with the one-shot solve (26/64 point the right way) and its median kick is 0.05× the solve's size, so rewards scatter around zero (30 positive, 34 negative). Reference policies on the same tasks (raw fractional reduction): one-shot regularized response-matrix solve from the read +0.999, Xopt best of 64 +0.943, random kicks within ±0.35 mrad −26. Reproduce with:
 
 ```sh
 gym/resources_servers/hackring_orbit/.venv/bin/python gym/resources_servers/hackring_orbit/analyze_runs.py \
-  var/gym/LFM2.5-230M/validation-20261017-181953 var/gym/LFM2.5-1.2B-Instruct/validation-20261017-183220 \
-  var/gym/LFM2.5-230M-hackring-v001/validation-20261017-191459
+  var/gym/mark-i/LFM2.5-230M/validation-20261017-181953 var/gym/mark-i/LFM2.5-1.2B-Instruct/validation-20261017-183220 \
+  var/gym/mark-i/LFM2.5-230M-hackring-v001/validation-20261017-191459
 ```
 
 # Licensing information

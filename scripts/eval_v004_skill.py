@@ -81,7 +81,7 @@ def run(args: argparse.Namespace) -> dict:
     output.mkdir(parents=True)
     trace_path = output / "traces.jsonl"
     trace_path.write_text("".join(json.dumps(t, allow_nan=False) + "\n" for t in traces))
-    report = {"schema": "hackring.skill_eval/1", "model": args.model,
+    report = {"schema": "hackring.skill_eval/1", "evaluation_series": "mark-ii", "model": args.model,
               "plant": "LocalMachine on checked-in PyAT ring with seeded error kicks",
               "inference": "Transformers CPU greedy; no forced tool prefix; numeric solve by checked-in response teacher",
               "cases_sha256": digest(cases_path), "evaluator_sha256": digest(Path(__file__)),
@@ -104,8 +104,8 @@ def run(args: argparse.Namespace) -> dict:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", required=True)
-    parser.add_argument("--cases", type=Path, default=ROOT / "evals/pyat-v002/cases.jsonl")
-    parser.add_argument("--output", type=Path, default=ROOT / "evals/pyat-v004/skill-v004")
+    parser.add_argument("--cases", type=Path, default=ROOT / "evals/mark-i/pyat-v002/cases.jsonl")
+    parser.add_argument("--output", type=Path, default=ROOT / "evals/mark-ii/pyat-v004/skill-v004")
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--split", choices=("train", "validation", "test"))

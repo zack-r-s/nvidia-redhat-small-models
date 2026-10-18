@@ -106,7 +106,17 @@ fi
 
 model_ready() {
   curl -fsS --max-time 3 "$MODEL_URL" 2>/dev/null |
-    "$PY" -c 'import json,sys; assert any(m.get("id") == sys.argv[1] for m in json.load(sys.stdin)["data"])' "$MODEL_ID" 2>/dev/null
+    "$PY" -c 'import json,sys; assert any(m.get("id") == sys.argv[1] for m in json.load(sys.stdin)["data"])' "$MODEL_ID" 2>/dev/null || return 1
+  # /models identifies the served name, not the checkpoint revision. When pinned,
+  # trust only a process this checkout launched with the requested source and tag.
+  if [[ -n $VLLM_REVISION ]]; then
+    [[ -f "$BOOT/vllm.pid" ]] || return 1
+    local pid command_line
+    pid=$(cat "$BOOT/vllm.pid")
+    [[ $pid =~ ^[0-9]+$ ]] && kill -0 "$pid" 2>/dev/null || return 1
+    command_line=" $(ps -p "$pid" -o command= 2>/dev/null || true) "
+    [[ $command_line == *" $VLLM_MODEL "* && $command_line == *" --revision $VLLM_REVISION "* ]] || return 1
+  fi
 }
 
 port_free() {
@@ -205,7 +215,7 @@ if [[ -f "$BOOT/vllm.pid" ]] && ! model_ready; then
   rm -f "$BOOT/vllm.pid"
 fi
 if curl -fsS --max-time 3 "$MODEL_URL" >/dev/null 2>&1 && ! model_ready; then
-  die "Port 8000 serves a different model; expected $MODEL_ID. Stop that server and rerun."
+  die "Port 8000 serves a different model or an unverified revision; expected $MODEL_ID from $VLLM_MODEL ${VLLM_REVISION:-default}. Stop that server and rerun."
 fi
 if ! model_ready && ! port_free 8000; then
   die "Port 8000 is occupied without a working $MODEL_ID endpoint. Stop that process and rerun."
@@ -269,6 +279,9 @@ fi
 cp .env.example .env
 chmod 600 .env
 printf 'VLLM_MODEL_NAME=%s\n' "$MODEL_ID" >> .env
+if [[ -n $VLLM_REVISION ]]; then
+  printf 'VLLM_MODEL_REVISION=%s\n' "$VLLM_REVISION" >> .env
+fi
 
 mkdir -p profiles
 "$PY" - "$ROOT" "$PORT_BASE" "$CA_PORT" "$PVA_PORT" <<'PY'

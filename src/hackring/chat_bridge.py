@@ -243,12 +243,17 @@ def load_small_agent() -> Any:
     return _small_agent
 
 
+def model_name() -> str:
+    agent = load_small_agent()
+    return os.getenv("VLLM_MODEL_NAME") or agent.PROVIDER["default_model"]
+
+
 async def live_turn(prompt: str, session: Session, controls: FixtureControls) -> tuple[str, list[dict]]:
     agent = load_small_agent()
     events: list[str] = []
     agent.dim = lambda text: events.append(text)  # the agent's trace lines; its answers use print()
     tools = [agent.to_openai(tool) for tool in controls.tools()]
-    args = SimpleNamespace(model=agent.PROVIDER["default_model"], temperature=0.2, max_tokens=512, max_steps=5, history=8)
+    args = SimpleNamespace(model=model_name(), temperature=0.2, max_tokens=512, max_steps=5, history=8)
     buffer = io.StringIO()
     with redirect_stdout(buffer):
         async with httpx.AsyncClient(base_url=VLLM_URL, timeout=300) as http:
@@ -286,7 +291,7 @@ async def _model_ready() -> bool:
     try:
         async with httpx.AsyncClient(timeout=2) as http:
             response = await http.get(f"{VLLM_URL}/models")
-        return response.is_success and any(m.get("id") for m in response.json().get("data", []))
+        return response.is_success and any(m.get("id") == model_name() for m in response.json().get("data", []))
     except (httpx.HTTPError, ValueError):
         return False
 
@@ -337,7 +342,7 @@ async def chat(request: ChatRequest) -> dict:
             else:
                 reply, events = await scripted_turn(message, controls)
                 session.history.extend([{"role": "user", "content": message}, {"role": "assistant", "content": reply}])
-    return {"reply": reply, "events": events, "mode": mode, "model": load_small_agent().PROVIDER["default_model"] if mode == "live" else None, "elapsed_s": round(time.monotonic() - started, 2)}
+    return {"reply": reply, "events": events, "mode": mode, "model": model_name() if mode == "live" else None, "elapsed_s": round(time.monotonic() - started, 2)}
 
 
 @app.post("/chat/clear")
