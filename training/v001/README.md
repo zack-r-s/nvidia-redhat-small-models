@@ -1,5 +1,7 @@
 # Liquid Finetune pass v001
 
+The published checkpoint is [model v002](https://huggingface.co/zack-r-s/hackring-LFM2.5-230M/tree/v002), matching its [dataset v002](https://huggingface.co/datasets/zack-r-s/hackring-pyat-control/tree/v002) input. `training/v001` is the chronological local run directory; see the [release chart](../README.md).
+
 This run trains `LiquidAI/LFM2.5-230M` with Liquid Finetune SFT and rank-8 default LoRA on the GPT-augmented v002 train split (864 conversations). It evaluates against the fixed 144-row validation split. The 144-row test split and eight-case PyAT evaluation remain held out. The 2-epoch plan uses assistant-only loss, a 3072-token sequence limit, batch size 1 with 8 gradient-accumulation steps, and saves at each epoch. The longest checked conversation is 2436 tokens.
 
 Use Liquid Finetune commit `d9cc23dae5a16498ab7dc11958b80ca803e0440a` in a separate environment. Its supported CLI requires CUDA. On a CUDA machine, run its CLI from this repository root with `OUTPUT_DIR` set to an ignored output location. On the tested Apple Metal machine, the wrapper calls Liquid's one-process trainer directly without editing Liquid source:
