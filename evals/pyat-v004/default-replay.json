@@ -1,0 +1,599 @@
+{
+  "base_230m": {
+    "normalized": 14,
+    "outcomes": [
+      {
+        "id": "center-x",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "after_target_rms_mm": 0.0010824016482763076,
+        "before_target_rms_mm": 0.25009006351334845,
+        "executed_effort": "balanced",
+        "id": "center-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "id": "center-both-a",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "after_target_rms_mm": 0.0012640668104553488,
+        "before_target_rms_mm": 0.40201352973108007,
+        "executed_effort": "balanced",
+        "id": "center-both-b",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "both"
+      },
+      {
+        "id": "new-03-x",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "id": "new-04-y",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "id": "new-05-both",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "after_target_rms_mm": 0.0005605438680324225,
+        "before_target_rms_mm": 0.14879088601683524,
+        "executed_effort": "balanced",
+        "id": "new-09-x",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0008876785351482981,
+        "before_target_rms_mm": 0.35557977162183185,
+        "executed_effort": "balanced",
+        "id": "new-10-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0011478750320445524,
+        "before_target_rms_mm": 0.304853393812,
+        "executed_effort": "balanced",
+        "id": "new-11-both",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "both"
+      },
+      {
+        "id": "new-15-x",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "id": "new-16-y",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "id": "new-17-both",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "after_target_rms_mm": 0.000318931511778542,
+        "before_target_rms_mm": 0.22214871171903688,
+        "executed_effort": "balanced",
+        "id": "new-21-x",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.000608965388911444,
+        "before_target_rms_mm": 0.08666698765746443,
+        "executed_effort": "balanced",
+        "id": "new-22-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0030032831597029373,
+        "before_target_rms_mm": 0.2471835949757018,
+        "executed_effort": "balanced",
+        "id": "new-23-both",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "both"
+      },
+      {
+        "id": "new-27-x",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "id": "new-28-y",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "id": "new-29-both",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "after_target_rms_mm": 0.00023792150748077522,
+        "before_target_rms_mm": 0.2696524251351613,
+        "executed_effort": "balanced",
+        "id": "new-33-x",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0012560149208919649,
+        "before_target_rms_mm": 0.23061108227171143,
+        "executed_effort": "balanced",
+        "id": "new-34-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0009369806145887123,
+        "before_target_rms_mm": 0.2263189478340695,
+        "executed_effort": "balanced",
+        "id": "new-35-both",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "both"
+      },
+      {
+        "id": "new-39-x",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "id": "new-40-y",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "id": "new-41-both",
+        "normalized": false,
+        "passed": false,
+        "requested_effort": "balanced",
+        "selected_effort": null,
+        "selected_plane": null
+      },
+      {
+        "after_target_rms_mm": 0.00048246104772616346,
+        "before_target_rms_mm": 0.20193354060241064,
+        "executed_effort": "balanced",
+        "id": "new-45-x",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0007680078406834764,
+        "before_target_rms_mm": 0.34771202900430714,
+        "executed_effort": "balanced",
+        "id": "new-46-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0019146971383723291,
+        "before_target_rms_mm": 0.15757941872830566,
+        "executed_effort": "balanced",
+        "id": "new-47-both",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "gentle",
+        "selected_plane": "both"
+      }
+    ],
+    "passed": 14,
+    "raw_intent_correct": 0,
+    "source_traces_sha256": "d39456453e6707e5e7a54febb4ddd2e6ac2e5c5cbf4a84792b30b56a3f56ee8b",
+    "total": 28
+  },
+  "cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "liquid_v004": {
+    "normalized": 16,
+    "outcomes": [
+      {
+        "after_target_rms_mm": 0.0002961466981606977,
+        "before_target_rms_mm": 0.33211144582666124,
+        "executed_effort": "balanced",
+        "id": "center-x",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0010824016482763076,
+        "before_target_rms_mm": 0.25009006351334845,
+        "executed_effort": "balanced",
+        "id": "center-y",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0011977234544588268,
+        "before_target_rms_mm": 0.26750576077137705,
+        "executed_effort": "balanced",
+        "id": "center-both-a",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.0012640668104553488,
+        "before_target_rms_mm": 0.40201352973108007,
+        "executed_effort": "balanced",
+        "id": "center-both-b",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.00036521151201830866,
+        "before_target_rms_mm": 0.21065530758159962,
+        "executed_effort": "balanced",
+        "id": "new-03-x",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0016737927149114136,
+        "before_target_rms_mm": 0.11328051569863432,
+        "executed_effort": "balanced",
+        "id": "new-04-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0011884725238592616,
+        "before_target_rms_mm": 0.1815762304757206,
+        "executed_effort": "balanced",
+        "id": "new-05-both",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.0005605438680324225,
+        "before_target_rms_mm": 0.14879088601683524,
+        "executed_effort": "balanced",
+        "id": "new-09-x",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0008876785351482981,
+        "before_target_rms_mm": 0.35557977162183185,
+        "executed_effort": "balanced",
+        "id": "new-10-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0011478750320445524,
+        "before_target_rms_mm": 0.304853393812,
+        "executed_effort": "balanced",
+        "id": "new-11-both",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.0003947464489166087,
+        "before_target_rms_mm": 0.27588525428190114,
+        "executed_effort": "balanced",
+        "id": "new-15-x",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0006266070318939646,
+        "before_target_rms_mm": 0.05054936137819795,
+        "executed_effort": "balanced",
+        "id": "new-16-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0031546363362524735,
+        "before_target_rms_mm": 0.2658703093998231,
+        "executed_effort": "balanced",
+        "id": "new-17-both",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.000318931511778542,
+        "before_target_rms_mm": 0.22214871171903688,
+        "executed_effort": "balanced",
+        "id": "new-21-x",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.000608965388911444,
+        "before_target_rms_mm": 0.08666698765746443,
+        "executed_effort": "balanced",
+        "id": "new-22-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0030032831597029373,
+        "before_target_rms_mm": 0.2471835949757018,
+        "executed_effort": "balanced",
+        "id": "new-23-both",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.00040098417280670846,
+        "before_target_rms_mm": 0.3176960763610297,
+        "executed_effort": "balanced",
+        "id": "new-27-x",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.000924260306333999,
+        "before_target_rms_mm": 0.3513121350632198,
+        "executed_effort": "balanced",
+        "id": "new-28-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.002779348530087141,
+        "before_target_rms_mm": 0.17222178096198065,
+        "executed_effort": "balanced",
+        "id": "new-29-both",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.00023792150748077522,
+        "before_target_rms_mm": 0.2696524251351613,
+        "executed_effort": "balanced",
+        "id": "new-33-x",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0012560149208919649,
+        "before_target_rms_mm": 0.23061108227171143,
+        "executed_effort": "balanced",
+        "id": "new-34-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0009369806145887123,
+        "before_target_rms_mm": 0.2263189478340695,
+        "executed_effort": "balanced",
+        "id": "new-35-both",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.00047555209408702275,
+        "before_target_rms_mm": 0.18398898463218336,
+        "executed_effort": "balanced",
+        "id": "new-39-x",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0006137916343328748,
+        "before_target_rms_mm": 0.46777108415066354,
+        "executed_effort": "balanced",
+        "id": "new-40-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0017643835253280148,
+        "before_target_rms_mm": 0.22038015492640026,
+        "executed_effort": "balanced",
+        "id": "new-41-both",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "both"
+      },
+      {
+        "after_target_rms_mm": 0.00048246104772616346,
+        "before_target_rms_mm": 0.20193354060241064,
+        "executed_effort": "balanced",
+        "id": "new-45-x",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "x"
+      },
+      {
+        "after_target_rms_mm": 0.0007680078406834764,
+        "before_target_rms_mm": 0.34771202900430714,
+        "executed_effort": "balanced",
+        "id": "new-46-y",
+        "normalized": true,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "aggressive",
+        "selected_plane": "y"
+      },
+      {
+        "after_target_rms_mm": 0.0019146971383723291,
+        "before_target_rms_mm": 0.15757941872830566,
+        "executed_effort": "balanced",
+        "id": "new-47-both",
+        "normalized": false,
+        "passed": true,
+        "requested_effort": "balanced",
+        "selected_effort": "balanced",
+        "selected_plane": "both"
+      }
+    ],
+    "passed": 28,
+    "raw_intent_correct": 12,
+    "source_traces_sha256": "44b56df80ed03dca68ad9ff122d8a2c543a097ecfdc6310b1eabd60c96ccb147",
+    "total": 28
+  },
+  "method": "same frozen model proposals; balanced-default effort normalized before deterministic PyAT solve; no model reinference",
+  "replay_script_sha256": "e9c29c2acc86e334ed18119ec1540371ba701543ab18c44926607cb01a0786a4",
+  "response_teacher_sha256": "8da906e2e4ca5cf449a2cfff8bd09994a29f60b1ea759d5f7dfe7dca3f2ae1cd",
+  "schema": "hackring.skill_default_replay/1"
+}

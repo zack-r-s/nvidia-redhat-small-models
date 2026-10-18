@@ -11,6 +11,7 @@ PY="$ROOT/.venv/bin/python"
 OSPREY="$ROOT/.venv/bin/osprey"
 MODEL_URL=http://127.0.0.1:8000/v1/models
 MODEL_ID=LFM2.5-230M
+MODEL_SOURCE=${HACKRING_VLLM_MODEL:-LiquidAI/LFM2.5-230M}
 
 say() { printf '\n==> %s\n' "$*"; }
 die() { printf 'bootstrap: %s\n' "$*" >&2; exit 1; }
@@ -30,6 +31,8 @@ Its volumes and the Xopt stack remain. --keep-old-demo skips that cleanup.
 
 If vllm is outside PATH, set VLLM_BIN to its executable. On Apple Silicon the
 script also checks ~/.venv-vllm-metal/bin/vllm. Docker must already be running.
+To serve the v004 checkpoint, set HACKRING_VLLM_MODEL=zack-r-s/hackring-LFM2.5-230M
+and HACKRING_VLLM_REVISION=v004 before running this script on a free port 8000.
 The reset destroys this deployment's containers, volumes, build/, and agent
 memory. It preserves the source and audit log. This script backs up any .env
 before replacing it with the local vLLM example.
@@ -252,8 +255,11 @@ if ! model_ready; then
     die "Port 8000 serves a different model; expected $MODEL_ID. Stop that server and rerun."
   fi
   [[ -n $VLLM_CMD ]] || die 'vLLM executable disappeared.'
-  model_args=(serve LiquidAI/LFM2.5-230M --served-model-name "$MODEL_ID"
+  model_args=(serve "$MODEL_SOURCE" --served-model-name "$MODEL_ID"
     --enable-auto-tool-choice --tool-call-parser lfm2 --host 127.0.0.1 --port 8000)
+  if [[ -n ${HACKRING_VLLM_REVISION:-} ]]; then
+    model_args+=(--revision "$HACKRING_VLLM_REVISION")
+  fi
   if [[ $(uname -s) == Darwin ]]; then
     model_args+=(--max-model-len 4096 --gpu-memory-utilization 0.05)
   fi

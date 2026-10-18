@@ -1,0 +1,64 @@
+{
+  "architecture": "model selects orbit_correct plane/effort; deterministic bounded response solve; measured PyAT readback",
+  "artifacts": {
+    "epoch_1_adapter": {
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-e1s54-20261017_210845",
+      "sha256": "fd0ee97c7b23ad9600f33f70e33d9d0554f201952a70c8677d4ac1f2c142b345"
+    },
+    "epoch_2_adapter": {
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-e2s108-20261017_210845",
+      "sha256": "7a498679e114d3badeccc7fefb7c96933e006eb0259e35dc3693b58b9a5663a2"
+    },
+    "merged_model": {
+      "directory": "LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_m-20261017_210845",
+      "sha256": "e35185efa6bf004461787220ba1c7d6bae31b0c22493c59643b285aeefda7519"
+    }
+  },
+  "backend": "Apple M4 Pro MPS; Liquid single-process trainer via scripts/run_liquid_training.py",
+  "base_model": "LiquidAI/LFM2.5-230M",
+  "dataset_manifest_sha256": "261efa03661f4dc29d29f6a16cb3c55b07f99857d39335ce1dfbc0eef15bd51d",
+  "epochs": 2,
+  "job_sha256": "98095b41ecdef21ecd890fd86e906b6120abb78b42c02de1e40cd07f4c422e58",
+  "optimizer_steps": 108,
+  "pyat_eval": {
+    "base_report_sha256": "fa9cd7159359a00fd00bf8565474c44f991be5452c541c22bd8888ce437b41ce",
+    "candidate_report_sha256": "b35334f9b6b34049fc676da8d6ef2fc2362713c8e03203976376bf402b79a3cd",
+    "default_replay_sha256": "88fe1be6baac05d00653cf98a4cab88dcaa8bd96742da40376dc5c3d7ed10865",
+    "frozen_cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+    "frozen_normalized": {
+      "base_passed": 14,
+      "candidate_normalized": 16,
+      "candidate_passed": 28,
+      "total": 28
+    },
+    "frozen_strict": {
+      "base_passed": 0,
+      "candidate_passed": 12,
+      "candidate_route_correct": 28,
+      "total": 28
+    },
+    "limitation": "The model sometimes misclassifies effort: strict frozen intent 12/28 and v004 seed-distinct test 67/72. Balanced-default normalization is an explicit harness rule; model-only numerical control is not claimed.",
+    "test_report_sha256": "71723016e843c89790fa8e787be31e8555947975f5cbec704084ad8ad9593540",
+    "v004_test": {
+      "passed": 67,
+      "route_correct": 72,
+      "total": 72
+    }
+  },
+  "run_dir": "training/v003/output/LFM2.5-230M-sft-train.json-all-lr0.0001-w0p1-lora_a-20261017_210845",
+  "schema": "hackring.liquid_training_result/1",
+  "status": "completed",
+  "test_sha256": "24783ef19f612f055f527251666a7d687444cde6fd8eeeeb3b5ee1dc2a586117",
+  "train_runtime_seconds": 224.7,
+  "train_sha256": "963b30fc40edec2215a4080b93cb3145bd8b73ad7397280318217dd37c63ec7b",
+  "upstream": {
+    "commit": "d9cc23dae5a16498ab7dc11958b80ca803e0440a",
+    "repository": "https://github.com/Liquid4All/liquid-finetune"
+  },
+  "validation_loss": {
+    "epoch_1": 0.03811078891158104,
+    "epoch_2": 0.03149571642279625
+  },
+  "validation_sha256": "dfcc5dae1a6a73587310d05224738b91d0e744fc595ea28c54b4d7f2b16c6f5e",
+  "version": "v004"
+}

@@ -6,7 +6,7 @@ The local generator resets the checked-in ring with seeded error kicks, reads it
 
 `train.jsonl`, `validation.jsonl`, and `test.jsonl` are Liquid Finetune `messages` conversations. `local_actions.jsonl` holds the new measured source actions. `index.jsonl` binds every conversation to its source and split; `manifest.json` records source and output checksums. The local error kicks are never inserted in model-visible messages. This is simulated data; it does not demonstrate live plant control.
 
-Public release: [dataset tag `v003`](https://huggingface.co/datasets/zack-r-s/hackring-pyat-control/tree/v003). The matching checkpoint is [model tag `v002`](https://huggingface.co/zack-r-s/hackring-LFM2.5-230M/tree/v002).
+Public release: [dataset tag `v003`](https://huggingface.co/datasets/zack-r-s/hackring-pyat-control/tree/v003). The matching checkpoint is [model tag `v003`](https://huggingface.co/zack-r-s/hackring-LFM2.5-230M/tree/v003).
 
 Rebuild only into an empty output directory:
 
