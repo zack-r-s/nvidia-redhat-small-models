@@ -3,7 +3,7 @@ import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { BeamSpots, RmsHistory } from "./BeamView";
 import Chat from "./Chat";
 import { AgentGoal, Correctors, Readings, StatusBar } from "./Panels";
-import RingScene, { WINDOWS_MM, magnificationFor } from "./RingScene";
+import RingScene, { PLAYBACK_SPEEDS, WINDOWS_MM, magnificationFor } from "./RingScene";
 import type { Device, TurnEvidence } from "./types";
 import { bpmPv, correctorPv } from "./types";
 import { useFeed } from "./useFeed";
@@ -27,6 +27,7 @@ export default function App() {
   const { state } = feed;
   const history = useHistory(state);
   const [windowMm, setWindowMm] = useState(WINDOWS_MM[2]);
+  const [speedStep, setSpeedStep] = useState(2);
   const [clearedAt, setClearedAt] = useState(0);
   const shown = useMemo(() => history.filter((h) => h.t > clearedAt), [history, clearedAt]);
   const dim = feed.status === "stale" || feed.status === "disconnected";
@@ -65,17 +66,24 @@ export default function App() {
       <main className="workspace">
         <Card className="panel scene-card" data-testid="stage">
           <div className="panel-head">
-            <h4>Ring <span className="muted">(schematic)</span></h4>
+            <h4>Ring <span className="muted">(schematic · {state?.orbit_profile ? "PyAT closed orbit" : "BPM readings"})</span></h4>
             <span className="panel-tools">
+              <label className="playback-control">
+                <span className="muted">Playback</span>
+                <input type="range" min="0" max={PLAYBACK_SPEEDS.length - 1} step="1" value={speedStep}
+                  onChange={(e) => setSpeedStep(Number(e.currentTarget.value))} aria-label="Beam path playback speed"
+                  disabled={!state?.orbit_profile} data-testid="beam-speed" />
+                <span className="playback-value" data-testid="beam-speed-value">{state?.orbit_profile ? PLAYBACK_SPEEDS[speedStep].label : "—"}</span>
+              </label>
               <span className="muted">Tube window</span>
               <HTMLSelect minimal value={windowMm} onChange={(e) => setWindowMm(Number(e.currentTarget.value))} options={WINDOWS_MM.map((w) => ({ value: w, label: `± ${w} mm` }))} data-testid="window-select" />
-              <Popover placement="bottom-end" content={<div className="legend-pop muted">Grey ring = reference path · tube = vacuum-chamber look; its cross-section is the display window (± {windowMm} mm ≈ ×{state ? Math.round(magnificationFor(windowMm, state.lattice.circumference_m || 1)) : "—"}), not the physical pipe · red dot = measured BPM, yellow = beyond the window (drawn at the wall) · tables show true values · click a device to inspect · drag to orbit</div>}>
+              <Popover placement="bottom-end" content={<div className="legend-pop muted">Grey ring = reference path · tube = vacuum-chamber look; its cross-section is the display window (± {windowMm} mm ≈ ×{state ? Math.round(magnificationFor(windowMm, state.lattice.circumference_m || 1)) : "—"}), not the physical pipe · red dot = measured BPM, yellow = beyond the window (drawn at the wall) · green marker and trail = sampled PyAT 4D closed orbit, available only with full local model state; drawing between samples and playback speed are display effects, not measured motion or physical revolution speed · tables show true PV values · click a device to inspect · drag to orbit</div>}>
                 <Button minimal small icon="info-sign" aria-label="Legend" />
               </Popover>
             </span>
           </div>
           <div className="scene">
-            {state ? <RingScene state={state} selected={selected?.name ?? null} onSelect={setSelected} dim={dim} windowMm={windowMm} /> : <div className="placeholder">{feed.status === "disconnected" ? "No machine data — viewer is disconnected." : "Waiting for machine state…"}</div>}
+            {state ? <RingScene state={state} selected={selected?.name ?? null} onSelect={setSelected} dim={dim} windowMm={windowMm} speedStep={speedStep} active={feed.status === "live" || (feed.status === "replay" && !!feed.replay?.playing)} /> : <div className="placeholder">{feed.status === "disconnected" ? "No machine data — viewer is disconnected." : "Waiting for machine state…"}</div>}
             <div className="inspect">{selected ? inspect(selected) : <span className="muted">Click a device to inspect.</span>}</div>
           </div>
         </Card>

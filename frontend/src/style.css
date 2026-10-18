@@ -29,6 +29,10 @@ body { margin: 0; }
 .panel-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .3rem; }
 .panel-head h4 { margin: 0; }
 .panel-tools { display: flex; align-items: center; gap: .4rem; }
+.playback-control { display: flex; align-items: center; gap: .3rem; white-space: nowrap; }
+.playback-control input { width: 6rem; accent-color: #22c55e; }
+.playback-control input:disabled { opacity: .45; }
+.playback-value { color: #4ade80; font-size: .76rem; min-width: 1.8rem; text-align: center; }
 .legend-pop { max-width: 26rem; padding: .75rem; }
 .driver-pop { width: min(34rem, 92vw); }
 .is-dim .scene, .is-dim .tbl, .is-dim .bars, .is-dim .rms { opacity: .45; }
@@ -77,6 +81,13 @@ body { margin: 0; }
   .right { min-height: 0; }
   .tabs-panel { flex: none; height: 26rem; }
   .chat-panel { flex: none; height: 30rem; }
+}
+@media (max-width: 500px) {
+  .panel-head { flex-wrap: wrap; }
+  .panel-tools { width: 100%; justify-content: space-between; gap: .2rem; }
+  .playback-control { gap: .1rem; }
+  .playback-control input { width: 5rem; }
+  .panel-tools .muted { font-size: .7rem; }
 }
 .trace-detail { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chat-input textarea { font-family: inherit; font-size: .85rem; }

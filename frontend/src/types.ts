@@ -6,6 +6,11 @@ export type MachineState = {
   pvs: Record<string, number>;
   summary: { x_rms_mm: number; y_rms_mm: number };
   lattice: { circumference_m: number | null; devices: Device[] };
+  /** Model result, separate from the measured BPM PVs. Present only when PyAT has the full plant state. */
+  orbit_profile?: {
+    kind: "pyat-closed-orbit-4d";
+    samples: { s_m: number; x_mm: number; y_mm: number }[];
+  };
 };
 
 export type TurnEvidence = {
