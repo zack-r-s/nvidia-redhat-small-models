@@ -1,0 +1,8 @@
+{"id":"read-bpms","seed":20263000,"kind":"read_bpms","prompt":"What are the X and Y positions at each of the four BPMs right now?"}
+{"id":"compare-planes","seed":20263001,"kind":"compare_planes","prompt":"Which transverse plane is farther from center? Use the BPM readings."}
+{"id":"exact-horizontal","seed":20263002,"kind":"exact_write","prompt":"Dial RING:MAG:H02:KICK:SP to +0.075 mrad and check RING:DIAG:BPM01:POSITION:X.","channel":"RING:MAG:H02:KICK:SP","value_mrad":0.075,"follow_up":"RING:DIAG:BPM01:POSITION:X"}
+{"id":"exact-vertical","seed":20263003,"kind":"exact_write","prompt":"Put RING:MAG:V03:KICK:SP at -0.060 mrad, then tell me RING:DIAG:BPM01:POSITION:Y.","channel":"RING:MAG:V03:KICK:SP","value_mrad":-0.06,"follow_up":"RING:DIAG:BPM01:POSITION:Y"}
+{"id":"center-x","seed":20263004,"kind":"correct","plane":"x","prompt":"Bring the horizontal beam toward zero and give me the measured residual orbit."}
+{"id":"center-y","seed":20263005,"kind":"correct","plane":"y","prompt":"The vertical orbit needs centering. Adjust that plane and report the BPM result."}
+{"id":"center-both-a","seed":20263006,"kind":"correct","plane":"both","prompt":"Steer both transverse planes toward the axis and show the measured outcome."}
+{"id":"center-both-b","seed":20263007,"kind":"correct","plane":"both","prompt":"Bring the full beam orbit back near center, then tell me how much remains."}

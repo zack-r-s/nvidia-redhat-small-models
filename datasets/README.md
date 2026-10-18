@@ -10,6 +10,47 @@ This is raw machine and optimizer data, not LFM chat training data. A later lang
 
 `scripts/split_dataset.py datasets/v001` assigns the first 75% of episodes in file order (`ep-0000`–`ep-0047`, 3,072 attempts) to fine-tuning and the last 25% (`ep-0048`–`ep-0063`, 1,024 attempts) to evaluation. Whole episodes stay on one side. This ignores the generator's shuffled `split` field; its seven `test` episodes all fall in the fine-tuning portion, so do not mix the two schemes. `splits/ft75-eval25/split.json` is the committed record with source checksums; the materialized `finetune_*.jsonl` and `eval_*.jsonl` copies are ignored and can be regenerated. Hidden calibration offsets from an episode reproduce its BPM readings in the local PyAT `LocalMachine` (corrector kick = setpoint + offset) to within 1e-13 mm, so an evaluation environment can replay evaluation episodes without the EPICS stack.
 
+## v002: measured control tasks
+
+`v002/response_teacher.json` fits the direct orbit response `ΔBPM = R·Δreadback` from **v001 train attempts only**; held-out validation and test residuals are recorded in the file. This is a compact [SciML-style data-driven identification](https://docs.sciml.ai/DataDrivenDiffEq/) step implemented with NumPy. SciPy bounded least squares proposes setpoints for fresh X-only, Y-only, and combined correction tasks. The teacher is not a substitute for PyAT: each task resets a seeded disturbance in Osprey's served ring, reads all 24 PVs, writes through EPICS, and records the measured 24-PV state after settlement. A fourth task per seed exercises an exact setpoint command. The lattice and checked-in Osprey profile are not modified.
+
+The collection uses 128 fresh seeds, with seed-level 96/16/16 train/validation/test splits and four independently reset actions per seed. `v002/raw/actions.jsonl` keeps hidden calibration offsets only for reproducibility; the conversation exporter never exposes them. `v002/raw/manifest.json` binds the raw file, v001 lineage, teacher, source lattice and PV contract, deployment, and software versions by checksums. An interrupted collector resumes missing task IDs only when its run settings and script checksum match; a complete version cannot be overwritten.
+
+The completed v002 validator found 512 valid actions, 384/64/64 actions by split, no non-improving correction tasks, and a maximum measured response-matrix residual of 4.82×10⁻¹⁴ mm. The canonical conversations pass the LFM2.5-230M tokenizer check; the longest has 2,435 input tokens before the reserved 512 output tokens.
+
+```sh
+PYTHONPATH=src .venv/bin/python scripts/fit_response_matrix.py
+MPLCONFIGDIR=/private/tmp/mpl-hackring-v002 .venv/bin/python scripts/prepare_dataset_va.py --deployment /private/tmp/hackring-data-v002-lite --ca-port 6264 --pva-port 6275 --port-base 16000 --no-archive --build
+.venv/bin/osprey up --repo /private/tmp/hackring-data-v002-lite --dev -d
+PYTHONPATH=src .venv/bin/python scripts/generate_control_dataset.py
+PYTHONPATH=src .venv/bin/python scripts/validate_control_dataset.py
+```
+
+The canonical export, `v002/sft-canonical/`, contains 640 conversations: one measured action conversation for each of the 512 tasks and one read-only task for each seed. The completed direct GPT language pass saved 512 checked pre-action requests in `v002/annotations/gpt-v001/paraphrases.jsonl`; its final manifest and run settings are retained, while the in-progress checkpoint stays ignored. The separate `v002/sft/` export contains 1,152 conversations: canonical and GPT versions of every action plus one read-only task per seed (864 train, 144 validation, 144 test). Four exact-write GPT requests match their canonical wording; no deterministic fallback was used. The GPT and canonical versions share identical tool calls and measured results. Correction actions that did not improve their measured target cost stay in raw data but are excluded from ideal-action SFT. Both exports use [Liquid's `messages` and native bracket tool-call format](https://github.com/Liquid4All/liquid-finetune#tool-calling-datasets). Run the tokenizer check with an environment containing `transformers` and the cached LFM2.5-230M tokenizer.
+
+The v002 paraphraser resumes from validated `progress.jsonl` rows. If its script changes during a run, review the change and pass `--resume-after-edit`; it preserves the prior script hash in `run.json` and labels any deterministic exact-write fallback in the final annotation file and manifest. A completed rerun with identical settings is idempotent. The completed correction paraphrases are structurally valid but have limited lexical variety: 24 distinct X prompts, 27 Y prompts, and 16 both-plane prompts across 128 tasks of each type. Evaluate generalization on unseen operator wording before concluding this language pass improves the model.
+
+## v003: mixed-backend training pass
+
+`v003/` is the next versioned SFT export. It retains the 640 canonical Osprey v002 conversations and adds 480 local-PyAT conversations built from 320 newly measured actions and read/compare tasks on fresh seeds. This directly covers the local error-kick disturbance used by the held-out PyAT evaluator while keeping the earlier served-plant examples. No new GPT calls were made. The 864/128/128 train/validation/test split, source-action file, per-row index, checksums, and generation procedure are documented in [v003/README.md](v003/README.md). The 56-case evaluation seeds are disjoint, and a bounded response-teacher feasibility check improved the requested orbit in all 28 correction cases.
+
+```sh
+PYTHONPATH=src .venv/bin/python scripts/export_control_conversations.py --output datasets/v002/sft-canonical
+/Users/zackstone/.venv-vllm-metal/bin/python scripts/validate_control_conversations.py datasets/v002/sft-canonical
+
+# Later, after setting OPENAI_API_KEY:
+PYTHONPATH=src .venv/bin/python scripts/paraphrase_control_prompts.py --limit 32 --output datasets/v002/annotations/pilot
+PYTHONPATH=src .venv/bin/python scripts/paraphrase_control_prompts.py
+PYTHONPATH=src .venv/bin/python scripts/export_control_conversations.py --paraphrases datasets/v002/annotations/gpt-v001/paraphrases.jsonl
+/Users/zackstone/.venv-vllm-metal/bin/python scripts/validate_control_conversations.py
+```
+
+The vLLM environment path above is an example from the development machine; use any Python with `transformers` installed. These scripts prepare training data and do not start fine-tuning.
+
+## v004: measured skill-routing pass
+
+`v004/` shifts the model target from numeric `channel_write` arguments to `orbit_correct(plane, effort)`. The fixed v002 response matrix and bounded least-squares solver compute kicks from current PV readings; local PyAT supplies the measured after-state. Fresh seed-disjoint splits contain 432/72/72 train/validation/test conversations. Effort labels are balanced across planes, prompt openings are independent of effort, and balanced examples include requests with no effort wording. No GPT pass is used for v004. The [v004 README](v004/README.md) and manifest describe reconstruction and lineage. See the [training chart](../training/README.md) for model and evaluation results.
+
 ## GPT annotation pass
 
 `scripts/annotate_dataset.py` uses direct [OpenAI Responses API](https://developers.openai.com/api/docs/libraries) calls, with [`gpt-6-luna`](https://developers.openai.com/api/docs/models/gpt-6-luna) as the default. It generates one `operator_prompt` per episode from **only that episode's initial public PV read**, then one retrospective `observation` for each selected read/write/read attempt. The operator prompt is repeated on the episode's annotated rows; it never sees later actions or results. Hidden episode faults are never sent. Prompts get rotating style cues and a BPM-derived factual focus, following the attributed-prompt idea in [AttrPrompt](https://arxiv.org/abs/2306.15895). This resembles Liquid's [robotics demo](https://www.liquid.ai/blog/lfm2-5-230m) in its episode-level language goal followed by tool calls, without claiming their undisclosed data recipe. Both fields permit one or two short sentences. Numeric measurements remain in the copied PV fields, not generated prose; the script rejects unsupported BPM names, numeric claims, omitted prompt focus, or an incorrect orbit-cost trend. Review a pilot for plausible wording and any remaining unsupported qualitative claims before the full pass.

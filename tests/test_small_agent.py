@@ -255,6 +255,9 @@ def test_goal_request_and_batch_validation():
     assert small_agent.goal_request("Center the horizontal orbit") == "x"
     assert small_agent.goal_request("Correct the vertical beam") == "y"
     assert small_agent.goal_request("Reduce the beam orbit") == "both"
+    assert small_agent.goal_request("The vertical orbit needs centering") == "y"
+    assert small_agent.goal_request("Steer both transverse planes toward the axis") == "both"
+    assert small_agent.goal_request("Steer the horizontal beam nearer the axis") == "x"
     assert small_agent.goal_request("Report the horizontal orbit") is None
     assert small_agent.goal_request("Do not correct the orbit") is None
     assert small_agent.goal_request("Set RING:MAG:H01:KICK:SP to 0.2, then center the orbit") is None
@@ -273,7 +276,7 @@ def test_goal_request_and_batch_validation():
             small_agent.valid_goal_operations(operations, allowed)
 
 
-def test_goal_correction_reads_before_and_after_write(capsys, monkeypatch):
+def test_legacy_goal_correction_reads_before_and_after_write(capsys, monkeypatch):
     monkeypatch.setattr(small_agent, "dim", print)
     bpm, correctors = small_agent.goal_channels("x")
     command = correctors[0]
@@ -308,7 +311,7 @@ def test_goal_correction_reads_before_and_after_write(capsys, monkeypatch):
 
     mcp = FakeMCP()
     history = []
-    asyncio.run(small_agent.turn("Center the horizontal orbit", history, mcp, FakeHTTP(),
+    asyncio.run(small_agent.goal_turn("Center the horizontal orbit", "x", history, mcp, FakeHTTP(),
         [{"type": "function", "function": {"name": "channel_read"}},
          {"type": "function", "function": {"name": "channel_write"}}],
         {"channel_write": {"properties": {"operations": {"type": "array"}}}},

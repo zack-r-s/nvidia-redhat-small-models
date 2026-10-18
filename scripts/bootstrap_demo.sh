@@ -18,7 +18,8 @@ need() { command -v "$1" >/dev/null 2>&1 || die "Missing $1. Install it and reru
 usage() {
   cat <<'EOF'
 Usage: scripts/bootstrap_demo.sh [--check] [--keep-old-demo] [--model MODEL]
-                                 [--served-name NAME] [--tool-parser PARSER]
+                                 [--revision REVISION] [--served-name NAME]
+                                 [--tool-parser PARSER]
 
 Resets only this checkout's Osprey deployment, installs pinned project
 dependencies, starts the selected vLLM model if needed, and brings up the
@@ -27,6 +28,7 @@ Osprey accelerator, viewer/API, and authenticated web terminal.
 --check        Check host prerequisites without changing anything.
 --model        Hugging Face ID or checkpoint directory (relative to repo root)
                (env VLLM_MODEL; default LiquidAI/LFM2.5-230M).
+--revision     Hugging Face model tag or commit (env VLLM_REVISION).
 --served-name  Model ID the endpoint reports and the chat requests
                (env VLLM_SERVED_NAME; default the model's last path part).
 --tool-parser  vLLM tool-call parser (env VLLM_TOOL_PARSER; default lfm2,
@@ -38,6 +40,7 @@ Its volumes and the Xopt stack remain. --keep-old-demo skips that cleanup.
 
 If vllm is outside PATH, set VLLM_BIN to its executable. On Apple Silicon the
 script also checks ~/.venv-vllm-metal/bin/vllm. Docker must already be running.
+To serve v004, pass --model zack-r-s/hackring-LFM2.5-230M --revision v004.
 The reset destroys this deployment's containers, volumes, build/, and agent
 memory. It preserves the source and audit log. This script backs up any .env
 before replacing it with the local vLLM example.
@@ -46,7 +49,8 @@ EOF
 
 MODE=run
 CLEANUP_OLD_DEMO=1
-VLLM_MODEL=${VLLM_MODEL:-LiquidAI/LFM2.5-230M}
+VLLM_MODEL=${VLLM_MODEL:-${HACKRING_VLLM_MODEL:-LiquidAI/LFM2.5-230M}}
+VLLM_REVISION=${VLLM_REVISION:-${HACKRING_VLLM_REVISION:-}}
 MODEL_ID=${VLLM_SERVED_NAME:-}
 VLLM_TOOL_PARSER=${VLLM_TOOL_PARSER:-lfm2}
 while (( $# )); do
@@ -54,10 +58,11 @@ while (( $# )); do
     --check) MODE=check ;;
     --cleanup-old-demo) CLEANUP_OLD_DEMO=1 ;;
     --keep-old-demo) CLEANUP_OLD_DEMO=0 ;;
-    --model|--served-name|--tool-parser)
+    --model|--revision|--served-name|--tool-parser)
       (( $# >= 2 )) && [[ -n $2 ]] || { usage >&2; exit 2; }
       case "$1" in
         --model) VLLM_MODEL=$2 ;;
+        --revision) VLLM_REVISION=$2 ;;
         --served-name) MODEL_ID=$2 ;;
         --tool-parser) VLLM_TOOL_PARSER=$2 ;;
       esac
@@ -117,7 +122,7 @@ if [[ $MODE == check ]]; then
     die 'vLLM is missing and no model server is available on 127.0.0.1:8000.'
   fi
   say 'Host checks passed: git, uv/Python 3.12, npm, Docker, curl, and vLLM or an existing model endpoint.'
-  printf 'Model: %s served as %s (tool parser %s)\n' "$VLLM_MODEL" "$MODEL_ID" "$VLLM_TOOL_PARSER"
+  printf 'Model: %s revision %s served as %s (tool parser %s)\n' "$VLLM_MODEL" "${VLLM_REVISION:-default}" "$MODEL_ID" "$VLLM_TOOL_PARSER"
   if [[ -n $VLLM_CMD ]]; then
     printf 'vLLM: %s\n' "$VLLM_CMD"
   else
@@ -300,6 +305,9 @@ if ! model_ready; then
   model_args=(serve "$VLLM_MODEL" --served-model-name "$MODEL_ID"
     --enable-auto-tool-choice --tool-call-parser "$VLLM_TOOL_PARSER" --host 127.0.0.1 --port 8000
     ${serve_extra[@]+"${serve_extra[@]}"})
+  if [[ -n $VLLM_REVISION ]]; then
+    model_args+=(--revision "$VLLM_REVISION")
+  fi
   nohup "$VLLM_CMD" "${model_args[@]}" >"$BOOT/vllm.log" 2>&1 &
   echo $! >"$BOOT/vllm.pid"
   for _ in {1..180}; do

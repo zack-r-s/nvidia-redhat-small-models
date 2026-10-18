@@ -10,6 +10,7 @@ dependencies = [
   "prompt_toolkit>=3",
   "pyepics>=3.5",
   "PyYAML>=6",
+  "scipy>=1.14",
   "uvicorn>=0.30",
   "xopt>=3,<4",
 ]
@@ -18,6 +19,7 @@ dependencies = [
 dev = ["caproto>=1.1", "pytest>=8"]
 # Generating hackring_orbit Gym tasks imports scripts/small_agent.py.
 gym = ["mcp>=1.0", "python-dotenv>=1.0"]
+eval = ["transformers>=5.17,<6"]
 
 [build-system]
 requires = ["hatchling"]

@@ -30,6 +30,7 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.history import FileHistory
 
 from hackring.deployment import identity
+from hackring.control import SKILL_SYSTEM, SKILL_TOOL, requested_effort, solve
 
 REPO = Path(__file__).resolve().parents[1]
 load_dotenv(REPO / ".env", override=False)
@@ -47,7 +48,7 @@ TOOLS = {"channel_read", "channel_write", "channel_limits"}
 ACTION = re.compile(r"\b(read|set|write|kick|get|measure|report|show)\b", re.IGNORECASE)
 BEAM_POSITION = re.compile(r"\b(beam position|orbit|bpm)\b", re.IGNORECASE)
 MOVE_BEAM = re.compile(r"\b(move|shift|steer|disturb|perturb)\b.*\b(beam|orbit)\b|\b(beam|orbit)\b.*\b(move|shift|steer|disturb|perturb)\b", re.IGNORECASE)
-GOAL_VERB = re.compile(r"\b(correct|center|centre|reduce|minimi[sz]e|flatten|restore)\b", re.IGNORECASE)
+GOAL_VERB = re.compile(r"\b(correct|center(?:ing|ed)?|centre(?:ing|ed)?|reduce|minimi[sz]e|flatten|restore|bring)\b", re.IGNORECASE)
 NEGATION = re.compile(r"\b(do not|don't|never|without)\b", re.IGNORECASE)
 KICK_LIMIT = float(CONTRACT["kick_limit_mrad"])
 COMMANDS = {"/clear": "forget the conversation so far", "/help": "show commands", "/exit": "quit"}
@@ -98,9 +99,11 @@ def wants_tool(prompt: str) -> bool:
 
 def goal_request(prompt: str) -> str | None:
     """Recognize an explicit orbit-correction goal, preserving exact PV commands."""
-    if requested_write(prompt) or NEGATION.search(prompt) or not GOAL_VERB.search(prompt):
+    steer_toward_center = bool(re.search(r"\bsteer\b", prompt, re.I) and
+                               re.search(r"\b(toward|nearer)\b.*\b(axis|center|centre|zero)\b", prompt, re.I))
+    if requested_write(prompt) or NEGATION.search(prompt) or not (GOAL_VERB.search(prompt) or steer_toward_center):
         return None
-    if not re.search(r"\b(beam|orbit|bpm)\b", prompt, re.IGNORECASE):
+    if not re.search(r"\b(beam|orbit|bpm|transverse|correctors?)\b", prompt, re.IGNORECASE):
         return None
     horizontal = bool(re.search(r"\b(horizontal|x-plane|x orbit)\b", prompt, re.IGNORECASE))
     vertical = bool(re.search(r"\b(vertical|y-plane|y orbit)\b", prompt, re.IGNORECASE))
@@ -381,10 +384,97 @@ async def goal_turn(prompt, plane, history, mcp, http, tools, schemas, args) -> 
     del history[: max(0, len(history) - max(1, args.history // 2) * 2)]
 
 
+async def skill_goal_turn(prompt, expected_plane, history, mcp, http, args) -> None:
+    """Let LFM route a goal; use measured Osprey PVs and a bounded deterministic solve."""
+    response = await http.post("/chat/completions", json={
+        "model": args.model,
+        "messages": [{"role": "system", "content": SKILL_SYSTEM}, *history,
+                     {"role": "user", "content": prompt}],
+        "tools": [SKILL_TOOL], "tool_choice": "required",
+        "temperature": args.temperature, "max_tokens": args.max_tokens,
+    })
+    if response.is_error:
+        raise httpx.HTTPStatusError(f"{response.status_code} from vLLM: {response.text}",
+                                    request=response.request, response=response)
+    calls = response.json()["choices"][0]["message"].get("tool_calls") or []
+    try:
+        if len(calls) != 1 or calls[0]["function"]["name"] != "orbit_correct":
+            raise ValueError("model did not select one orbit_correct skill")
+        choice = json.loads(calls[0]["function"]["arguments"] or "{}")
+        plane, effort = choice.get("plane"), choice.get("effort")
+        if plane != expected_plane:
+            raise ValueError(f"model selected {plane!r}, but the request names {expected_plane!r}")
+        if effort not in ("gentle", "balanced", "aggressive"):
+            raise ValueError("model selected an unknown effort level")
+        intended_effort = requested_effort(prompt)
+        if effort != intended_effort and intended_effort != "balanced":
+            raise ValueError(f"model selected {effort!r} effort, but the request calls for {intended_effort!r}")
+    except (ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
+        print(f"No write was made: {exc}.")
+        return
+    if effort != intended_effort:
+        dim(f"  [orbit_correct · effort normalized] model selected {effort}; using balanced for this request")
+        effort = intended_effort
+    dim(f"  [orbit_correct] {json.dumps({'plane': plane, 'effort': effort})}")
+    bpm, correctors = goal_channels(plane)
+    needed = bpm + correctors
+    try:
+        pre = await mcp.call_tool("channel_read", {"channels": needed})
+        before = readings_from("\n".join(getattr(part, "text", "") for part in pre.content))
+        if not all(pv in before for pv in needed):
+            raise ValueError("pre-write BPM or corrector read incomplete")
+        measured = {pv: float(before[pv]["value"]) for pv in needed}
+        settings = solve(measured, plane, effort)
+        operations = valid_goal_operations(
+            [{"channel": pv, "value": value} for pv, value in settings.items()], correctors)
+    except Exception as exc:
+        print(f"No write was made: {exc}.")
+        return
+    dim(f"  [channel_read · pre-write] {len(needed)} measured PVs")
+    dim(f"  [channel_write] {json.dumps({'operations': operations, 'confirm': True})}")
+    write_error = None
+    confirmed = {}
+    try:
+        written = await mcp.call_tool("channel_write", {"operations": operations, "confirm": True})
+        payload = json.loads("\n".join(getattr(part, "text", "") for part in written.content))
+        if payload.get("status") == "success":
+            confirmed = {entry.get("channel"): entry for entry in payload.get("summary", {}).get("results", [])}
+        else:
+            write_error = payload.get("message", "Osprey did not confirm the write")
+    except Exception as exc:
+        write_error = str(exc)
+    follow_up = bpm + [READBACKS[pv] for pv in settings]
+    after = {}
+    try:
+        post = await mcp.call_tool("channel_read", {"channels": follow_up})
+        after = readings_from("\n".join(getattr(part, "text", "") for part in post.content))
+    except Exception as exc:
+        write_error = f"{write_error}; read failed: {exc}" if write_error else f"read failed: {exc}"
+    dim(f"  [channel_read · post-write] {len(after)}/{len(follow_up)} measured PVs")
+    lines = []
+    for pv, value in settings.items():
+        observed = after.get(READBACKS[pv], {}).get("value")
+        outcome = confirmed.get(pv, {}).get("outcome", "unknown")
+        lines.append(f"{pv}: requested {value:.6f} mrad; Osprey {outcome}; "
+                     + (f"readback {observed} mrad." if observed is not None else "no verified readback."))
+    if write_error:
+        lines.append(f"Write or follow-up error: {write_error}.")
+    for label, channels in (("X", [pv for pv in bpm if pv.endswith(":X")]),
+                            ("Y", [pv for pv in bpm if pv.endswith(":Y")])):
+        if channels:
+            start, end = rms(before, channels), rms(after, channels)
+            lines.append(f"{label} RMS: {start:.4f} → {end:.4f} mm (measured)." if start is not None and end is not None
+                         else f"{label} RMS: no complete post-write measurement.")
+    answer = "\n".join(lines)
+    print(answer)
+    history.extend([{"role": "user", "content": prompt}, {"role": "assistant", "content": answer}])
+    del history[: max(0, len(history) - max(1, args.history // 2) * 2)]
+
+
 async def turn(prompt, history, mcp, http, tools, schemas, args) -> None:
     plane = goal_request(prompt)
     if plane:
-        await goal_turn(prompt, plane, history, mcp, http, tools, schemas, args)
+        await skill_goal_turn(prompt, plane, history, mcp, http, args)
         return
     messages = [{"role": "system", "content": SYSTEM}, *history, {"role": "user", "content": prompt}]
     force = wants_tool(prompt)

@@ -1,0 +1,30 @@
+{
+  "balanced_default_replay": {
+    "base_passed": 14,
+    "total": 28,
+    "v004_effort_normalized": 16,
+    "v004_passed": 28
+  },
+  "evidence_sha256": {
+    "base-230m/report.json": "fa9cd7159359a00fd00bf8565474c44f991be5452c541c22bd8888ce437b41ce",
+    "default-replay.json": "88fe1be6baac05d00653cf98a4cab88dcaa8bd96742da40376dc5c3d7ed10865",
+    "liquid-v004/report.json": "b35334f9b6b34049fc676da8d6ef2fc2362713c8e03203976376bf402b79a3cd",
+    "test-v004/report.json": "71723016e843c89790fa8e787be31e8555947975f5cbec704084ad8ad9593540"
+  },
+  "frozen_cases_sha256": "67bc09faaeb408f89258c3fa57f5b818fa3e483f1c4bed80d21112a23a82ddd7",
+  "limits": "Model-only numerical control and non-correction tasks are not evaluated; default replay normalizes effort in code; no live Osprey/EPICS plant test.",
+  "method": "unforced tool-call generation; strict plane/effort check; measured bounded PyAT solve; separate saved-call default replay",
+  "plant": "LocalMachine on checked-in PyAT ring with seeded error kicks",
+  "schema": "hackring.skill_comparison/1",
+  "strict_frozen": {
+    "base_passed": 0,
+    "total": 28,
+    "v004_passed": 12,
+    "v004_plane_correct": 28
+  },
+  "v004_test": {
+    "passed": 67,
+    "plane_correct": 72,
+    "total": 72
+  }
+}

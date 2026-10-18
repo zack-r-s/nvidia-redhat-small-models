@@ -12,6 +12,7 @@
 !/.env.example
 /frontend/node_modules/
 /frontend/dist/
+/training/v*/output/
 *.tsbuildinfo
 __pycache__/
 *.py[cod]

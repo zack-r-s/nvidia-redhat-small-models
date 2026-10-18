@@ -58,6 +58,14 @@ curl http://127.0.0.1:8000/v1/models
 
 The `lfm2` parser is required for structured tool calls. On the tested Apple Silicon host running vLLM Metal alongside Docker, `--max-model-len 4096 --gpu-memory-utilization 0.05` worked for 230M; tune these resource flags for your host. A 1.2B comparison server is optional and does not change the checked-in 230M provider configuration.
 
+For the v004 skill-routing checkpoint, serve the matching [model tag](https://huggingface.co/zack-r-s/hackring-LFM2.5-230M/tree/v004) with the same served name, or set `HACKRING_VLLM_MODEL=zack-r-s/hackring-LFM2.5-230M HACKRING_VLLM_REVISION=v004` before `scripts/bootstrap_demo.sh` on a host where port 8000 is free:
+
+```sh
+vllm serve zack-r-s/hackring-LFM2.5-230M --revision v004 \
+  --served-model-name LFM2.5-230M --enable-auto-tool-choice \
+  --tool-call-parser lfm2 --host 127.0.0.1 --port 8000
+```
+
 The checked-in profile has one served PyAT virtual accelerator, a recorded archive, controls MCP tools, and the custom small-model web terminal. It has no planning, rule, or approval hooks. Start the accelerator after building, then start the viewer API in a separate terminal:
 
 ```sh
@@ -72,7 +80,9 @@ For manual setup when data generation already owns 5064/5075, make a separate de
 
 For the end-to-end check, note the starting values at `/state`, then ask the chat: `Set RING:MAG:H01:KICK:SP to 0.05, then read RING:DIAG:BPM01:POSITION:X`. The named setpoint's unit is mrad; an explicit `mrad` is also accepted. Look for a `channel_read · pre-write`, a `channel_write`, and Osprey's reported outcome. Compare the H01 setpoint and readback and at least one BPM in chat, `/state`, and the viewer. A later setpoint command replaces the earlier value. The API's `backend` field and viewer label should say `osprey-epics`/“Osprey”. An out-of-limit request above ±0.35 mrad should leave the setpoint unchanged and report the rejection. `POST /scenario` is unavailable in EPICS mode.
 
-The chat also accepts explicit goals such as “Center the horizontal orbit,” “Correct the vertical beam,” or “Reduce the beam orbit.” It reads the requested plane's BPMs and corrector setpoints first, then asks the model for one batch of absolute kicks. The harness accepts only distinct correctors in the requested plane and finite values within ±0.35 mrad. It reads the written correctors' readbacks and the same BPMs after the attempt, reporting measured RMS before and after. A worsening proposal is still measured and reported; the model does not get an invented improvement. Vague requests such as “Move the beam” still ask for a specific setpoint and kick. Exact setpoint commands retain their verified read/write/read flow, and read-only prompts cannot write. The 230M base model may not yet choose good corrections; this interface enables evaluation and later fine-tuning.
+The chat also accepts explicit goals such as “Center the horizontal orbit,” “Correct the vertical beam,” or “Reduce the beam orbit.” With v004, the model selects the `orbit_correct` skill's plane and effort level. The harness checks that selection against the operator's request; an unstated effort means balanced. The skill reads BPMs and corrector setpoints, computes bounded absolute kicks with the versioned response matrix, writes through Osprey, and reads corrector readbacks and BPMs again. The answer reports measured RMS before and after. A rejected selection makes no write. Vague requests such as “Move the beam” still ask for a specific setpoint and kick. Exact setpoint commands retain their verified read/write/read flow, and read-only prompts cannot write. The skill-routing model is specialized for correction; the frozen PyAT evaluation does not establish its quality on read/report or exact-write requests.
+
+An [eight-case local PyAT baseline](evals/pyat-v001/README.md) and a [56-case expanded evaluation](evals/pyat-v002/README.md) check held-out operator wording and measured write outcomes without changing the shared Osprey deployment.
 
 For read-only interpretation, “Which orbit plane has the larger measured RMS?” reads all eight BPM channels and reports the measured X and Y RMS values and the larger plane.
 
@@ -98,7 +108,9 @@ The `ara/` research artifact, `build/`, `var/`, virtual environments, frontend d
 
 ## Generate and validate Xopt traces
 
-The data lane records read → write → read attempts against the served PyAT accelerator through EPICS, using the same 24-PV contract as the chat and viewer. `datasets/v001/` contains 64 episodes and 4,096 attempts with episode-level train, validation, and test splits. The physical traces are separate from language annotations and model training. [Dataset documentation](datasets/README.md) describes the row schema, provenance, and annotation pass.
+The data lane records read → write → read attempts against the served PyAT accelerator through EPICS, using the same 24-PV contract as the chat and viewer. `datasets/v001/` contains 64 episodes and 4,096 Xopt attempts. The v002 pass fits a response-matrix teacher from v001 train data and measures fresh correction and exact-write tasks on the served ring, with separate Liquid-format conversation exports. The v003 pass retains canonical served-plant examples and adds measured local-PyAT examples for the evaluator's error-kick disturbance. V004 uses fresh local PyAT measurements to train a natural-language `orbit_correct(plane, effort)` skill call; the bounded response-matrix solver supplies numerical PV settings. Physical traces remain separate from language annotations and model training. [Dataset documentation](datasets/README.md) describes the schemas, provenance, and commands; the [training and release chart](training/README.md) points to each run's data, checkpoint, and evaluation.
+
+Public releases use one [versioned dataset repository](https://huggingface.co/datasets/zack-r-s/hackring-pyat-control) and one [versioned LFM model repository](https://huggingface.co/zack-r-s/hackring-LFM2.5-230M). Matching dataset/model tags `v002`, `v003`, and `v004` identify each pass. The [release chart](training/README.md) maps the local training-run directories, legacy tags, and each evaluation. V004 selects the correct plane on 28/28 frozen correction requests, but raw plane-and-effort intent passes 12/28; balanced-default normalization plus the deterministic solver produces measured improvement on 28/28. It remains an experimental simulated-plant controller, and this pass does not re-evaluate read or exact-write behavior.
 
 The first collection used an isolated Osprey deployment at `/private/tmp/hackring-data-v001-monitor`. At that time the checked-in deck had `Marker` BPMs, so staging converted only those four zero-length elements to `Monitor` and verified the test orbit was unchanged. The merged main deck now uses `Monitor` directly; staging accepts it without changing the checked-in lattice or facility files. The recorded v001 manifest retains the historical conversion provenance.
 
@@ -107,8 +119,8 @@ To stage a new isolated deployment, use a fresh `--deployment` path. It requires
 ```sh
 PYTHONPATH=src .venv/bin/python scripts/prepare_dataset_va.py --deployment /private/tmp/hackring-data-next --build
 DOCKER_HOST=unix://$HOME/.rd/docker.sock .venv/bin/osprey up --repo /private/tmp/hackring-data-next --dev -d
-PYTHONPATH=src .venv/bin/python scripts/generate_dataset.py --deployment /private/tmp/hackring-data-next --output datasets/v002
-PYTHONPATH=src .venv/bin/python scripts/validate_dataset.py datasets/v002
+PYTHONPATH=src .venv/bin/python scripts/generate_dataset.py --deployment /private/tmp/hackring-data-next --output datasets/v004
+PYTHONPATH=src .venv/bin/python scripts/validate_dataset.py datasets/v004
 ```
 
 The generator refuses to overwrite an output version. The full default pass is 64 episodes × 64 sequential Xopt evaluations with bounded ±0.35 mrad correctors. The driver sets hidden seeded disturbances, reads all public PVs, applies EPICS writes, and records the settled public PVs and objective after each attempt. Run `PYTHONPATH=src .venv/bin/python scripts/validate_dataset.py datasets/v001` to verify the checked-in first pass. The annotation script writes a separate version under `datasets/v001/annotations/`; it does not edit the raw traces. No fine-tuning is performed here.
